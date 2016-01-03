@@ -1,0 +1,50 @@
+<div 
+    style="
+        position:fixed;
+        top:0;
+        bottom:0;
+        left:0;
+        right:0;
+        background-color:black;">
+    <div style="
+    position:fixed;
+        top:0;
+        bottom:0;
+        left:0;
+        right:25%;
+        background-color:black;
+        background-size: cover;
+        background-position: 50% 0%;
+        cursor:pointer;
+        -webkit-transition:all linear 0.5s;
+        transition:all linear 0.5s;
+        display:flex;
+        flex-direction:row;
+        justify-content:flex-start;"
+    ng-style="{'background-image':'url('+getParkAdImgUrl()+')'}">
+    <div style=""><h1 ng-bind="getParkAdName()"></h1></div>
+    <div style="" ng-bind="getParkAdDesc()"></div>
+	<!-- <div style="position:fixed;top:0;bottom:0;left:0;right:25%;">  -->
+		<!-- <div style="height:386px;">
+            <carousel interval="carouselSettings.interval" no-wrap="carouselSettings.noWrapFlag">
+                <slide ng-repeat="slide in ads" active="slide.active">
+                    <img ng-src="{{slide.imageUrl}}" style="margin:auto;max-width:900px;"/>
+                    <div class="carousel-caption">
+                        <p ng-bind="slide.name"></p>
+                        <p ng-bind="slide.campaignDescription"></p>
+                        <p>
+                            <a ng-href="{{slide.actionItemUrl}}" ng-bind="slide.actionItemName"></a>
+                        </p>
+                    </div>
+                </slide>
+            </carousel>
+        </div> -->
+        <!-- <sze-park-advertisement title="park.parkAdvertisements[1].name" url="park.parkAdvertisements[1].imageUrl" desc="park.parkAdvertisements[1].campaignDescription"></sze-park-advertisement> -->
+        <!-- <img ng-src="{{park.parkAdvertisements[1].imageUrl}}" style="position:absolute;top:0;left:0;right:0;bottom:0;"/> -->
+    </div>
+     <div class="text-center get-started">
+        <div class="get-started-item">
+            <a class="btn btn-lg btn-warning" ng-href="{{'/#'+GetStartedPath}}" style="background-color:#FD732B;">Get Started!</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="col-lg-1 col-md-2 col-xs-12" ng-show="guest.photo != null">
+        <img ng-src="{{guest.photo}}" alt="{{guest.firstName + ' ' + guest.lastName}}"/>
+    </div>
+    <div class="col-xs-12" ng-class="{'col-lg-6 col-md-6':(guest.photo != null),'col-lg-7 col-md-8':(guest.photo == null)}">
+
+        <b ng-bind="guest.firstName + ' ' + guest.lastName">Betty Doe</b>
+        <span ng-bind="'('+guest.birthday+', '+guest.gender+')'"></span>
+        <div style="color:#808080" ng-bind="guest.email">bettydoe@gmail.com</div>
+    </div>
+    <div class="col-lg-4 col-md-3 col-xs-12">
+        Guest of Honor
+    </div>
+    <div class="col-lg-1 col-md-1 col-xs-12">
+        <span class="glyphicon glyphicon-trash" aria-hidden="true" style="color:#727272;font-size:24px"></span>
+    </div>
+</div>

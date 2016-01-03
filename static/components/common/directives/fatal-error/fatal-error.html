@@ -1,0 +1,15 @@
+<div id="fatal-error" class="panel small-12 columns {{errorClass}}" ng-if="szeFatalError">
+  <h3 id="error-title">
+    <i class="fa fa-exclamation-circle"></i>&nbsp;
+    <span ng-if="errorTitle" ng-bind="errorTitle"></span>
+    <span ng-if="!errorTitle">We are having trouble retrieving your information</span>
+  </h3>
+
+  <p ng-if="errorMessage" ng-bind="errorMessage"></p>
+  <p ng-if="!errorMessage">We apologize for the error and are working to fix it. Please refresh the page below.</p>
+  <button class="button large radius custom-split"
+          ng-if="errorAction"
+          ng-click="errorAction()">Refresh<span><i class="fa fa-chevron-right"></i></span></button>
+</div>
+
+<ng-transclude ng-if="!szeFatalError"></ng-transclude>

@@ -1,0 +1,110 @@
+.button {
+  text-transform: uppercase;
+}
+
+.increment-input{
+
+  .numeric-increment {
+    background-color: $panel-bg;
+    border: 1px solid $input-border-color;
+    border-left: none;
+    color: $body-color;
+  }
+}
+
+.postfix.date-button {
+  background-color: $panel-bg;
+  border: 1px solid $input-border-color;
+  border-left: none;
+  color: $body-color;
+}
+
+#cart-timer {
+
+  font-size: rem-calc(14);
+  color: $white;
+
+  .fa {
+    position: relative;
+    top: 2px;
+    padding-right: 2px;
+
+    color: $primary-color;
+    font-size: rem-calc(21);
+  }
+}
+
+.help-icon.fa-stack {
+  height: 0;
+
+  .fa-circle {
+    color: $primary-color;
+    font-size: rem-calc(24);
+  }
+
+  .fa-question {
+    color: $white;
+    font-size: rem-calc(21);
+    top: -4px;
+    left: -1px;
+  }
+}
+
+input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+body.no-scroll {
+  overflow: hidden;
+}
+
+
+/* BUTTONS */
+
+.button.standard-sidebar:not(.active) {
+  background-color: $white;
+  color: $primary-color;
+  border: 1px solid $white;
+
+  .fa {
+    color: #777777;
+  }
+
+  &:hover {
+    background-color: #ECEBEB;
+    border: 1px solid #DEDEDE;
+  }
+}
+
+.button.negative-action:not(.active) {
+  background-color: $white;
+  color: #777777;
+  border: 1px solid #DEDEDE;
+
+  .fa {
+    color: #777777;
+  }
+
+  &:hover {
+    background-color: #ECEBEB;
+    border: 1px solid #DEDEDE;
+  }
+}
+
+.side-nav{
+  margin-left: 0;
+  list-style-type: none;
+
+  li {
+
+    .button {
+      padding-right: rem-calc(20);
+      padding-left: rem-calc(20);
+      margin-bottom: rem-calc(10);
+
+      .fa {
+        font-size: rem-calc(20);
+      }
+    }
+  }
+}

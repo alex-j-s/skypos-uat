@@ -1,0 +1,1254 @@
+/* 
+--------------------------------------------------
+--------------------------------------------------
+            Navigation 
+--------------------------------------------------
+-------------------------------------------------- */
+
+/* center navigation */
+
+
+#navigation.navbar{
+    min-height: 89px;
+}
+
+@media (min-width: 768px) {
+#navigation.navbar {
+    position: relative;
+    min-height: 50px;
+    margin-bottom: 0px;
+    border: none;
+}
+@media (min-width: 768px){
+    #navigation.navbar {
+        border-radius: 0px;
+    }
+}
+@media (min-width: 768px){
+    #navigation .navbar-nav {
+        display: table;
+        float: none;
+        margin: 0 auto;
+    }
+}
+#navigation .navbar-nav {
+    display: table;
+    float: none;
+    margin: 0 auto;
+}
+.navbar-default {
+    background-color: #0055b7;
+    border-color: #e7e7e7;
+    border: 0;
+    margin: 0;
+}
+.navbar-default .navbar-nav > li > a {
+    color: #b3ccea;
+    text-transform: uppercase;
+    font-size: .8em;
+}
+.navbar-default .navbar-nav > li > a:hover {
+    color: #b3ccea;
+    cursor: pointer;
+}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+    color: #fff;
+    background-color: transparent;
+    z-index: 1;
+    position: relative;
+    text-align: center;
+}
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+    background-color: transparent;
+    color: #b3ccea;
+}
+.nav > li {
+    position: relative;
+    display: block;
+    margin: 0px 0 -11px 0;
+    min-width: 145px;
+    height: 100px;
+    text-align: center;
+}
+.navbar-nav > li > a {
+    padding-top: 45px;
+    line-height: 45px;
+    margin-top: 0px;
+    padding-bottom: 0px;
+}
+img.nav-icons {
+    color: #fff;
+    text-align: center;
+    display: flex;
+    margin: 0px auto -50px;
+    padding: 10px 0 0 0;
+}
+.active-arrow {
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 30px;
+    color: #EEE;
+    margin: -20px 0 -5px;
+}
+
+
+
+/* 
+--------------------------------------------------
+--------------------------------------------------
+            Footer 
+--------------------------------------------------
+-------------------------------------------------- */
+
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height (removed for overflow panels) */
+ /* margin-bottom: 80px;*/
+}
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 80px;
+  background-color: #3d3d3d;
+  padding: 10px;
+}
+
+#footer .sub-total {
+    width: 175px;
+    background: #4d4d4f;
+    padding: 5px;
+    border-radius: 4px;
+    display: flex;
+    color: #fff;
+}
+#footer .sub-total span.title {
+    font-size: .85rem;
+    color: #EEE;
+    display: block;
+    text-transform: uppercase;
+}
+#footer .sub-total span.total {
+    font-size: 1.4rem;
+    color: #ccc;
+    display: block;
+    margin-top: -5px;
+}
+#footer .sub-total i.fa.fa-shopping-cart {
+    font-size: 2.25rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Waiver Unsigned */
+#footer .waiver-alert, #footer .notes-alert {
+    text-transform: uppercase;
+    color: #eee;
+    font-size: .8em;
+    margin: 15px 0 0 0;
+    padding: 0 0 0 30px;
+}
+#footer .notes-alert{
+
+}
+#footer .waiver-alert span {
+    padding-left: 5px;
+}
+#footer .waiver-alert a,#footer .notes-alert a  {
+    color: #fff;
+}
+/* Modal table
+-------------------------------------------------- */
+#footer th {
+    border: none;
+}
+/* Progress bar
+-------------------------------------------------- */
+.p-container .progress {
+    height: 10px;
+    border-radius: 8px;
+    width: 50%;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    background-color: #515151;
+}
+.p-container .progress-bar-sz {
+    background-color: #fd732b;
+}
+.p-container {
+    position: relative;
+    height: 4rem;
+}
+.p-container .progress {
+    
+}
+/* Previous & Next Navigation
+-------------------------------------------------- */
+#footer .nav-container {
+    margin: -5px -25px 0;
+    text-align: center;
+}
+#footer .nav-container a {
+    color: #fafafa;
+}
+#footer .nav-container .prev {
+    border-right: 1px solid #565656;
+    height: 4rem;
+    line-height: 4rem;
+}
+#footer .icon-left {
+    line-height: normal;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 30px;
+    font-size: 4rem;
+    margin-top: -15px;
+}
+#footer .nav-container .next {
+    height: 4rem;
+    line-height: 4rem;
+}
+#footer .icon-right {
+    line-height: normal;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 30px;
+    font-size: 4rem;
+    margin-top: -15px;
+}
+#footer .text {
+    line-height: normal;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 1.2rem;
+    margin-top: -10px;
+}
+
+/*#footer .nav-container span {
+    top: 40%;
+    position: relative;
+    margin: 0 auto;
+    font-size: 1.2rem;
+}*/
+
+/* table */
+.table-fixed {
+    margin: 0px;
+}
+.table-fixed thead {
+    width: 100%;
+}
+.table-fixed tbody {
+    height: 320px;
+    overflow-y: auto;
+    width: 100%;
+}
+.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+    display: block;
+}
+.table-fixed tbody td, .table-fixed thead > tr> th {
+    float: left;
+    border-bottom-width: 0;
+}
+
+
+
+/* num keypad css */
+
+.square-container {
+    display: block;
+    margin: 0 0 0 10%;
+    width: 275px;
+}
+.square-box{
+    float: left;
+    position: relative;
+   /* width: 32%;*/
+    width: 85px;
+    overflow: hidden;
+    background: coral;
+    margin-right: 1%;
+    margin-bottom: 1%;
+
+}
+.square-box:before{
+    content: "";
+    display: block;
+    padding-top: 98%;
+}
+.square-content{
+    position:  absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+}
+.square-content div {
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+.square-content span {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    color: white;
+    cursor: pointer;
+    font-size: 1.8em;
+}
+
+
+/* Tables 
+-------------------------------------------------- */
+.section-rows label {
+    width: 100%;
+    font-weight: 100;
+}
+div.single-panel table .section-rows td {
+    border-top: 0px;
+}
+.single-panel th.active-header {
+    padding: 8px 6px 0px;
+}
+
+.table > tbody + tbody.section-rows {
+    border-top: none;
+}
+
+
+/* 
+--------------------------------------------------
+--------------------------------------------------
+            Start 
+--------------------------------------------------
+-------------------------------------------------- */
+#start .config {
+    padding: 10px 20px;
+    /*background: #e5e5e5;*/
+    border-bottom: 1px solid #dadada;
+}
+#start .config a {
+    color: #333;
+}
+#start .guest-email {
+    top: 215px;
+    z-index: 1;
+}
+.guest-email input {
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 3px;
+    font-weight: 100;
+}
+#start .circle-xl {
+    background-color: #f4f4f4;
+    /* border-radius: 50%; */
+    width: 250px;
+    height: 250px;
+    top: 30px;
+    border: 1px solid #E1E1E1;
+    margin: 0 20px;
+}
+#start .circle-txt {
+    line-height: 9em;
+    font-size: 24px;
+}
+#start .square-xl {
+    background: #f4f4f4;
+    border-radius: 5px;
+    width: 250px;
+    height: 250px;
+    top: 30px;
+    border: 1px solid #E1E1E1;
+    margin: 0 20px;
+    transition: background-color .15s ease-out;
+}
+#start .square-xl:hover {
+    background-color: #FD732B;
+    transition: background-color 0.15s ease;
+    color: #fff;
+}
+#start .square-xl a:hover {
+    text-decoration: none;
+}
+#start .square-xl:hover a {
+    color: #fff;
+}
+#start .square-txt {
+    line-height: 9em;
+    font-size: 24px;
+}
+
+#myConfig .modal-lg {
+    width: 100%;
+    padding: 0 25px;
+}
+/* 
+--------------------------------------------------
+--------------------------------------------------
+            Activity 
+--------------------------------------------------
+-------------------------------------------------- */
+
+#activity h3 {
+    color: #333;
+}
+#activity .h4 {
+    vertical-align: middle;
+    line-height: 50px;
+    margin: 24px 0px 0px 0px;
+    line-height: 20px;
+    font-size: 110%;
+}
+#activity .date-container {
+    text-transform: uppercase;
+}
+#activity .date-container span {
+    font-weight: bold;
+}
+#activity .date-container .fa-caret-right {
+    color: #FD732D;
+    margin: 0 5px;
+}
+#activity .date-container span.dark {
+    color: #333;
+    font-weight: 600;
+}
+#activity span.date {
+     font-weight: inherit;
+}
+#activity .date-icon {
+    background: #ddd;
+    padding: 8px 10px;
+    border-radius: 3px;
+    font-size: 1.4rem;
+    margin-left: 10px;
+    color: #333;
+    display: inline-flex;
+}
+#activity .head_section {
+    background-color: #dfdfe0;
+}
+
+#activity .main_section {
+    background-color: transparent;
+    height: 250px;
+    position: relative;
+    top: -67px;
+    /*background-color: #eeeeee;
+    height: 250px;*/
+}
+#activity .placeholder {
+    margin: 110px auto 0;
+    display: table;
+    text-align: -webkit-center;
+    color: #cccccc;
+}
+#activity .placeholder img {
+    width: 60%;
+}
+
+#activity .single-panel {
+    background: #ebebeb;
+    padding: 20px 0 30px 15px;
+    margin: -20px -30px 0 0;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px #c2c2c2;
+    height: 470px;
+}
+#activity .single-panel.last {
+    margin-right: 0px;
+} 
+#activity span.ticket {
+    float: right;
+    margin-right: 20px; 
+    font-weight: 400;
+    font-size: .85em;
+    text-transform: uppercase;
+}  
+
+/* Use .inactive to toggle the  1,2,3 panels on time/activity page  */
+#activity .single-panel.inactive {
+    background: transparent;
+    box-shadow: none;
+}
+#activity .single-panel .row {
+    margin-right: 0;
+}
+
+#activity .table-scroll {
+    overflow: auto;
+    height: 380px;
+}
+#activity #one .table-scroll {
+    display: inline;
+}
+/* Sample Animation for activity panel */
+
+.panel-show-hide {
+    -moz-box-shadow:     0 1px 3px #c2c2c2;
+    -webkit-box-shadow:  0 1px 3px #c2c2c2;
+    box-shadow: 0 1px 3px #c2c2c2;
+
+    border-radius: 2px;
+    background:#f9f9f9;
+
+   /* -webkit-transition:all linear 0.5s;
+    transition:all linear 0.5s;*/
+}
+
+.panel-show-hide.ng-hide {
+    opacity:0;
+}
+
+
+#activity .circle {
+    padding: 2pt;
+    margin: 15pt 5pt;
+    width: 20pt;
+    height: 20pt;
+    border-radius: 50%;
+    font-size: 10pt;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+    background: darkgray;
+    float: left;
+}
+
+#activity label {
+    height: 3em;
+}
+#activity  input.radio:empty ~ label {
+    line-height: 3em;
+}
+#activity .icon-right {
+    line-height: 3rem;
+    font-size: 2.3rem;
+    /*right: 25px;*/
+    position: relative;
+}
+
+
+#activity .selector-row{
+    padding: 2px 0px 2px 0px;
+    margin: 0 auto;
+}
+
+#activity .selector-row div{
+    padding: 0px 0px 0px 0px;
+    margin: 0 auto;
+}
+
+#activity .selector-row div.anchor{
+    padding: 0px 0px;
+    height: 60px;
+}
+
+#activity label .selector-row  .minutes {
+    padding-left: 3.3em;
+    line-height: 2.65em;
+}
+#activity label .selector-row div .qty {
+    padding: 4px 0 0;
+}
+
+#activity #input-quantity {
+    border-radius: 3px;
+    width: 36px;
+    height: 100%;
+    line-height: 34px;
+    border: 1px solid #ccc;
+    background-color: transparent;
+    box-shadow: none;
+    font-weight: 500;
+    text-align: center;
+    font-size: 16px;
+    padding: 0px;
+    margin: 0 auto;
+    display: block;
+
+}
+
+#activity .price, .lead p {
+    font-weight: 600;
+    font-size: 16px;
+    display: block;
+    margin: 0 auto;
+    line-height: 2.65em;
+    color: #0ea22a;
+    /*text-align: center;*/
+}
+
+#activity a.great {
+    background-color: #c3c3c3;
+    margin: 4px;
+    padding: 2px 8px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 2px;
+    width: 30px;
+    height: 30px;
+    display: block;
+}
+
+/* 
+--------------------------------------------------
+--------------------------------------------------
+            Guest 
+--------------------------------------------------
+-------------------------------------------------- */
+
+#guest h3 {
+    color: #333;
+}
+/* input overrides for guest screen */
+#guest select, input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="month"], input[type="week"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], input[type="color"], textarea {
+    height: 3rem;
+    font-size: 1.2rem;
+    padding: 0.8rem;
+    border-color: #ddd;
+    border-radius: 3px;
+    font-weight: 100;
+}
+#guest .guest-container {
+    margin-top: 75px;
+}
+#guest .order-label {
+    line-height: 2.5;
+    font-size: 1rem;
+    color: #737373;
+}
+#guest .band {
+    background-color: #e4e4e4;
+    border-radius: 3px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 35px;
+}
+#guest i.fa {
+    margin-right: 10px;
+}
+
+
+/* 
+--------------------------------------------------
+--------------------------------------------------
+            Jumpers 
+--------------------------------------------------
+-------------------------------------------------- */
+#jumper *:focus {
+    outline: none;
+}
+#jumper a {
+   outline: 0;
+}
+#jumper h3 {
+    color: #333;
+}
+
+#jumper table.table {
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #DDDDDD;
+    border-top-style: solid;
+    border-top-width: 2px;
+    border-top-color: #Ddd;
+}
+#jumper thead tr th {
+    vertical-align: middle;
+    line-height: 40px;
+    background-color: #e3e3e3;
+    font-weight: 600;
+    font-size: 1.15em;
+}
+#jumper td {
+    vertical-align: middle;
+}
+#jumper .img-jumper {
+    max-width: 50px;
+    max-height: 50px;
+    margin-left: 10%;
+    margin-right: 0px;
+}
+#jumper .waiver-active {
+    color: #1BC130;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+#jumper .waiver-inactive {
+    padding: 0px 6px;
+    background: #C12828;
+    position: absolute;
+    height: 32px;
+    margin: -1px 0 0 5px;
+    line-height: 30px;
+    border-radius: 0px 3px 2px 0px;
+}
+#jumper .waiver-pending {
+    padding: 0px 6px;
+    background: #C5863A;
+    position: absolute;
+    height: 32px;
+    margin: -1px 0 0 5px;
+    line-height: 30px;
+    border-radius: 0px 3px 2px 0px;
+}
+
+#jumper .cell-combo {
+    max-width: 190px;
+    line-height: 1em;
+    padding: 8px 0;
+}
+    #jumper .cell-combo .dropdown {
+    margin-top: -2px;
+    }
+
+#jumper i.fa.fa-trash {
+    font-size: 1.6em;
+    color: #656565;
+}
+/* Jumper modal 
+--------------------------------------------------*/
+#jumper .hd-new {
+    color: #FB7337;
+    font-size: 1.5em;
+}
+#jumper .hd-exist {
+    color: #333;
+    font-size: 1.5em;
+}
+.jumper-modal .order-label {
+    font-size: 1rem;
+    color: #737373;
+}
+.jumper-modal .band {
+    background-color: #e4e4e4;
+    border-radius: 3px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 35px;
+}
+ .jumper-modal i.fa {
+    margin-right: 10px;
+}
+.jumper-modal a {
+    padding: 10px 10px;
+}
+/*  Jumper yes/no toggle switch
+--------------------------------------------------*/
+#jumper .switch-sz {
+    background-color: #DCDCDC;
+    border-radius: 2px;
+    box-shadow: none;
+    color: #fff;
+}
+#jumper .switch-sz label {
+      color: #fff; }
+    #jumper .switch-sz > span span {
+      opacity: 0;
+      margin-left: 7.1875em;
+      -webkit-transition: all 0.1s;
+      -moz-transition: all 0.1s;
+      transition: all 0.1s; }
+      #jumper .switch-sz > span span:first-of-type {
+        opacity: 1; }
+    #jumper .switch-sz > span span, #jumper .switch-sz input + label {
+      font-size: 85%;
+      line-height: 2.15625em; }
+    #jumper .switch-sz a {
+      background-color: #FD732B;
+      border-radius: 2px;
+      box-shadow: none;}
+    #jumper .switch-sz.switch-light input:checked ~ a {
+      background-color: #0E88B1; }
+    #jumper .switch-sz.switch-light input:checked ~ span span:first-of-type {
+      opacity: 0; }
+    #jumper .switch-sz.switch-light input:checked ~ span span:last-of-type {
+      opacity: 1; }
+    #jumper .switch-sz.switch-toggle, #jumper .switch-sz > span span {
+      text-transform: uppercase; }    
+
+/* 
+--------------------------------------------------
+--------------------------------------------------
+            Waiver 
+--------------------------------------------------
+-------------------------------------------------- */
+.waiver-header {
+    margin-left: -15px;
+    margin-right: -15px;
+    background: #ECECEC;
+    margin-top: -8px;
+    border-bottom: 1px solid #ddd;
+    padding: 5px 20px 10px;
+}
+.waiver-steps {
+    display: block;
+    margin-left: -15px;
+    margin-right: -15px;
+    padding: 5px 0px 25px;
+}
+.waiver-footer {
+    background: #ECECEC;
+    margin-left: -15px;
+    margin-right: -15px;
+    margin-bottom: -35px;
+    padding: 10px 20px 10px;
+    height: 70px;
+    border-top: 1px solid #ddd;
+}
+
+/* 
+--------------------------------------------------
+--------------------------------------------------
+            Offers 
+--------------------------------------------------
+-------------------------------------------------- */
+
+#offers h3, #offers h4 {
+    color: #333;
+}
+#offers .items {
+    padding: 0px 2%;
+}
+
+#offers .table-th {
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #ccc;
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-top-color: #ccc;
+    padding: 4px 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+#offers .item-row {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+#offers .item-img {
+    display: block;
+    float: left;
+    padding-right: 30px;
+}
+#offers .item-detail {
+    display: block;
+}
+#offers .item-title {
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #333;
+}
+#offers .item-desc {
+    font-size: 0.8em;
+    display: block;
+    margin: -3px 0 0 0;
+}
+#offers .qty {
+    display: inline-flex;
+    margin: 0 auto;
+}
+
+#offers .minus {
+    background-color: #0274d6;
+    font-size: 15px;
+    float: left;
+    margin: 10px 6px 0px 0px;
+    border-radius: 3px;
+    width: 34px;
+    height: 32px;
+    padding: 0px;
+}
+#offers .qty-input {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #c2c2c2;
+    border-radius: 3px;
+    float: left;
+    color: #999;
+    font-size: 18px;
+    font-weight: 100;
+    text-align: center;
+    line-height: 50px;
+}
+#offers .plus {
+    background-color: #0274d6;
+    font-size:15px;
+    float:left;
+    margin:10px 0px 0px 6px;
+    border-radius: 3px;
+    width:34px;
+    height:32px;
+    padding:0px
+}
+#offers .price {
+    font-size: 20px;
+    font-weight: 100;
+    color: #333;
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+#offers .action {
+    display: inline-flex;
+    margin: 0 0 0 -15px;
+}
+#offers .action .sk-btn {
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+#offers .table select {
+    color: #0374d5;
+    text-transform: uppercase;
+    font-size: 12px;
+    border: none;
+    border-radius: 3px;
+    min-width: 70px;
+}
+
+#offers .table.scroll {
+    height: 100%;
+    position: fixed;
+    overflow: auto;
+    width: 72%;
+    padding-left: 15px;
+    padding-right: 20px;
+    padding-bottom: 285px;
+    margin-top: -15px;
+    padding-top: 5px;
+    margin-left: -15px;
+}
+
+#offers .dropdown-menu {
+    border: none;
+    border-radius: 2px;
+}
+#offers .filters li a {
+    padding: 8px 20px;
+    margin-left: -5px;
+}
+#offers .dropdown-menu > li > a::before, .dropdown-menu > li > a::before {
+    content: "\f00c";
+    font-family: FontAwesome;
+    padding: 11px;
+    color: #ddd;
+    margin-left: -20px;
+    margin-right: 10px;
+}
+#offers .dropdown-menu > li > a:hover::before, .dropdown-menu > li > a:focus::before {
+    content: "\f00c";
+    font-family: FontAwesome;
+    background: #FD732B;
+    padding: 11px;
+    color: #fff;
+    margin-left: -20px;
+    margin-right: 10px;
+}
+#offers .dropdown-menu i {
+    color: #656565;
+}
+
+/* iPads (landscape fixes) ----------- */
+@media only screen and (max-width : 1250px) {
+    /*div#offers {
+    background: bisque;
+    }  */
+
+    #offers .item-detail {
+        display: block;
+        line-height: 10px;
+    }
+    #offers .item-title {
+        text-transform: uppercase;
+        font-weight: 600;
+        color: #333;
+        font-size: 12px;
+    }
+    #offers .item-desc {
+        font-size: 0.8em;
+        display: block;
+        margin: 5px 0 0 0;
+        line-height: 15px;
+    }
+    #offers .table select {
+        color: #0374d5;
+        text-transform: uppercase;
+        font-size: 12px;
+        border: none;
+        border-radius: 3px;
+        min-width: inherit;
+    }
+    #offers .action {
+        display: inline-flex;
+        margin: 0 0 0 -25px;
+    }
+    .action .sk-btn {
+        margin-left: 2px;
+        margin-right: 2px;
+    }
+    .btn-action-red {
+        padding: 10px 5px;
+    }
+    .btn-action-blue {
+        padding: 10px 5px;
+    }
+
+         
+}
+
+
+/* 
+--------------------------------------------------
+--------------------------------------------------
+            Payment 
+--------------------------------------------------
+-------------------------------------------------- */
+#payment {
+    color: #333;
+}
+#payment h3 {
+    color: #333;
+}
+#payment .btm-container {
+background-color: #D7D7D7;
+    bottom: 80px;
+    position: fixed;
+    width: 75%;
+    left: 0;
+    height: 125px;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+#payment thead {
+    border-top: 1px solid #ddd;
+    height: 40px;
+    width: 98%;
+}
+#payment .scroll {
+    height: 100%;
+    overflow-y: auto;
+    position: fixed;
+    padding-bottom: 415px;
+    width: 71%;
+}
+
+#payment .btm-container .fa {
+    margin-right: 5px;
+}
+#payment .footer-button {
+    width: 100%;
+    font-size: 12px;
+    height: 40px;
+    margin-bottom: 5px;
+    padding: 0px;
+}
+/* 
+--------------------------------------------------
+            Offers & Payment SIDEBAR 
+-------------------------------------------------- */
+
+#sidebar.sidebar {
+    background-color: #f3f3f3;
+    top: 90px;
+    bottom: 80px;
+    right: 0;
+    position: absolute;
+    border-left: 1px solid #ddd;
+    color: #333;
+    text-transform: uppercase;
+}
+
+#sidebar .scroll {
+    position: absolute;
+    height: 30%;
+    top: initial;
+    overflow: auto;
+    bottom: 150px;
+}
+
+#sidebar .payments, #sidebar .cart {
+    margin-left: -15px;
+}
+
+#sidebar .totals {
+    bottom: 80px;
+    padding: 10px 0 0 0px;
+    position: fixed;
+    border-top: 1px solid #dadada;
+    width: 25%;
+    margin-left: -15px;
+}
+#sidebar .totals .total {
+    border-top: 1px solid #E4E4E7;
+    padding-top: 5px;
+}
+#sidebar dl {
+    margin-bottom: -5px;
+    font-size: .95rem;
+}
+#sidebar .dl-horizontal dt {
+    width: 120px;
+    margin-left: 30px;
+    text-align: left;
+}
+#sidebar .dl-horizontal dd {
+    margin-left: 150px;
+}
+#sidebar .total dl.dl-horizontal dd {
+    color: #eb5202;
+}
+#sidebar .remaining dl.dl-horizontal dd {
+    color: #09BB09;
+}
+
+
+/* 
+--------------------------------------------------
+--------------------------------------------------
+            Bootstrap overrides 
+--------------------------------------------------
+-------------------------------------------------- */
+
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+/* removes padding on fluid container */
+.container-fluid {
+    padding: 0px;
+}
+
+/* buttons */
+button:hover, button:focus, .button:hover, .button:focus {
+    background-color: #0055b7;
+}
+
+/* 
+--------------------------------------------------
+--------------------------------------------------
+            Modal overrides 
+--------------------------------------------------
+-------------------------------------------------- */
+.modal  .modal-backdrop {
+    background-color: #686868;
+}
+.modal h2, .modal h3 {
+    color: #333;
+}
+.modal .modal-content {
+    border-radius: 2px;
+    box-shadow: none;
+}
+.modal .modal-footer,.modal-header {
+    background-color: #eee;
+}
+
+.modal input[type="text"], .modal input[type="password"], .modal input[type="date"], .modal input[type="datetime"], .modal input[type="datetime-local"], .modal input[type="month"], .modal input[type="week"], .modal input[type="email"], .modal input[type="number"], .modal input[type="search"], .modal input[type="tel"], .modal input[type="time"], .modal input[type="url"], .modal input[type="color"], .modal textarea {
+    height: 3.5rem;
+    font-size: 1.5rem;
+    padding: 0.8rem;
+    border-color: #ddd;
+    border-radius: 3px;
+    font-weight: 300;
+    color: #333;
+    box-shadow: none;
+    text-align: center;
+
+}
+
+.modal .outputtext{
+    font-size: 2.2em;
+    line-height: 1em;
+    float: right;
+    color: #999;
+}
+
+.modal .sub-text {
+    padding-right: 0px;
+    font-size: 12px;
+    font-weight: 600;
+    float: right;
+    text-transform: uppercase;
+}
+.modal .side-text {
+    padding-right: 5px;
+    line-height: 2.5em;
+    color: #888;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+.modal .btn-modal {
+    border-radius: 2px;
+    border-color: #ddd;
+    width: 188px;
+    height: 55px;
+    text-transform: uppercase;
+    color: #888;
+    font-size: 1.2em;
+    font-weight: 300;
+}
+
+/*--------PAYMENT PAGE --------*/
+#payment .modal .modal-footer {
+    padding: 15px;
+    text-align: right;
+    border-top: 1px solid #e5e5e5;
+    margin: 0 -15px -15px;
+}
+.modal i.fa {
+    margin-right: 5px;
+}
+.modal .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, .15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+
+    width: 190px;
+}
+.modal .close:hover, .modal .close:focus {
+    background-color: transparent;
+}

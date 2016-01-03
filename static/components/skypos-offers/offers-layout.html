@@ -1,0 +1,316 @@
+<div class="container-fluid" id="offers">
+    <style type="text/css">
+    /* select filter - main top section */
+     ul {
+        list-style: none;
+    }
+
+    .menu > li, .menu > div > li {
+        float: left;
+    }
+    .menu button {
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+    }
+    .menu button:hover,
+    .menu button:focus {
+        outline: 0;
+    }
+
+    .submenu {
+        display: none;
+        
+        list-style-type: none;
+        margin-left: 0;
+        position: absolute;
+        z-index: 1000;
+        background-color: #F2F2F2;
+        padding: 0.625rem 0.3125rem;
+        -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+        background-clip: padding-box;
+        margin: 2px 0 0;
+        font-size: 14px;
+        text-align: left;
+        list-style: none;
+        float: left;
+        min-width: 160px;
+        border: none;
+        border-radius: 2px;
+        line-height: 3;
+        
+    }
+    .menu button:focus + .submenu,
+    .submenu:hover {
+        display: block;
+    }
+
+    .submenu li a {
+        padding: 8px 20px;
+        margin-left: -5px;
+        text-decoration: none;
+    }
+    .submenu > li > a::before, .sub-menu > li > a::before {
+        content: "\f00c";
+        font-family: FontAwesome;
+        padding: 11px;
+        color: #ddd;
+        margin-left: -20px;
+        margin-right: 10px;
+    }
+
+    .submenu > li > a:hover::before, .submenu > li > a:focus::before {
+        content: "\f00c";
+        font-family: FontAwesome;
+        background: #FD732B;
+        padding: 11px;
+        color: #fff;
+        margin-left: -20px;
+        margin-right: 10px;
+    }   
+
+    /* table with content list */
+    .table.scroll {
+        border-top: 1px dotted #C7C7C7;
+    }
+    .flex-align {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .item-img img {
+        height: 75px;
+    }
+    #offers .item-img {
+        display: block;
+        float: left;
+        padding-right: 30px;
+        min-width: 100px;
+        min-height: 40px;
+        max-width: 160px;
+        max-height: 80px;
+    }
+    #offers .options {
+        background: #E2E2E2;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #ccc;
+    }
+    #offers .offer-label {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 18px;
+    }
+    #offers .item-row {
+        border-bottom: 0px solid #ccc;
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+    #offers .minus, #offers .plus {
+        margin-top: 0px;
+    }  
+    #offers .item-desc-limit {
+        max-height: 60px;
+        word-wrap: break-word;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }  
+    button.disabled, button[disabled], .button.disabled, .button[disabled] {
+        background-color: #FBA376;
+        border-color: #eb5202;
+        color: #FFFFFF;
+        cursor: default;
+        opacity: 0.7;
+        box-shadow: none;
+    }
+    </style>
+    <div class="row">
+        <div class="col-md-9 items">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Additional Offers</h3>
+                </div>
+            </div>
+            <div class="row filters">
+                <ul class="menu">
+                    <li>
+                        <button class="btn btn-default btn-none">{{ getCategoryName(parentCategory) }} <span class="caret"></span></button>
+                        <ul class="submenu" >
+                            <li ng-repeat="category in catalog.categories">
+                                <a ng-click="setParentCategory(category)">{{category.name}}</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <div ng-if="enableChildren(parentCategory)">
+                        <li><i class="fa fa-chevron-right ml20 mr20" style="padding: 13px 0 0;"></i></li>
+                        <li>
+                            <button class="btn btn-default btn-none">{{ getCategoryName(childCategory) }} <span class="caret"></button>
+                            <ul class="submenu" ng-show="viewCategory && viewCategory.childCategories">
+                                <li ng-repeat="cc in viewCategory.childCategories">
+                                    <a ng-click="setChildCategory(cc)">{{ cc.name }}</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </div>
+                    <div ng-if="enableChildren(childCategory)">
+                        <li><i class="fa fa-chevron-right ml20 mr20" style="padding: 13px 0 0;"></i></li>
+                        <div class="3-category" ng-if="enableChildren(childCategory)">
+                            <button class="btn btn-default btn-none">{{ getCategoryName(grandChildCategory) }}  <span class="caret"></span></button>
+                            <li ng-repeat="cc in viewCategory.grandChildCategories">
+                                <a ng-click="setGrandChildCategory(cc)">{{ cc.name }}</a>
+                            </li>
+                        </div>
+                    </div>
+                </ul>
+            </div>
+
+                <!--<div class="1-category pull-left">
+                    <div class="btn-group">
+                      <a type="button" class="btn-none btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ getCategoryName(parentCategory) }} <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu" style="display:block">
+                        <li ng-repeat="category in catalog.categories">
+                            <a ng-click="setParentCategory(category)">{{category.name}}</a>
+                        </li>
+                      </ul>
+                    </div>
+                    <i class="fa fa-chevron-right ml20 mr20"></i>
+                </div> 
+                <div class="2-category pull-left" ng-if="enableChildren(parentCategory)">
+                    <div class="btn-group">
+                      <a type="button" class="btn-none btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ getCategoryName(childCategory) }} <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu" ng-show="viewCategory && viewCategory.childCategories" style="display:block">
+                        <li ng-repeat="cc in viewCategory.childCategories">
+                            <a ng-click="setChildCategory(cc)">{{ cc.name }}</a>
+                        </li>
+                      </ul>
+                    </div>
+                    <i class="fa fa-chevron-right ml20 mr20"></i>
+                </div>
+                <div class="3-category" ng-if="enableChildren(childCategory)">
+                    <a type="button" class="btn-none btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ getCategoryName(grandChildCategory) }} <span class="caret"></span>
+                      </a>
+                </div>
+            </div>-->
+            <!-- <div class="row">
+                <div class="col-sm-2" ng-repeat="category in catalog.categories">
+                    <button type="button" class="sk-btn btn-blue" ng-click="setViewCategory(category)">{{category.name}}</button>
+                </div>
+                <div class="col-sm-2 pull-right">
+                    <div class="form-group">
+                      <select class="form-control" id="color">
+                        <option value="" selected disabled>Apparel</option>
+                        <option>Option2</option>
+                        <option>Option3</option>
+                        <option>Option3</option>
+                        <option>Option4</option>
+                      </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-show="viewCategory && viewCategory.childCategories">
+                <div class="col-sm-2" ng-repeat="cc in viewCategory.childCategories">
+                    <button type="button" class="sk-btn btn-blue" ng-click="setViewCategory(cc)">{{cc.name}}</button>
+                </div>
+            </div> -->
+            <div class="row">
+                <div class="col-sm-12 mt20">
+                    <!-- <div class="row table-th">
+                        <div class="col-sm-4">ITEM</div>
+                        <div class="col-sm-1 text-center">COLOR</div>
+                        <div class="col-sm-1 text-center">SIZE</div>
+                        <div class="col-sm-2 text-center">QTY</div>
+                        <div class="col-sm-2 text-center">PRICE</div>
+                        <div class="col-sm-2">&nbsp;</div> 
+                    </div>-->
+                    <div class="table scroll">                        
+                        <div class="row item-row" ng-repeat-start="product in viewCategory.products">
+                            <div class="col-sm-4">
+                                <!-- <img ng-show="product.image != null" ng-src="{{product.image}}" alt="Skyzone tee" style="width:50px;height:50px;" />&nbsp;&nbsp; {{product.name}} -->
+                                <div class="item-img">
+                                    <img ng-src="{{ product.image }}" />
+                                </div>
+                                <div class="item-detail">
+                                    <span class="item-title">{{product.name}}</span>
+                                    <span class="item-desc item-desc-limit">{{ product.description }}</span>
+                                </div>
+                            </div>
+                            <!-- <div class="col-sm-1">
+                                <div class="form-group mt10">
+                                  <select class="form-control" id="color">
+                                    <option value="" selected disabled>Select</option>
+                                    <option>Black</option>
+                                    <option>White</option>
+                                    <option>Orange</option>
+                                    <option>Blue</option>
+                                  </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <div class="form-group mt10">
+                                  <select class="form-control" id="size">
+                                    <option value="" selected disabled>Select</option>
+                                    <option>S</option>
+                                    <option>M</option>
+                                    <option>L</option>
+                                    <option>XL</option>
+                                  </select>
+                                </div>
+                            </div> -->
+                            <div class="col-sm-5">
+                                <div class="" ng-show="order.status=='In Progress'">
+                                    <div class="price text-center offer-label">Quantity</div>
+                                    <div class="flex-align mt10">
+                                        <button type="button" class="sk-btn btn-blue minus" ng-click="decrementViewQuantity(product)"><i class="fa fa-minus"></i></button>
+                                        <div class="qty-input" ng-bind="product.viewQuantity"></div>
+                                        <button type="button" class="sk-btn btn-blue plus" ng-click="incrementViewQuantity(product)"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="price text-center offer-label">Price/Unit</div>
+                                <div class="price mt10 text-center" ng-bind="product.pricingAndTaxInfo.effectivePrice|currency"></div>
+                            </div>
+                            <!-- <div class="col-sm-2">
+                                <div class="action">
+                                    <button type="button" class="sk-btn btn-action-lightblue mt10" ng-click="addToOrder(product)">Add</button>
+                                    <button type="button" class="sk-btn btn-action-red mt10" >Remove</button>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="row item-row options" ng-repeat-end>
+                            <div class="col-sm-1 mt10">
+                                <span class="offer-label">
+                                Options:
+                                </span>
+                            </div>
+                            <div class="col-sm-2" ng-repeat="attr in product.attributes">
+                                <div class="form-group mt10">
+                                  <select ng-model="attr.viewSelect" ng-change="attSelected(product,attr)" class="form-control" id="color">
+                                    <option value="" selected disabled>{{ attr.name }}</option>
+                                    <option ng-repeat="value in attr.values">{{ value.value }}</option>
+                                  </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 pull-right">
+                                <div class="action">
+                                    <button type="button" class="sk-btn mt10" ng-click="addproductToOrder(product)" ng-disabled="!productFullySelected(product)"
+                                    ng-hide="order.status!='In Progress'">Add To Order</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 sidebar" id="sidebar">
+            <skypos-order-summary order="order"></skypos-order-summary>
+        </div>
+    </div>
+</div>
+
+<sze-footer-navigation order="order" next="goToPaymentScreen" prev="goToJumpersScreen" next-label="Payment" prev-label="Jumpers" current="'offers'"></sze-footer-navigation>

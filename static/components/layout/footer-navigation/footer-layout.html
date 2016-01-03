@@ -1,0 +1,46 @@
+<footer id="footer">
+    <div class="container-fluid">
+        <div class="col-sm-2">
+            <div class="sub-total">
+                <div class="col-sm-8">
+                    <span class="title">Sub Total</span>
+                    <span class="total" ng-bind="getOrderAmount(order)|currency">=</span>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-shopping-cart"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="waiver-alert text-center" style="float:left;cursor:pointer" ng-click="goToJumpersScreen()">
+                <a ng-href="" class="btn " ng-class="getStatusClass()" ng-bind="numUnsigned()"></a>
+                <span>Unsigned</span>
+            </div>
+            <div class="notes-alert text-center" style="float:right">
+                <a ng-show="showNotesButton()" ng-href="" data-toggle="modal" ng-click="showOrderNotes()" class="btn btn-info"><i class="fa fa-file-text-o"></i></a>
+            </div>
+        </div>
+        <div class="col-sm-3 p-container">
+            <div class="progress">
+                <div class="progress-bar progress-bar-sz" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" ng-style="{'width': progressPercentage()}">
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="nav-container" style="color:white;">
+                    <div class="col-sm-6 prev" ng-click="prev()" style="cursor:pointer;">
+                        <span class="icon-left">
+                                <i class="fa fa-angle-left"></i>
+                            </span>
+                        <span class="text" ng-bind="prevLabel"></span>
+                    </div>
+                    <div class="col-sm-6 next" ng-click="next()" style="cursor:pointer;">
+                        <span class="text" ng-bind="nextLabel"></span>
+                        <span class="icon-right">
+                                <i class="fa fa-angle-right"></i>
+                            </span>
+                    </div>
+            </div>
+        </div>
+    </div>
+</footer>

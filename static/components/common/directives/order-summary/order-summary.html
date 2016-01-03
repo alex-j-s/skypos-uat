@@ -1,0 +1,116 @@
+<div class="dog col-md-offset-0 col-md-12 col-lg-offset-2 col-lg-10">
+    <div class="text-center mt30">
+        <button ng-show="orderInProgress() && !orderCancelled()" type="button" class="sk-btn btn-red" ng-click="cancelOrder()">CANCEL TRANSACTION</button>
+        <button ng-show="orderPurchased()" type="button" class="sk-btn btn-red" ng-click="refundOrder()">REFUND ORDER</button>
+    </div>
+    <div class="mt30">
+        <div class="cart">
+            <dl class="dl-horizontal">
+                <dt>STATUS: </dt>
+                <dd>{{ order.status }}</dd>
+            </dl>
+        </div>
+        <hr />
+        <div class="cart">
+            <div ng-repeat="lineItem in order.orderItems">
+                <dl class="dl-horizontal">
+                  <dt>{{ lineItem.product.name }}</dt>
+                  <dd>{{ lineItem.itemSubTotal | currency }}</dd>
+                </dl>
+            </div>
+        </div>
+        <hr/>
+        <div class="payments" ng-repeat="payment in existingPayments">
+            <div>
+                <dl class="dl-horizontal">
+                  <dt>{{ payment.recordType.name }}</dt>
+                  <dd>{{ payment.amount | currency }} <i ng-show="orderInProgress()" class="fa fa-times" ng-click="removePayment(order.id,payment.id)"></i></dd>
+                </dl>
+                <!-- <dl ng-if="payment.creditCardNumber != null" class="pull-right">
+                    <dd>{{ payment.creditCardNumber }}</dd>
+                </dl> -->
+            </div>
+        </div>
+        <div class="payments" ng-if="order.discountAmount != null">
+            <div>
+                <dl class="dl-horizontal">
+                  <dt>DISCOUNT</dt>
+                  <dd>{{ order.discountAmount | currency }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="totals">
+        <div>
+            <dl class="dl-horizontal">
+              <dt>Sub Total</dt>
+              <dd>{{ order.orderAmount | currency }}</dd>
+            </dl>
+        </div>
+        <div>
+            <dl class="dl-horizontal">
+              <dt>Sales Tax</dt>
+              <dd>{{ order.taxAmount | currency }}</dd>
+            </dl>
+        </div>
+        <div class="total">
+            <dl class="dl-horizontal">
+              <dt>Total</dt>
+              <dd>{{ order.totalOrderAmount | currency }}</dd>
+            </dl>
+        </div>
+        <div class="remaining">
+            <dl class="dl-horizontal">
+              <dt>Remaining</dt>
+              <dd>{{ order.totalAmountDue | currency }}</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+<!-- <div class="panel panel-primary" style="border-radius:0px; padding: 0px;margin: 0px;">
+    <div class="panel-heading" style="background-color: white;border: 0px;">
+        <center><button type="button" class="sk-btn btn-red" style="margin-bottom: 0px;">CANCEL TRANSACTION</button></center>
+    </div>
+    <div class="panel-body" style="padding:0px; min-height: 200px; ">
+        <div style="padding:10px; background-color: white">
+                <table class="table table-fixed" >
+                <tbody style=" max-height: 280px; ">
+                    <tr ng-repeat="item in order.orderItems" >
+                        <td class="col-xs-6 panelCell" >{{ item.name }}</td>
+                        <td class="col-xs-6 panelCell text-right">{{item.unitPrice | currency}}</td>
+                    </tr>
+                </tbody>
+                </table>
+        </div>
+    </div>
+    <div class="panel-footer" style="padding:0px;">
+        <div style="padding:10px; background-color: white">
+        <table class="table">
+            <tbody>
+            <tr>
+                <td class="panelCell">SUB TOTAL</td>
+                <td class="panelCell"></td>
+                <td class="panelCell text-right">{{order.orderAmount | currency}}</td>
+            </tr>
+            <tr>
+                <td class="panelCell">SALES TAX</td>
+                <td class="panelCell"></td>
+                <td class="panelCell text-right">{{order.taxAmount | currency}}</td>
+            </tr>
+            <tr>
+                <td ><strong>TOTAL</strong></td>
+                <td ></td>
+                <td class="text-right"><strong>{{order.totalOrderAmount | currency}}</strong></td>
+            </tr>
+            <tr>
+                <td class="panelCell">REMAINING</td>
+                <td class="panelCell"></td>
+                <td class="panelCell text-right">{{order.totalAmountDue | currency}}</td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+</div> -->
+

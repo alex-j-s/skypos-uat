@@ -1,0 +1,18 @@
+<div class="row collapse increment-input"
+      ng-init="value = value || 1">
+  <div class="small-8 medium-6 columns">
+    <input sze-numbers-only min="1" type="text" ng-model="value">
+  </div>
+  <div class="small-2 medium-3 columns">
+    <a href="" class="button postfix numeric-increment"
+      ng-click="(value > 1) ? value = value-1 : '';">
+      <i class="fa fa-minus"></i>
+    </a>
+  </div>
+  <div class="small-2 medium-3 columns">
+    <a href="" class="button postfix numeric-increment"
+      ng-click="value = value + 1">
+      <i class="fa fa-plus"></i>
+    </a>
+  </div>
+</div>

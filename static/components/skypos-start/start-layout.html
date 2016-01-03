@@ -1,0 +1,101 @@
+<div class="container-fluid full-height full-width " style="" id="start">
+	<div class="col-xs-12 config">
+		<a href="" data-toggle="modal" data-target="#myConfig"><i class="fa fa-cog"></i> <span> Settings and Configuration</span></a>
+	</div>
+	<div class="row">
+		<div class="col-xs-3 col-xs-offset-3 text-center guest-email">
+            <input style="margin-left:25px;" placeholder="Guest Email" ng-model="searchCriteria.primaryGuestEmail" name="guestEmail" class="text-center" ng-show="SelectedPOS.label == 'Book Jump Time'"/>
+			<input style="margin-left:25px;" placeholder="Guest Email" ng-model="searchCriteria.primaryGuestEmail" name="guestEmail" class="text-center" ng-show="SelectedPOS.label == 'Event Coordinator'"/>
+		</div>
+	</div>
+	<div class="row flexcontainer nav-blocks">
+		<div class="text-center square-xl" style="cursor:pointer;" 
+			ng-class="{'col-xs-3': SelectedPOS.actions.length % 4 === 0, 'col-xs-4': SelectedPOS.actions.length % 3 === 0}"
+			ng-repeat="a in SelectedPOS.actions" 
+            ng-click="a.action()">
+			<a ng-href="" class="major-action square-txt" ng-bind="a.label"></a>
+		</div>
+	</div>
+	<div class="row flexcontainer nav-blocks">
+        <div class="col-md-3 col-sm-3">
+            <div class="band" style="margin-top:70px;">
+                <div class="col-xs-12 tet-center">
+                    <a ng-href="" ng-click="openSkybandModal()" class="sk-btn btn-orange btn-xl"><i class="fa fa-circle-o-notch"></i> SCAN SKYBAND</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-3">
+            <div class="band" style="margin-top:70px;">
+                <div class="col-xs-12 tet-center">
+                    <a ng-href="" ng-click="openBarCodeModal()" class="sk-btn btn-orange btn-xl"><i class="fa fa-barcode"></i> SCAN RECEIPT</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-3">
+            <div class="band" style="margin-top:70px;">
+                <div class="col-xs-12 text-center">
+                    <a ng-href="" ng-click="handleClockInOut()" class="sk-btn btn-orange btn-xl"><i class="fa fa-clock-o"></i> CLOCK IN/OUT</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Settings and Config Modal -->
+<div class="modal fade" id="myConfig" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Settings and Configuration</h4>
+      </div>
+      <div class="modal-body">
+          <span>Select POS Type : </span> <select ng-init="SelectedPOS = POSTypes[SelectedPOSType==null?0:SelectedPOSType.id-1]" ng-options="type.label  for type in POSTypes"  ng-model="SelectedPOS">
+      <option  value="">--- Select Pos Type ---</option>
+      </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="sk-btn btn-blue" data-dismiss="modal" ng-click="onSave()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reservations List Modal-->
+<div class="modal fade" id="reservationList" tabindex="-1" role="dialog" aria-labelledby="reservationModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="reservationModalLabel">Reservation List</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table" >
+                    <thead style="height: 40px;">
+                    <tr>
+                        <th class="col-xs-3"><b>NAME</b></th>
+                        <th class="col-xs-2"><b>DATE</b></th>
+                        <th class="col-xs-3"><b>NUMBER OF GUESTS</b></th>
+                        <th class="col-xs-2"><b>STATUS</b></th>
+                        <th class="col-xs-2"></th>
+                    </tr>
+                    </thead>
+                    <tbody class="scroll">
+                    <tr ng-repeat="resObj in searchedGuest.reservation track by $index" >
+                        <td>{{searchedGuest.firstName + " " + searchedGuest.lastName }}</td>
+                        <td>{{resObj.startDate}}</td>
+                        <td>{{resObj.numberOfGuests}}</td>
+                        <td>{{resObj.status}}</td>
+                        <td style="vertical-align:middle;"> <button type="submit" class="sk-btn btn-blue btn-l" ng-click="openPaymentScreen(searchedGuest.id,resObj.id)">Complete</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- <sze-footer-navigation order="order"></sze-footer-navigation> -->
+

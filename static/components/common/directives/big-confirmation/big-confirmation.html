@@ -1,0 +1,13 @@
+<div class="big-conf-container">
+	<div class="big-conf">
+	<h1 ng-bind="confModel.title"></h1>
+	<p ng-bind="confModel.message"></p>
+	<div class="row">
+		<div class="col-6 pull-left">
+			<button ng-click="action($event, 'cancel')" class="btn btn-lg btn-default" ng-bind="confModel.cancel.label"></button>
+		</div>
+		<div class="col-6 pull-right">
+			<button ng-click="action($event, 'confirm')" class="btn btn-lg btn-earning" ng-bind="confModel.confirm.label"></button>
+		</div>
+	</div>
+</div>

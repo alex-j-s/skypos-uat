@@ -1,0 +1,120 @@
+$transition-speed: .5s !default;
+$transition-type: linear !default;
+
+@mixin browser-transitions($transition-speed: $transition-speed, $transition-type: $transition-type) {
+  transition: all $transition-speed $transition-type;
+  -webkit-transition:all $transition-speed $transition-type;
+  -moz-transition: all $transition-speed $transition-type;
+  -o-transition: all $transition-speed $transition-type;
+}
+
+@mixin hide-show-transition($transition-speed: $transition-speed, $transition-type: $transition-type) {
+  &.ng-hide-add,
+  &.ng-hide-remove {
+    @include browser-transitions($transition-speed, $transition-type);
+    opacity:0.5;
+  }
+
+  &.ng-hide-remove,
+  &.ng-hide-add.ng-hide-add-active {
+    opacity: 0;
+  }
+
+  &.ng-hide-add,
+  &.ng-hide-remove.ng-hide-remove-active {
+    opacity:1;
+  }
+}
+
+@mixin ng-if-transition($transition-speed: $transition-speed, $transition-type: $transition-type) {
+  &.ng-enter,
+  &.ng-leave,
+  &.ng-move {
+    @include browser-transitions($transition-speed, $transition-type);
+    opacity:0.5;
+  }
+
+  &.ng-enter,
+  &.ng-leave.ng-leave-active {
+    opacity: 0;
+  }
+
+  &.ng-leave,
+  &.ng-enter.ng-enter-active,
+  &.ng-move.ng-move-active {
+    opacity:1;
+  }
+
+  &.ng-move {
+    opacity: 0.5;
+  }
+}
+
+.not-available {
+  @include ng-if-transition(.15s, $transition-type);
+}
+
+.product {
+  @include ng-if-transition(.15s, $transition-type);
+}
+
+.alert-box {
+  @include hide-show-transition;
+  @include ng-if-transition;
+}
+
+#waiver-information {
+  @include hide-show-transition(.15s, $transition-type);
+}
+
+sze-cart-timer .top-bar,
+sze-greeting .top-bar {
+  @include ng-if-transition;
+}
+
+.reveal-modal {
+
+  &.fade {
+    @include browser-transitions(.2s, ease-out);
+    opacity: 0;
+  }
+
+  &.in {
+  opacity: 1;
+  }
+}
+
+.reveal-modal-bg {
+
+  &.fade {
+    opacity: 0;
+  }
+
+  &.in {
+    opacity: 1;
+  }
+}
+
+#billing-payment {
+
+  .card-added {
+    @include ng-if-transition(.15s, $transition-type);
+  }
+
+  #credit-card-form {
+    @include hide-show-transition(.15s, $transition-type);
+  }
+}
+
+@media #{$small-only}, #{$medium-only} {
+  .top-bar {
+    .top-bar-section > ul {
+      max-height: 0px;
+      overflow: hidden;
+      transition: max-height .5s ease-in-out;
+    }
+    &.expanded .top-bar-section > ul {
+      max-height: 500px;
+    }
+  }
+}

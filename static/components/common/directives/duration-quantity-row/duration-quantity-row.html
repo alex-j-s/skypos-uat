@@ -1,0 +1,76 @@
+
+        <div class="two">
+            <input type="checkbox" name="radio"  id={{'radio-'+index}} class="radio"  ng-checked="duration.isChecked" />
+
+            <label for="{{'radio-'+index}}" ng-click="handleRowClick($event)">
+                <div class=" row selector-row " style="margin-left: auto; width:100%; float:right; text-indent: 0px; margin: 0px;" >
+
+                    <div class="col-xs-5 minutes"><span ng-bind="duration.jumpDurationMinutes"></span> Min</div>
+                    <div class="col-xs-5" >
+                        <div class="row qty">
+
+                            <div class="col-xs-4 ">
+                                <a class="btn btn-subtract great inActive" style="float:right;" ng-click="onQuantityChange(false, $event)"> - </a>
+                            </div>
+
+                            <div class="col-xs-4">
+                                <input type="text" value="0" class="well digit" id="input-quantity" ng-value="duration.quantity" />
+                            </div>
+
+                            <div  class="col-xs-4">
+                                <a class="btn btn-add great inActive" ng-click="onQuantityChange(true, $event)"> + </a>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div style="">
+                            <input type="hidden" id="amount" class="form-control"/>
+                            <p class="price lead" id="amount-label">{{'$' + (duration.quantity*duration.pricingAndTaxInfo.effectivePrice)}}</p>
+                        </div>
+                    </div>
+                </div>
+            </label>
+
+        </div>
+
+<!-- 
+    <td style="padding: 0px; border-top:0px; width:100%">
+        <div>
+            <input type="checkbox" name="radio"  id={{'radio-'+index}} class="radio"  ng-checked="duration.isChecked">
+
+            </input>
+
+
+            <label for="{{'radio-'+index}}" style="height: 40px;" ng-click="handleRowClick($event)">
+                <div class=" row selector-row " style="margin-left: auto; width:100%; float:right; text-indent: 0px; margin: 0px;" >
+
+                    <div class="col-xs-5" style="padding-left: 3.3em;"><span ng-bind="duration.jumpDurationMinutes"></span> Minutes</div>
+                    <div class="col-xs-5" >
+                        <div class="row">
+
+                            <div class="col-xs-4 ">
+                                <a class="btn btn-subtract great inActive" style="float:right;" ng-click="onQuantityChange(false, $event)"> - </a>
+                            </div>
+
+                            <div class="col-xs-4">
+                                <input type="text" value="0" class="well digit" id="input-quantity" style="border-radius:3px; width:36px; height:100%; line-height: 34px " ng-value="duration.quantity" />
+                            </div>
+
+                            <div  class="col-xs-4">
+                                <a class="btn btn-add great inActive" style="float:left;" ng-click="onQuantityChange(true, $event)"> + </a>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div style="">
+                            <input type="hidden" id="amount" class="form-control"/>
+                            <p class="price lead" id="amount-label" style="width: 100%; line-height: 38px;">{{'$' + (duration.quantity*duration.pricingAndTaxInfo.effectivePrice)}}</p>
+                        </div>
+                    </div>
+                </div>
+            </label>
+
+        </div>
+    </td> -->

@@ -1,0 +1,120 @@
+
+
+label.Yes  {
+    width: 40px;
+    height: 2.3em;
+    margin: 0px;
+    border-radius: 5px 0 0 5px;
+}
+label.No {
+    width: 40px;
+    height: 2.3em;
+    margin: 0px;
+    border-radius: 0px 5px 5px 0px;
+}
+
+/* hide input */
+.radio-type1:empty {
+    margin-left: -999px;
+    display: none;
+}
+
+/* style label */
+.radio-type1:empty ~ label{
+    position: relative;
+    float: left;
+    line-height: 2.3em;
+    text-indent: 3.27em;
+    /*margin-top: 2em;*/
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+.radio-type1:empty ~ label.isYes:before {
+    position: absolute;
+    display: block;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    content: '';
+    width: 40px;
+    content:'YES';
+    border-radius: 2px 0 0 2px;
+}
+
+.radio-type1:empty ~ label.isNo:before {
+    position: absolute;
+    display: block;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    content: '';
+    width: 38px;
+    content:'NO';
+    border-radius: 0px 2px 2px 0px;
+}
+
+/* toggle hover */
+.radio-type1:not(:checked) ~ label:before {
+    /*content:'NO';*/
+    text-indent: .2em;
+    color: #C2C2C2;
+    background-color: whitesmoke;
+}
+
+.radio-type1:not(:checked) ~ label {
+    color: #888;
+    /*content: 'NO'*/
+}
+
+/* toggle on */
+.radio-type1:checked ~ label:before {
+    /*content:'YES';*/
+    text-indent: .2em;
+    color: white;
+    background-color: orange;
+}
+
+.radio-type1:checked ~ label {
+    /*color: #777;*/
+}
+
+
+/* radio focus */
+.radio-type1:focus ~ label:before {
+    /*box-shadow: 0 0 0 3px #999;*/
+}
+
+.select-style {
+    padding:0;
+    margin: 0px 5px ;
+    border: none;
+    width: 4em;
+    border-radius: 2px;
+    overflow: hidden;
+    background-color: #fff;
+    color: #0374d5;
+    background: #fff url("http://www.scottgood.com/jsg/blog.nsf/images/arrowdown.gif") no-repeat 90% 50%;
+}
+
+.select-style select {
+    padding: 5px 8px;
+    width: 130%;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    color: #0374d5;
+}
+
+.select-style select:focus {
+    outline: none;
+}
+

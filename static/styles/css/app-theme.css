@@ -1,0 +1,205 @@
+/* buttons */
+.sk-btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: none;
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+.btn-xl {
+    padding: 15px 25px;
+    font-size: 1.2rem;
+}
+.btn-wide {
+    padding: 10px 30px;
+}
+.btn-none {
+    background: transparent;
+    border: none;
+    color: #FD732B;
+    font-size: 1.3em;
+    text-transform: uppercase;
+}
+.btn-disabled {
+    color: #fff;
+    background-color: #b3b3b4;
+    border-color: #b3b3b4;
+}
+.btn-disabled:hover {
+    color: #fff;
+    background-color: #a8a8a8;
+    border-color: #a8a8a8;
+}
+.btn-blue {
+    color: #fff;
+    background-color: #0055b7;
+    border-color: #0055b7;
+}
+.btn-blue:hover {
+    color: #fff;
+    background-color: #286090;
+    border-color: #204d74;
+}
+.btn-red {
+    color: #fff;
+    background-color: #d56060;
+    border-color: #d56060;
+}
+.btn-red:hover {
+    color: #fff;
+    background-color: #CA474A;
+    border-color: #CA474A;
+}
+.btn-orange {
+    color: #fff;
+    background-color: #ff7832;
+    border-color: #ff7832;
+}
+.btn-orange:hover {
+    color: #fff;
+    background-color: #e16220;
+    border-color: #e16220;
+}
+.btn-yellow {
+    color: #fff;
+    background-color: #f4a649;
+    border-color: #DE953D;
+}
+.btn-yellow:hover {
+    color: #fff;
+    background-color: #E69F4C;
+    border-color: #E69F4C;
+}
+.btn-alert {
+    color: #fff;
+    background-color: #c51823;
+    border-color: #c51823;
+}
+.btn-alert:hover {
+    color: #fff;
+    background-color: #CA474A;
+    border-color: #CA474A;
+}
+.btn-action-blue {
+    border-radius: 2px;
+    padding: 12px 12px;
+    font-size: .7rem;
+    background-color: #0274D6;
+}
+.btn-action-blue:hover {
+    background-color: #075DA7;
+} 
+.btn-action-lightblue {
+    border-radius: 2px;
+    padding: 12px 12px;
+    font-size: .7rem;
+    background-color: #3ca0f6;
+}
+.btn-action-lightblue:hover {
+    background-color: #2f98f2;
+} 
+.btn-action-red {
+    border-radius: 2px;
+    padding: 12px 12px;
+    font-size: .7rem;
+    background-color: #e54c53;
+}
+.btn-action-red:hover {
+    background-color: #CE3C43;
+}
+
+
+
+/* 
+--------------------------------------------------
+--------------------------------------------------
+            Helper Classes
+--------------------------------------------------
+-------------------------------------------------- */
+
+.flexcontainer {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row /* works with row or column */ flex-direction: row;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+}
+.mt5 {
+    margin-top: 5px;
+}
+.mt10 {
+    margin-top: 10px;
+}
+.mt15 {
+    margin-top: 15px;
+}
+.mt20 {
+    margin-top: 20px;
+}
+.mt30 {
+    margin-top: 30px;
+}
+.mb5 {
+    margin-bottom: 5px !important;
+}
+.mb10 {
+    margin-bottom: 10px;
+}
+.mb15 {
+    margin-bottom: 15px;
+}
+.mb20 {
+    margin-bottom: 20px;
+}
+.mb30 {
+    margin-bottom: 30px;
+}
+.mtb10 {
+    margin: 10px 0;
+}
+.mtb15 {
+    margin: 15px 0;
+}
+.mtb20 {
+    margin: 20px 0;
+}
+.mtb30 {
+    margin: 30px 0;
+}
+.mr10 {
+    margin-right: 10px
+}
+.mr20 {
+    margin-right: 20px
+}
+.ml10 {
+    margin-left: 10px
+}
+.ml20 {
+    margin-left: 20px
+}
+
+.hr-sm {
+    border-top: 1px solid #ddd;
+    height: 1px;
+    width: 40%;
+    float: right;
+    margin: 15px 0;
+}

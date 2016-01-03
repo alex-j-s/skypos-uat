@@ -1,0 +1,346 @@
+<!doctype html>
+<html class="no-js">
+
+<head>
+    <meta charset="utf-8">
+    <title>EPIC SkyPOS</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="static/images/protofavi.png">
+    <!-- <link rel="apple-touch-startup-image" href="images/logo.png"> -->
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <!-- endbuild -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="static/styles/fonts/font-awesome-4.2.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="static/bower_components/angular-wizard/dist/angular-wizard.css">
+    <link rel="stylesheet" href="static/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="static/bower_components/bootstrap-select/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="static/styles/css/app.css"> 
+    <link rel="stylesheet" href="static/styles/css/app-theme.css">
+    <link rel="stylesheet" href="static/bower_components/toggle-switch/dist/toggle-switch.css">
+    <link rel="stylesheet" media="all" href="static/styles/css/custom.css" type="text/css">
+    <link rel="stylesheet" href="static/styles/css/skypos-activity-select-checkbox-styles.css">
+    <link rel="stylesheet" href="static/components/common/directives/jumperrow/jumperrow.css">
+
+    <style type="text/css">
+    html {
+       /* overflow: hidden;*/
+    }
+    body {
+        font-family: 'Open Sans', sans-serif;
+        color: #333;
+    }
+    *:focus {
+        outline: 0;
+    }
+    .nateandnolan {
+        background-size: 145%;
+        background-position: 50% 0%;
+        background-image: url(images/nateandnolan.jpg);
+    }
+    
+    .nateandnolan .guest-search label {
+        /*color:#ffffff;*/
+    }
+    
+    .info-req-exp {
+        position: fixed;
+        top: 0;
+        right: 1.9375rem;
+        z-index: 185;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: flex-end;
+        height: 75px;
+    }
+    
+    .get-started {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 66.7%;
+        right: 0;
+        background-color: #0055B7;
+        background-image: url(images/logo.png);
+        background-repeat: no-repeat;
+        background-position: 50% 1rem;
+        background-size: 94%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+    
+    .get-started .get-started-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin: 2rem;
+    }
+    
+    .guest-search {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 2rem 3rem 3rem;
+        box-shadow: #000 0px 0px 10px -2px;
+    }
+    
+    .main-form {
+        background-color: rgba(255, 255, 255, 0.85);
+        box-shadow: black 0px 0px 10px -2px;
+        width: 100%;
+        min-height: 400px;
+    }
+    
+    .big-conf-container {
+        background: rgba(255, 255, 255, 0.60);
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        top: 0;
+        left: 0;
+        z-index: 189;
+        justify-content: center;
+    }
+    
+    .big-conf {
+        background-color: white;
+        width: 60%;
+        height: 60%;
+        padding: 0.5rem 2rem 2rem;
+        box-shadow: rgba(0, 0, 0, 0.6) 0px 0px 10px -2px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .waiver-item {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        height:300px;
+    }
+    .ag-form{
+        padding-bottom:2em;
+    }
+    .band {
+        background-color: #e4e4e4;
+        border-radius: 3px;
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 15px;
+    }
+    #guest select{
+            padding-top: 0.6rem;
+            
+    }
+    </style>
+</head>
+
+<body ng-app="skyZoneApp">
+    <sze-big-confirmation></sze-big-confirmation>
+    <!-- Add your site or application content here -->
+    <div style="width:100%; /*position:fixed*/;top:0;bottom:0;display:flex;flex-direction:column;">
+        <!-- header -->
+        <sze-navigation></sze-navigation>
+        <!-- main content -->
+        <ng-view style="min-width:70%" autoscroll="true"></ng-view>
+        <!-- footer -->
+        
+
+          <!-- Unsigned Waiver Info -->
+            <!-- <div class="modal fade" id="unsignedwaiver" tabindex="-1" role="dialog" aria-labelledby="unsignedwaiver">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Unsigned Waivers</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="table-responsive">
+                      <table class="table">
+                        <tr>
+                            <th>Jumper</th>
+                            <th>Waiver Status</th>
+                        </tr>
+                        <tr>
+                            <td>John Doe</td>
+                            <td class="text-info"><i class="fa fa-spinner fa-spin mr10"></i> In Progress</td>
+                        </tr>
+                        <tr>
+                            <td>Jane Doe</td>
+                            <td class="text-danger"><i class="fa fa-exclamation-triangle mr10"></i> Inactive</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+    </div>
+    <!-- build:js(.) scripts/oldieshim.js -->
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.js"></script>
+    <![endif]-->
+    <!-- endbuild -->
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="static/bower_components/jquery/dist/jquery.js"></script>
+    <script src="static/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.dropdown-toggle').dropdown();
+        });
+    </script>
+    <script src="static/bower_components/angular/angular.js"></script>
+
+
+    <script src="static/bower_components/angular-bootstrap/ui-bootstrap.js"></script>
+    <script src="static/bower_components/angular-resource/angular-resource.js"></script>
+    <script src="static/bower_components/angular-foundation/mm-foundation-tpls.js"></script>
+    <script src="static/bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="static/bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="static/bower_components/angular-animate/angular-animate.js"></script>
+    <!-- // <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script> -->
+    <script src="static/bower_components/angular-touch/angular-touch.js"></script>
+    <script src="static/bower_components/angular-route/angular-route.js"></script>
+    <script src="static/bower_components/qrcode-generator/js/qrcode.js"></script>
+    <script src="static/bower_components/angular-qrcode/qrcode.js"></script>
+
+    
+    <script src="static/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+
+
+    <!-- <script src="bower_components/imagesloaded/imagesloaded.js"></script> -->
+    <script type="text/javascript" src="static/bower_components/angular-wizard/dist/angular-wizard.js"></script>
+    <script type="text/javascript" src="static/bower_components/api-check/dist/api-check.js"></script>
+    <script type="text/javascript" src="static/bower_components/angular-formly/dist/formly.js"></script>
+    <script type="text/javascript" src="static/bower_components/lodash/dist/lodash.js"></script>
+    <script type="application/javascript" src="static/scripts/ui-bootstrap-custom-tpls-0.12.0.min.js"></script>
+    <!-- using web socket 0.9.16 -- http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js -->
+    <script type="text/javascript" src="static/scripts/socket.io.min.js"></script>
+    <script type="text/javascript" src="static/bower_components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js"></script>
+    <script src="static/crypto-js/core.js"></script>
+    <script src="static/crypto-js/x64-core.js"></script>
+    <script src="static/crypto-js/enc-base64.js"></script>
+    <script src="static/crypto-js/md5.js"></script>
+    <script src="static/crypto-js/hmac.js"></script>
+    <script src="static/crypto-js/sha512.js"></script>
+    <script src="static/crypto-js/hmac-sha512.js"></script>
+    <!-- endbuild -->
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <!-- resolve functions pulled out to make app.js more manageable -->
+    <script type="application/javascript" src="static/components/resolves/CachedGuestResolve.js"></script>
+    <script type="application/javascript" src="static/components/resolves/GuestResolve.js"></script>
+    <script type="application/javascript" src="static/components/resolves/OrderResolve.js"></script>
+    <script type="application/javascript" src="static/components/resolves/NewOrderResolve.js"></script>
+    <script type="application/javascript" src="static/components/resolves/CachedParkResolve.js"></script>
+    <script type="application/javascript" src="static/components/resolves/ParkResolve.js"></script>
+    <script type="application/javascript" src="static/components/resolves/ProductResolve.js"></script>
+    <script type="application/javascript" src="static/components/resolves/CatalogResolve.js"></script>
+    <script type="application/javascript" src="static/components/resolves/ActivitiesResolve.js"></script>
+    <script type="application/javascript" src="static/components/resolves/WaiverResolve.js"></script>
+
+    <!-- begin app -->
+    <script type="application/javascript" src="static/app.js"></script>
+    <script type="application/javascript" src="static/components/common/access-manager/access-manager.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/big-confirmation/big-confirmation.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/big-loader/big-loader.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/birthday-dropdown/birthday-dropdown.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/compare-to/compare-to.js"></script>
+    <script type="application/javascript" src="static/components/common/datepicker/datepicker-factory.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/idle-timer/idle-timer.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/increment-input/increment-input.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/jumperrow/jumperrow.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/orderrow/orderrow.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/numkeypad/numkeypad.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/duration-quantity-row/duration-quantity-row.js"></script>
+
+
+    <script type="application/javascript" src="static/components/common/directives/modal-dialog/modal-dialog.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/numbers-only/numbers-only.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/profile-modal/profile-modal.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/receipt-modal/receipt-modal.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/notes-modal/notes-modal.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/order-summary/order-summary.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/validate-password/validate-password.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/validate-email/validate-email.js"></script>
+    <script type="application/javascript" src="static/components/common/directives/fatal-error/fatal-error.js"></script>
+    <script type="application/javascript" src="static/components/employee-login/login-controller.js"></script>
+    <script type="application/javascript" src="static/components/factories/hardware-factories/epson-factory/epson-command-factory.js"></script>
+    <script type="application/javascript" src="static/components/factories/hardware-factories/verifone-factory/verifone-command-factory.js"></script>
+    <script type="application/javascript" src="static/components/factories/hardware-factories/verifone-factory/forms/verifone-form-idle.js"></script>
+    <script type="application/javascript" src="static/components/factories/hardware-factories/verifone-factory/forms/verifone-form-payment.js"></script>
+    <script type="application/javascript" src="static/components/factories/hardware-factories/verifone-factory/forms/verifone-form-payment-complete.js"></script>
+    <script type="application/javascript" src="static/components/factories/hardware-factories/verifone-factory/forms/verifone-form-waiver.js"></script>
+    <script type="application/javascript" src="static/components/factories/promise-factory/promise-factory.js"></script>
+    <script type="application/javascript" src="static/components/layout/idle-screen/idle-screen.js"></script>
+    <script type="application/javascript" src="static/components/services/alert-service/alert-service.js"></script>
+    <script type="application/javascript" src="static/components/services/catalog-service/catalog-service.js"></script>
+    <script type="application/javascript" src="static/components/services/date-service/date-service.js"></script>
+    <script type="application/javascript" src="static/components/services/hardware-service/boca-service.js"></script>
+    <script type="application/javascript" src="static/components/services/hardware-service/hardware-service.js"></script>
+    <script type="application/javascript" src="static/components/services/hardware-service/epson-service.js"></script>
+    <script type="application/javascript" src="static/components/services/hardware-service/rfid-reader-service.js"></script>
+    <script type="application/javascript" src="static/components/services/hardware-service/verifone-service.js"></script>
+    <script type="application/javascript" src="static/components/services/hmac-service/hmac-service.js"></script>
+    <script type="application/javascript" src="static/components/services/lookup-service/lookup-service.js"></script>
+    <script type="application/javascript" src="static/components/services/order-service/order-service.js"></script>
+    <script type="application/javascript" src="static/components/services/park-service/park-service.js"></script>
+    <script type="application/javascript" src="static/components/services/print-service/print-service.js"></script>
+    <script type="application/javascript" src="static/components/services/product-service/product-service.js"></script>
+    <script type="application/javascript" src="static/components/services/profile-service/profile-service.js"></script>
+    <script type="application/javascript" src="static/components/services/reservation-service/reservation-service.js"></script>
+    <script type="application/javascript" src="static/components/services/startup-service/startup-service.js"></script>
+    <script type="application/javascript" src="static/components/services/storage-service/storage-service.js"></script>
+    <script type="application/javascript" src="static/components/services/user-service/user-service.js"></script>
+    <script type="application/javascript" src="static/components/services/waiver-service/waiver-service.js"></script>
+    <script type="application/javascript" src="static/components/skypos-activity/activity-controller.js"></script>
+    <script type="application/javascript" src="static/components/skypos-guest/guest-controller.js"></script>
+    <script type="application/javascript" src="static/components/skypos-hardware/hardware-config-controller.js"></script>
+    <script type="application/javascript" src="static/components/skypos-jumpers/jumpers-controller.js"></script>
+    <script type="application/javascript" src="static/components/skypos-offers/offers-controller.js"></script>
+    <script type="application/javascript" src="static/components/skypos-payment/payment-controller.js"></script>   
+    <script type="application/javascript" src="static/components/skypos-start/start-controller.js"></script>
+    <script type="application/javascript" src="static/components/skypos-start/skyband-modal-controller.js"></script>
+    <script type="application/javascript" src="static/components/skypos-clockin/clockin-controller.js"></script>
+    <script type="application/javascript" src="static/components/layout/navigation/navigation-controller.js"></script>
+    <script type="application/javascript" src="static/components/layout/footer-navigation/footer-navigation.js"></script>
+    <script type="application/javascript" src="static/components/guest-search/guest-search.js"></script>   
+    <!-- web assets, ignore -->
+    <!-- <script type="application/javascript" src="components/store-offline/store-offline.js"></script> -->
+    <!-- <script type="application/javascript" src="components/parks/park-list.js"></script> -->
+    <!-- web assets, ignore -->
+    <!-- <script type="application/javascript" src="components/common/directives/cart-timer/cart-timer.js"></script> -->
+    <!-- <script type="application/javascript" src="components/common/directives/progress-bar/progress-bar.js"></script> -->
+    <!-- kiosk assets, ignore -->
+    <!-- <script type="application/javascript" src="components/guest-search/guest-search.js"></script>
+    <script type="application/javascript" src="components/event-details/event-details.js"></script>
+    <script type="application/javascript" src="components/event-guests/event-guests.js"></script>
+    <script type="application/javascript" src="components/events-full/events-full.js"></script>
+    <script type="application/javascript" src="components/layout/idle-screen/idle-screen.js"></script>
+    <script type="application/javascript" src="components/layout/complete-screen/complete-screen.js"></script>
+    <script type="application/javascript" src="components/layout/init-screen/init-screen.js"></script> -->
+    <!-- endbuild -->
+</body>
+
+</html>

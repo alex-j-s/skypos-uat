@@ -1,0 +1,32 @@
+<style>
+
+.back-button {
+    color: #fd732b;
+    background-color: #ffffff;
+    border-radius: 0 0 0.5rem 0.5rem;
+    padding: 0.7rem 2rem 1rem;
+    position: absolute;
+    top: 0rem;
+}
+
+</style>
+
+<sze-big-loader is-loading="isLoading"></sze-big-loader>
+<div id="navigation" class="navbar navbar-default">
+    <ul class="nav navbar-nav">
+      <li ng-repeat="route in routes" ng-class="{'active':isActive(route)}">
+        <img class="nav-icons" ng-src="static/images/icons/{{route.icon}}">
+        <a style="cursor:default;" ng-href="" ng-bind="route.label"></a>
+        <i ng-if="isActive(route)" class="fa fa-caret-up active-arrow"></i>
+      </li>
+    </ul>
+    <!-- <div style="float:right;">
+    <a ng-href="" ng-click="hardwareModal()" class="back-button">
+        <span class="icon-left">
+                <i class="fa fa-cogs"></i>
+            </span>
+        <span class="text">Hardware</span>
+    </a>
+    </div> -->
+</div>
+<alert ng-if="alert" type="alert.type" close="close(alert)">{{alert.msg}}</alert>

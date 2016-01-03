@@ -1,0 +1,158 @@
+.dropdown-menu {
+  $button-color: #777777;
+  $button-border-color: $button-color;
+  $datepicker-bg-color: #F2F2F2;
+
+
+  list-style-type: none;
+  margin-left: 0;
+  position: absolute;
+  z-index: 1000;
+  background-color: $datepicker-bg-color;
+  border: 1px solid #9F9D9D;
+  padding: rem-calc(10) rem-calc(5);
+
+  thead tr:first-child {
+
+    th button {
+      background: none;
+      border: none;
+      text-transform: uppercase;
+      font-size: rem-calc(16);
+      color: $black;
+
+      &:hover {
+        color: $primary-color;
+      }
+    }
+
+    th:first-child button,
+    th:last-child button {
+      color: $white;
+      border-radius: 3px;
+      background-color: $secondary-button-color;
+      border-color: $secondary-button-color;
+
+      &:hover {
+        background-color: $secondary-button-bg-hover;
+        border-color: $secondary-button-bg-hover;
+      }
+    }
+  }
+
+  td {
+    padding: rem-calc(2);
+  }
+
+  small {
+    color: $black;
+    font-size: rem-calc(12);
+  }
+
+  tbody button {
+    background: none;
+    border: 1px solid $datepicker-bg-color;
+
+    color: $button-color;
+
+    &:not([disabled]) {
+      border: 1px solid $button-border-color;
+      background-color: $white;
+    }
+
+    &[disabled]:hover {
+      background: none;
+      color: $button-color;
+    }
+
+    &:hover {
+      background-color: #D5D3D3;//$button-bg-hover;
+      // border-color: $button-bg-hover;
+      // color: $white;
+    }
+
+    &.btn-info {
+      background-color: $primary-color;
+      border-color: $primary-color;
+      color: $white;
+      border-radius: 0;
+
+      &:hover {
+        background-color: $button-bg-hover;
+        border-color: $button-bg-hover;
+        color: $white;
+      }
+    }
+
+  }
+
+  button {
+
+    margin: 0;
+
+    &.btn-info,
+    &.btn-danger,
+    &.btn-success {
+      text-transform: uppercase;
+      border-radius: 3px;
+      color: $white;
+    }
+
+    &.btn-info {
+      $btn-info-color: #3595BD;
+
+      background-color: $btn-info-color;
+      border-color: $btn-info-color;
+
+      &:hover {
+        background-color: #2E86AA;
+      }
+    }
+
+    &.btn-danger {
+      $btn-danger-color: #BF2A0D;
+
+      background-color: $btn-danger-color;
+      border-color: $btn-danger-color;
+
+      &:hover {
+        background-color: #A8250C;
+      }
+    }
+
+    &.btn-success {
+      $btn-success-color: $secondary-button-color;
+
+      background-color: $btn-success-color;
+      border-color: $btn-success-color;
+
+      &:hover {
+        background-color: $secondary-button-bg-hover;
+      }
+    }
+  }
+
+  button.btn-sm {
+    @include button-size($padding:$button-tny);
+  }
+
+  .glyphicon {
+    font: normal normal normal 14px/1 FontAwesome;
+  }
+
+  .glyphicon-chevron-left:before {
+    content: "\f053";
+  }
+
+  .glyphicon-chevron-right:before {
+    content: "\f054";
+  }
+
+  @media #{$tny-only} {
+    button.btn-default {
+      padding-left: rem-calc(13);
+      padding-right: rem-calc(13);
+    }
+  }
+
+}

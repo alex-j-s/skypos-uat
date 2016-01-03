@@ -1,0 +1,26 @@
+<div style="margin:-1.875rem;">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="reservationModalLabel">Reservation List</h4>
+    </div>
+    <div class="modal-body">
+        <div class="table container" style="max-height: 400px;overflow: auto;">
+            <div class="row">
+                <div class="col-xs-3"><b>NAME</b></div>
+                <div class="col-xs-3"><b>DATE</b></div>
+                <div class="col-xs-2"><b>GUESTS</b></div>
+                <div class="col-xs-2"><b>STATUS</b></div>
+                <div class="col-xs-2"><b>SELECT</b></div>
+            </div>
+            <div class="row" style="padding:0.2rem" ng-repeat="res in searchedGuest.reservation|orderBy:'startDate':'DESC' track by $index" ng-if="res !== null && res.status !== 'expired'">
+                <div class="col-xs-3">{{searchedGuest.firstName + " " + searchedGuest.lastName }}</div>
+                <div class="col-xs-3">{{res.startDate|date:'MMM d, y'}}</div>
+                <div class="col-xs-2">{{res.numberOfGuests}}</div>
+                <div class="col-xs-2">{{res.status}}</div>
+                <div class="col-xs-2 text-center" style="vertical-align:middle;">
+                    <button type="submit" class="sk-btn btn-blue" ng-click="selectReservation(searchedGuest.id,res.id)">Select</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

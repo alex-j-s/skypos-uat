@@ -1,0 +1,110 @@
+
+<div id="activity" class="container-fluid">
+
+    <div class="row mt10">
+        <div class="col-sm-6 ">
+            <h3>TIME</h3>
+        </div>
+        <div class="col-sm-6 ">
+            <div class="date-container pull-right" style="margin-top:5px; margin-bottom:-20px;">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" readonly="readonly" data-datepicker-popup="{{format}}" data-datepicker-options="dateOptions" data-ng-model="date" data-is-open="opened" data-ng-required="true" data-close-text="Close" />
+                    </div>
+                    <div class="col-sm-2">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-lg btn-default" data-ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </div>
+                </div>
+
+
+                <!-- <uib-datepicker data-datepicker-popup="EEEE, MMMM d" show-weeks="false" ng-model="date"></uib-datepicker> -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row head_section mt30">
+        <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
+            <div class="circle">1</div>
+            <h4 class="h4">Choose activity</h4>
+        </div>
+        <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
+            <div class="circle">2</div>
+            <h4 class="h4">Duration & Pricing</h4>
+        </div>
+        <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
+            <div class="circle">3</div>
+            <h4 class="h4">Select time</h4>
+        </div>
+    </div>
+
+    <div class="row main_section">
+        
+        <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4 table-wrapper " id="one">
+            <div class="single-panel common-panel-style activity-panel check-element">
+                <div class="row full-width"><div class="circle">1</div>
+                    <h4 class="h4">Choose activity</h4>
+                </div>
+                <div class="table-scroll">
+                    <div class="row" ng-repeat="activity in activities track by $index">
+                        <input type="radio" name="front-activity" id={{'front-activity-'+$index}} class="radio" ng-click="onActivitySelection('1',activity)" ng-checked="activity.isChecked">
+                            <div class=""><i class="icon-right fa fa-angle-right"></i></div>
+                        </input>
+
+                        <label for={{'front-activity-'+$index}} ng-bind="activity.activityType">
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4 table-wrapper " id="two">
+
+            <div class="placeholder" ng-show="panelStatusObjects[1].showPlaceholder">
+                <p><img src="static/images/duration-placeholder.png"></p>    
+                <p><span>Choose an activity</span></p>
+            </div>
+            <div class="single-panel dcommon-panel-style duration-panel check-element panel-show-hide full-width"  ng-show="panelStatusObjects[1].showFrontPanel">
+                <div class="row full-width"><div class="circle">2</div>
+                    <h4 class="h4">Duration &amp; Pricing</h4>
+                </div>
+                <div class="table-scroll row">
+                    <div duration-quantity-row duration="duration" quantity="quantity" activity="activity"  rowStatus="rowStatus" index="{{'front'+$index}}"  ng-repeat="duration in durations track by $index" ng-click="onDurationSelection(duration)"></div>
+                </div>
+            </div>
+
+            <!-- rendered after selection -->
+            <div class="single-panel common-panel-style duration-panel duration-panel-after full-height" style="border: 1px;" ng-show="panelStatusObjects[1].showBackPanel">
+                <div class="row full-width"><div class="circle">2</div>
+                    <h4 class="h4">Duration &amp; Pricing</h4>
+                </div>
+                <div class="table-scroll row">
+                    <div duration-quantity-row quantity="duration.quantity" activity="activity" rowStatus="rowStatus" index="{{'back'+$index}}" ng-repeat="duration in durations track by $index" duration="duration" ng-click="onDurationSelection(duration)"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4 table-wrapper " id="three">
+            <div class="placeholder" ng-show="panelStatusObjects[2].showPlaceholder">
+                <p><img src="static/images/time-placeholder.png"></p>    
+                <p><span>Choose an time</span></p>
+            </div>
+            <div class="single-panel last common-panel-style timeSlot-panel check-element panel-show-hide"  ng-show="panelStatusObjects[2].showFrontPanel">
+                <div class="row full-width"><div class="circle">3</div>
+                    <h4 class="h4">Select Time</h4>
+                </div>
+                <div class="table-scroll row">
+                    <div  ng-repeat="timeSlot in timeSlots|orderBy:'tsIndex'">
+                       <input type="radio" name="timeSlot" id={{'front-time-'+$index}} class="radio" ng-click="onTimeSlotSelection(timeSlot)" ng-checked="timeSlot.isChecked" />
+                       <label for={{'front-time-'+$index}}><span ng-bind="timeSlot.label"> </span>
+
+                            <span class="ticket" ng-bind="timeSlot.ticketLabel"></span>
+                       </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<sze-footer-navigation order="order" next="goToGuestScreen" prev="goToStartScreen" next-label="Guest" prev-label="Start" current="'activity'"></sze-footer-navigation>

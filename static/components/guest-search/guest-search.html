@@ -1,0 +1,77 @@
+<div>
+    <!-- <div class="modal fade in">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Guest Search</h4>
+            </div>
+            <div class="modal-body"> -->
+    <div class="row gs-search">
+        <div class="row">
+            <div class="col-md-3">
+                <input type="text" class="form-control" placeholder="First Name" ng-model="gs.firstName" />
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" placeholder="Last Name" ng-model="gs.lastName" />
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" placeholder="Email" ng-model="gs.email" />
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" placeholder="Postal Code" ng-model="gs.postalCode" />
+            </div>
+            <div class="col-md-1">
+                <button ng-click="guestSearch(gs)" class="btn btn-info btn-search" type="button"><i class="glyphicon glyphicon-search"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="row gs-results isSearching" ng-show="isSearching">
+        <div class="col-md-12 center-align" style="padding:15px; min-height:100px;">
+            <sze-big-loader is-loading="isSearching"></sze-big-loader>
+        </div>
+    </div>
+    <div class="row gs-results" ng-show="!isSearching && guestSearchResults.length === 0">
+        <div class="col-md-12 center-align" style="padding:15px">
+            No results, please try again.
+        </div>
+    </div>
+    <div class="row gs-results" ng-if="!isSearching && guestSearchResults.length > 0">
+        <div class="gs-search-rows">
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>Name</strong>
+                </div>
+                <div class="col-md-3">
+                    <strong>Birthday</strong>
+                </div>
+                <div class="col-md-3">
+                    <strong>Email</strong>
+                </div>
+                <div class="col-md-2">
+                    <strong>Postal Code</strong>
+                </div>
+                <div class="col-md-1">
+                    <strong>Add</strong>
+                </div>
+            </div>
+            <div class="row " ng-repeat="guest in guestSearchResults" style="display: flex; align-items: center; padding-top: 1px; padding-bottom: 1px;">
+                <div class="col-md-3" ng-click="viewProfile(guest)" ng-bind="guest.firstName + ' ' + guest.lastName"></div>
+                <div class="col-md-3" ng-bind="guest.birthday"></div>
+                <div class="col-md-3" ng-bind="guest.email"></div>
+                <div class="col-md-2 right-align" ng-bind="guest.address.postalCode"></div>
+                <div class="col-md-1">
+                    <button ng-click="selectGuest(guest)" class="btn btn-warning btn-plus" type="button"><i class="glyphicon glyphicon-plus"></i></button>
+                </div>
+            </div>
+            <div class="row" style="height:10px;"></div>
+        </div>
+    </div>
+    <!--             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div> -->
+    <!-- </div> -->
+</div>

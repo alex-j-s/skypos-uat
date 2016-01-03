@@ -1,0 +1,158 @@
+<div class="" id="jumper">
+    <style>
+    .inner-addon {
+        position: relative;
+    }
+    /* style icon */
+    
+    .inner-addon .glyphicon {
+        position: absolute;
+        padding: 10px;
+        pointer-events: none;
+    }
+    /* align icon */
+    
+    .left-addon .glyphicon {
+        left: 0px;
+    }
+    
+    .right-addon .glyphicon {
+        right: 0px;
+    }
+    /* add padding  */
+    
+    .left-addon input {
+        padding-left: 30px;
+    }
+
+    .right-addon input {
+        padding-right: 30px;
+    }
+    /* Jumper modal */
+     .hd-new {
+        color: #FB7337;
+        font-size: 1.5em;
+    }
+     .hd-exist {
+        color: #333;
+        font-size: 1.5em;
+    }
+</style>
+    <div class="row">
+        <div class="container-fluid mt20">
+            <div class="col-md-12">
+                <h3 class="pull-left ml10">JUMPERS</h3>
+                <div class="pull-right mt15">
+                    <button class="sk-btn btn-blue btn-wide mr10" ng-click="toggleModal('Add Jumper')">
+                        <i class="fa fa-plus mr10"></i> ADD JUMPER
+                    </button>
+                    <!--<button class="sk-btn btn-blue btn-wide mr10">
+                        <i class="fa fa-print mr10"></i> PRINT STICKERS
+                    </button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row container-fluid">
+        <div class="table mt20" style="border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: #DDDDDD;">
+            <div class="row table-th">
+                <div class="col-xs-1">&nbsp;&nbsp;</div>
+                <div class="col-xs-3">Jumper</div>
+                <div class="col-xs-3">Waiver Status</div>
+                <div class="col-xs-4">
+                    <div class="row">
+                        <div class="col-xs-6" ng-repeat="addon in getAddOns()">Need {{addon.prod.name}}?</div>
+                    </div>
+                </div>
+                <div class="col-xs-1">Remove</div>
+            </div>
+            <hr/>
+            <jumperrow ng-repeat="jumper in order.participants track by $index" jumper="jumper" park="park" order="order"></jumperrow>
+        </div>
+    </div>
+    <div class="row">
+        <div class="container-fluid" >
+            <div class="col-md-6">
+                <h4><span class="text-success">{{order.participants.length}}</span>/{{order.numberOfGuests}} JUMPERS ADDED</h4>
+            </div>
+            <div class="col-md-6 text-right">
+                <span ng-repeat="addon in getAddOns()">+ {{numNeeded(addon.jumpers)}} {{addon.prod.name}}<span ng-show="$index < (getAddOns().length -1)">, </span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
+
+</div>
+
+<!-- display: table-cell;vertical-align: middle -->
+
+<modal title="{{ getModalType() }}" visible="showModal">
+    <div ng-switch on="modalType">
+
+        <div ng-switch-when="Add Jumper">
+            <form name="jumper-form" novalidate >
+                    <div class="row">
+                        <div class="col-md-6" style="padding:5% 5% 5% 10%">
+                            <span class="hd-new">ADD NEW JUMPER</span>
+                            <div class="form-group inner-addon left-addon">
+                                <i class="glyphicon glyphicon-user" style="color:#999"></i>
+                                <input type="text" id="firstname" class="form-control" placeholder="First Name" ng-model="jumper.firstName">
+                            </div>
+                            <div class="form-group inner-addon left-addon">
+                                <i class="glyphicon glyphicon-user" style="color:#999"></i>
+                                <input type="text" id="lastname" class="form-control" placeholder="Last Name" ng-model="jumper.lastName">
+                            </div>
+                            <div class="form-group inner-addon left-addon">
+                                <i class="glyphicon glyphicon-envelope" style="color:#999"></i>
+                                <input type="email" class="form-control" id="Email2" placeholder="Email" ng-model="jumper.email">
+                            </div>
+                            <div class="form-group inner-addon left-addon">
+                                <i class="glyphicon glyphicon-envelope" style="color:#999"></i>
+                                <select class="form-control" id="gender" ng-model="jumper.gender">
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group inner-addon left-addon">
+                            <sze-birthday-dropdown form="form" is-submit="form.$submitted" birthday="jumper.birthday" label="Birthday"></sze-birthday-dropdown>
+                            </div>
+                            <button type="submit" class="sk-btn btn-blue" style="background-color:#0071db;" ng-click="newJumper(jumper)">Submit</button>
+                        </div>
+                        <div class="col-md-6" style="padding:5% 10% 5% 5%">
+                            <span class="hd-exist">ADD EXISTING JUMPER</span>
+                            <div class="form-group inner-addon left-addon">
+                                <i class="glyphicon glyphicon-envelope" style="color:#999"></i>
+                                <input type="email" class="form-control" id="Email1" placeholder="Email" ng-model="existingEmail">
+                            </div>
+                            <button ng-click="doGuestSearch(existingEmail)" type="submit" class="sk-btn btn-blue" style="background-color:#0071db">Submit</button>
+
+                            <div class="row">
+                                <div class="col-md-12 jumper-modal">
+                                    <div class="band mt30">
+                                        <div class="col-md-6 order-label">
+                                        SkyBand guest search
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a href="" data-toggle="modal" data-target="#skybandsearch" class="sk-btn btn-orange btn-xl"><i class="fa fa-barcode"></i> Search</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- glyphicon glyphicon-user glyphicon glyphicon-envelope -->
+            </form>
+        </div>
+
+        <div ng-switch-when="Jumper Profile">
+            <profile-modal profile="selectedJumper" />
+        </div>
+        
+
+    </div>
+</modal>
+<sze-footer-navigation order="order" next="goToOffersScreen" prev="goToGuestScreen" next-label="Offers" prev-label="Guest" current="'jumpers'"></sze-footer-navigation>

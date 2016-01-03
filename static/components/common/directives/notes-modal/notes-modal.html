@@ -1,0 +1,6 @@
+<div>
+<h3>Order Notes</h3>
+<textarea ng-model="order.notes" rows="10" ng-if="!isTeamMember()"></textarea>
+<textarea ng-model="order.notes" rows="10" readonly ng-if="isTeamMember()"></textarea>
+<button type="button" ng-click="closeModal()">Close</button>
+</div>

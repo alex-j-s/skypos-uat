@@ -1,0 +1,510 @@
+<style>
+    .table td.panelCell{
+        border-top: none !important;
+    }
+
+    input[type="checkbox"]{
+        cursor: pointer;
+        -webkit-appearance: none;
+        appearance: none;
+        background: #FFFFFF;
+        border-radius: 1px;
+        box-sizing: border-box;
+        position: relative;
+        box-sizing: content-box ;
+        width: 30px;
+        height: 30px;
+        border-width: 0;
+        transition: all .3s linear;
+        margin-bottom: 5px;
+        float: left;
+    }
+    input[type="checkbox"]:checked{
+        background-color: #34495E;
+    }
+    input[type="checkbox"]:focus{
+        outline: 0 none;
+        box-shadow: none;
+    }
+
+    .css-label
+    {
+        width: 150px;
+        height: 30px;
+        padding-top: 3px;
+    }
+
+</style>
+
+<div class="container-fluid" style="padding-left: 8px;" id="payment">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>YOUR PURCHASES </h3>
+                </div>
+            </div>
+            <div id="table-wrapper">
+                <div id="table-scroll">
+                    <table class="table table-fixed" >
+                        <thead>
+                      <tr>
+                            <th class="col-xs-4"><b>ITEM</b></th>
+                            <th class="col-xs-2"><b>PRICE/ EA</b></th>
+                            <th class="col-xs-2"><b>QUANTITY</b></th>
+                            <th class="col-xs-2"><b>SUB TOTAL</b></th>
+                            <th class="col-xs-2"></th>
+                        </tr>
+                        </thead>
+                        <tbody class="scroll">
+                            <tr skyzone-order-row ng-repeat="orderItem in order.orderItems track by $index" ></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="btm-container">
+                <div class="col-md-12" style="padding: 20px 10px 20px 10px;">
+                    <div class="row mb5">
+                        <div class="col-md-2">
+                            <!-- <input type="checkbox" name="checkbox" id="checkbox" />
+                            <label for="checkbox" class="css-label">Electronic Reciept</label> -->
+                        </div>
+                        <div class="col-md-2">
+                            <button class="sk-btn btn-orange footer-button btn-responsive" ng-disabled="!orderPurchased()" ng-click="printReciept(order)" ><i class="fa fa-print"></i>{{ orderPurchased() ? 'RE-PRINT' : 'Print'  }}</button>
+                        </div>
+                        <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive" ng-click="toggleModal('coupon')" ng-disabled="!orderInProgress()"><i class="fa fa-ticket"></i> COUPON</button></div>
+                        <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive"   ng-click="toggleModal('gift-card')" ng-disabled="!orderInProgress()"><i class="fa fa-gift"></i> GIFT CARD</button></div>
+                        <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive" ng-disabled="!orderInProgress()"   ng-click="toggleModal('cash')"><i class="fa fa-money"></i> CASH</button></div>
+                        <div class="col-md-2">
+                            <button class="sk-btn btn-orange footer-button btn-responsive" ng-disabled="orderPurchased()" ng-click="kickOffPaymentProcess()" ><i class="fa fa-print"></i>Get Payment</button>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-md-2">
+                            <button class="sk-btn btn-footer-button btn-responsive" style="background-color: #CA474A"  ng-click="noSale()" ><span class="glyphicon glyphicon-minus-sign">&nbsp;</span>NO SALE</button></div>
+                        <div class="col-md-2">
+                            <button class="sk-btn btn-orange footer-button btn-responsive" ng-disabled="!orderPurchased()"  ng-click="printTicket(order)" ><i class="fa fa-ticket"></i> TICKETS</button>
+                            </div>
+                        <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive" ng-click="toggleModal('band')" ><i class="fa fa-circle-o-notch"></i> BAND</button></div>
+                        <div class="col-md-2">
+                            <button class="sk-btn btn-orange footer-button btn-responsive"  ng-click="toggleModal('discount')" ng-disabled="!orderInProgress()"><i class="fa fa-angle-double-down"></i> DISCOUNT</button>
+                            </div>
+                        <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive"   ng-click="toggleModal('check')" ng-disabled="!orderInProgress()"><i class="fa fa-th"></i> CHECK</button></div>
+                        <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive"   ng-click="toggleModal('credit')" ng-disabled="!orderInProgress()"><i class="fa fa-credit-card"></i> CREDIT</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 sidebar" id="sidebar">
+            <skypos-order-summary order="order"></skypos-order-summary>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-12">
+            <!-- TODO Footer-->
+        </div>
+    </div>
+</div>
+
+
+<modal  title="{{modelTitle}}" visible="showModal" id="payment">
+    <div ng-switch on="modelType">
+        
+        <div ng-switch-when="cash">
+            <div class="row">
+                <h3 class="text-center mb20">Cash Payment</h3>
+                <div class="col-sm-6">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <div class="col-sm-8 pull-right">
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" id="cashReceived" placeholder="" ng-value="getNumberString(cashInputValue)">
+                                </div>
+                                <div class="col-sm-12">
+                                    <span class="text-muted col-sm-6 sub-text text-right" for="cashReceived">Cash Received</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hr-sm">&nbsp;</div>
+                        <div class="form-group">
+                            <div class="col-sm-8 pull-right">
+                                <div class="col-sm-12">
+                                    <span class="outputtext">{{ getChangedOwed(cashInputValue) }}</span>
+                                    <!-- <input type="text" class="form-control" id="changedOwed" placeholder=""> -->
+                                </div>
+                                 <div class="col-sm-12">
+                                    <span class="text-muted col-sm-6 sub-text text-right mt5" for="changedOwed">Change Owed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-sm-5 mb20">
+                    <numkeypad ng-model="cashInputValue"> </numkeypad>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <center>
+                    <button type="button" class="btn btn-blue btn-wide" data-dismiss="modal" ng-click="submitCashPayment(cashInputValue)">SUBMIT PAYMENT</button>
+                </center>
+            </div>
+        </div>
+
+        <div ng-switch-when="noSale">
+            <div class="modal-body">
+                <div class="row">
+                    <span>Select No Sale Reasons : </span> <select ng-options="reason.label for reason in NOSalesReasons" ng-model="NOSalesReason" ng-change="onOptionChange(NOSalesReason)">
+                    <option value="">-- choose reason --</option>
+                </select>
+                </div>
+
+                <div class="row" ng-show="showOtherReasonInput">
+                    <input type="text" class="form-control" id="otherReason" placeholder="">
+                </div>
+            </div>
+            <div class="row">
+                <center>
+                    <button class="sk-btn btn-footer-button btn-responsive" style="background-color: #CA474A"  ng-click="managerApprovel()" data-dismiss="modal" ><span class="glyphicon glyphicon-minus-sign">&nbsp;</span>NO SALE</button>
+
+            <!--<button type="button" class="sk-btn"  ng-click="managerApprovel()" data-dismiss="modal">No Sale</button>-->
+                </center>
+            </div>
+        </div>
+
+
+        <div ng-switch-when="check">
+            <div class="row">
+                <h3 class="text-center mb20">Pay by Check</h3>
+                <div class="col-sm-6">
+
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="side-text control-label col-sm-6" for="checkNumber" style="padding-right: 0px">Check number</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="checkNumber" ng-focus="checkFieldFocused('checkNumber')" placeholder="" ng-model="check.checkNumber">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="side-text control-label col-sm-6" for="checkAmount" style="padding-right: 0px">Amount</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-focus="checkFieldFocused('amount')" id="checkAmount" ng-value="getNumberString(check.amount)" placeholder="">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-sm-6 mb20">
+                    <numkeypad ng-model="check[selectedCheckField]"> </numkeypad>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <center>
+                    <button type="button" class="btn btn-blue btn-wide" ng-click="submitCheckPayment()" data-dismiss="modal">SUBMIT PAYMENT</button>
+                </center>
+            </div>
+        </div>
+
+        <div ng-switch-when="credit">
+            <div class="row">
+                <h3 class="text-center mb20">Credit Card Payment</h3>
+                <div class="col-sm-6">
+
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="side-text control-label col-sm-6" for="cashReceived" style="padding-right: 0px">Card Number</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-focus="creditFieldFocused('ccn')" id="card.ccn" placeholder="" ng-model="card.ccn">
+                            </div>
+                        </div>
+                        <!-- <div class="form-group">
+                            <label class="side-text control-label col-sm-6" for="cardType" style="padding-right: 0px">Card Type</label>
+                            <div class="dropdown col-sm-6 ">
+                                <div class="btn-group">
+                                  <button id-"cardType" type="button" class="btn btn-default btn-modal dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Action <span class="caret"></span>
+                                  </button>
+                                  <ul class="dropdown-menu">
+                                    <li><a href=""><i class="fa fa-cc-visa"></i> Visa</a></li>
+                                    <li><a href=""><i class="fa fa-cc-mastercard"></i> MasterCard</a></li>
+                                    <li><a href=""><i class="fa fa-cc-discover"></i> Discover</a></li>
+                                    <li><a href=""><i class="fa fa-cc-amex"></i> American Express</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href=""><i class="fa fa-apple"></i> Apple Pay</a></li>
+                                    <li><a href=""><i class="fa fa-android"></i> Android Pay</a></li>
+
+                                  </ul>
+                                </div>
+                                <button id="cardType" class="form-control btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
+                                    <span class="caret"></span></button>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">Type 1</a></li>
+                                    <li><a href="#">Type 2</a></li>
+                                    <li><a href="#">Type 3</a></li>
+                                </ul>
+                            </div>
+                        </div> -->
+                        <div class="form-group">
+                            <label class="side-text control-label col-sm-6" for="expires" style="padding-right: 0px">Expires</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="expiresM" ng-focus="creditFieldFocused('expM')" maxlength="2" ng-model="card.expM" placeholder="MM">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" maxlength="2" id="expiresY" ng-focus="creditFieldFocused('expY')" ng-model="card.expY" placeholder="YY">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="side-text control-label col-sm-6" for="cvv" style="padding-right: 0px">CVV</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" maxlength="4" ng-focus="creditFieldFocused('cvv')" ng-model="card.cvv" id="cvv" placeholder="" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="side-text control-label col-sm-6" for="cvv" style="padding-right: 0px">Amount</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-focus="creditFieldFocused('amount')" ng-model="card.amount" id="amount" placeholder="">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-sm-6 mb20">
+                    <numkeypad ng-model="card[selectedCreditField]"> </numkeypad>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <center>
+                    <button type="button" class="btn btn-blue btn-wide" ng-click="submitCreditCardPayment()" data-dismiss="modal">SUBMIT PAYMENT</button>
+                    <!-- <button type="button" class="btn btn-blue btn-wide" ng-click="kickOffPaymentProcess()" data-dismiss="modal">CAPTURE PAYMENT</button> -->
+                </center>
+            </div>
+        </div>
+
+        <div ng-switch-when="gift-card">
+            <div class="row">
+                <h3 class="text-center mb20">Pay by Gift Card</h3>
+                <div class="col-sm-6">
+
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="side-text control-label col-sm-6" for="cardNumber" style="padding-right: 0px">Card Number</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="cardNumber" ng-focus="giftCardFieldFocused('giftCardNumber')" placeholder="" ng-model="giftCard.giftCardNumber">
+                            </div>
+                        </div>
+                    </form>
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="side-text control-label col-sm-6" for="cardNumber" style="padding-right: 0px">Amount</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="cardNumber" ng-focus="giftCardFieldFocused('amount')" placeholder="" ng-value="getNumberString(giftCard.amount)">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-sm-6 mb20">
+                    <numkeypad ng-model="giftCard[selectedGiftCardField]"> </numkeypad>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <center>
+                    <button type="button" class="btn btn-blue btn-wide" ng-click="submitGiftCardPayment(giftCardNumber)" data-dismiss="modal">SUBMIT PAYMENT</button>
+                </center>
+            </div>
+        </div>
+
+        <div ng-switch-when="coupon">
+            <div class="row">
+                <h3 class="text-center mb20">Apply Coupon</h3>
+                <div class="col-sm-6">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="side-text control-label col-sm-6" for="cardNumber" style="padding-right: 0px">Coupon Code</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="cashReceived" placeholder="" ng-model="couponCode">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-sm-6 mb20">
+                    <numkeypad ng-model="couponCode"> </numkeypad>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <center>
+                    <button type="button" class="btn btn-blue btn-wide" data-dismiss="modal" ng-click="submitCouponCode(couponCode)">SUBMIT CODE</button>
+                </center>
+            </div>
+        </div>
+
+        <div ng-switch-when="discount">
+            <div class="row">
+                <h3 class="text-center mb20">Apply Discount</h3>
+                <div class="col-sm-12">
+                	<input type="text" class="form-control" id="discountValue" placeholder="Discount in $" ng-value="discountValue">
+                	 <input type="text" class="form-control" id="discountValue" placeholder="Discount in %" ng-value="discountValue">
+                    <button class="sk-btn btn-orange footer-button" ng-click="managerDiscountApproval()">Apply Discount</button>
+                </div>
+            </div>
+        </div>
+        
+        <div ng-switch-when="band">
+            <div class="row">
+                <h3 class="text-center mb20">_LINK BAND</h3>
+                <div class="col-sm-12">
+                    <button class="sk-btn btn-orange footer-button" ng-click="getRFIDTag()">Get Tag ID</button>
+                    <h3 ng-bind="tagData"></h3>
+                </div>
+            </div>
+        </div>
+        
+
+
+        <div ng-switch-default>
+
+        </div>
+
+
+
+    <!--<div ng-switch-when="credit">
+        <div class="row">
+            <h3 class="text-center mb20">Credit Card Payment</h3>
+            <div class="col-sm-6">
+
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="side-text control-label col-sm-6" for="cashReceived" style="padding-right: 0px">Card Number</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" ng-focus="creditFieldFocused('ccn')" id="card.ccn" placeholder="" ng-model="card.ccn">
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="side-text control-label col-sm-6" for="cardType" style="padding-right: 0px">Card Type</label>
+                        <div class="dropdown col-sm-6 ">
+                            <div class="btn-group">
+                              <button id-"cardType" type="button" class="btn btn-default btn-modal dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Action <span class="caret"></span>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a href=""><i class="fa fa-cc-visa"></i> Visa</a></li>
+                                <li><a href=""><i class="fa fa-cc-mastercard"></i> MasterCard</a></li>
+                                <li><a href=""><i class="fa fa-cc-discover"></i> Discover</a></li>
+                                <li><a href=""><i class="fa fa-cc-amex"></i> American Express</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href=""><i class="fa fa-apple"></i> Apple Pay</a></li>
+                                <li><a href=""><i class="fa fa-android"></i> Android Pay</a></li>
+
+                              </ul>
+                            </div>
+                            <button id="cardType" class="form-control btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
+                                <span class="caret"></span></button>
+
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Type 1</a></li>
+                                <li><a href="#">Type 2</a></li>
+                                <li><a href="#">Type 3</a></li>
+                            </ul>
+                        </div>
+                    </div> 
+                    <div class="form-group">
+                        <label class="side-text control-label col-sm-6" for="expires" style="padding-right: 0px">Expires</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="expiresM" ng-focus="creditFieldFocused('expM')" maxlength="2" ng-model="card.expM" placeholder="MM">
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" maxlength="2" id="expiresY" ng-focus="creditFieldFocused('expY')" ng-model="card.expY" placeholder="YY">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="side-text control-label col-sm-6" for="cvv" style="padding-right: 0px">CVV</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" maxlength="4" ng-focus="creditFieldFocused('cvv')" ng-model="card.cvv" id="cvv" placeholder="" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="side-text control-label col-sm-6" for="cvv" style="padding-right: 0px">Amount</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" ng-focus="creditFieldFocused('amount')" ng-value="getNumberString(card.amount)" id="amount" placeholder="">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-6 mb20">
+                <numkeypad ng-model="card[selectedCreditField]"> </numkeypad>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <center>
+                <button type="button" class="btn btn-blue btn-wide" ng-click="submitCreditCardPayment()" data-dismiss="modal">SUBMIT PAYMENT</button>
+            </center>
+        </div>
+    </div>-->
+
+    <div ng-switch-when="manager-auth" >
+        <div class="row">
+            <h3 class="text-center mb20">Manager Approval</h3>
+            <div class="col-sm-6">
+
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="side-text control-label col-sm-6" for="managerId" style="padding-right: 0px">Manager ID</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="managerId" ng-focus="checkFieldFocused('managerId')" placeholder="" ng-model="auth.managerId">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="side-text control-label col-sm-6" for="managerPin" style="padding-right: 0px">Manager PIN</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" ng-focus="checkFieldFocused('managerPin')" id="managerPin"  placeholder="" ng-model="auth.managerPin">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-6 mb20">
+                <numkeypad ng-model="auth[selectedAuthField]"> </numkeypad>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <center>
+                <button type="button" class="btn btn-blue btn-wide" ng-click="verifyManagerPin()" data-dismiss="modal">Approve</button>
+            </center>
+        </div>
+    </div>
+    
+     <div ng-switch-when="manager-auth-discount" >
+        <div class="row">
+            <h3 class="text-center mb20">Manager Approval</h3>
+            <div class="col-sm-6">
+
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="side-text control-label col-sm-6" for="managerId" style="padding-right: 0px">Manager ID</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="managerId" ng-focus="checkFieldFocused('managerId')" placeholder="" ng-model="auth.managerId">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="side-text control-label col-sm-6" for="managerPin" style="padding-right: 0px">Manager PIN</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" ng-focus="checkFieldFocused('managerPin')" id="managerPin"  placeholder="" ng-model="auth.managerPin">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-6 mb20">
+                <numkeypad ng-model="auth[selectedAuthField]"> </numkeypad>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <center>
+                <button type="button" class="btn btn-blue btn-wide" ng-click="managerDiscount()" data-dismiss="modal">Approve</button>
+            </center>
+        </div>
+    </div>
+ </div>
+</modal>
+
+<sze-footer-navigation order="order" next-label="Complete" prev-label="Offers" next="attemptCompleteOrder" prev="goToOffersScreen" current="'payment'"></sze-footer-navigation>

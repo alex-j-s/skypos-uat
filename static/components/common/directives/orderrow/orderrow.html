@@ -1,0 +1,43 @@
+
+
+<td class="col-xs-4"><b>{{orderItem.product.name}}</b>
+    <br><span style="color:#808080;">{{ order.jumpStartTime }}, {{ orderItem.product.jumpDurationMinutes }} MINS</span>
+</td>
+<td class="col-xs-2" style="line-height: 50px;">
+   <span>{{orderItem.unitPrice | currency}}</span>
+</td>
+<td ng-show="orderInProgress()" class="col-xs-2">
+    <div style="padding:5px 0px 0px 0px; width:100%;">
+        <div class="dropdown ">
+                <div class="select-style" >
+                    <select id="dropdown1" style="margin:0px" ng-model="orderItem.quantity" ng-change="updateOrderQuantity()">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+                </div>
+        </div>
+
+        <!-- <div class="qty">
+            <button type="button" class="sk-btn btn-blue minus" ng-click=""><i class="fa fa-minus"></i></button>
+            <div class="qty-input" ng-bind="orderItem.quantity"></div>
+            <button type="button" class="sk-btn btn-blue plus" ng-click=""><i class="fa fa-plus"></i></button>
+        </div> -->
+        <!-- todo: quantity +/- -->
+    </div>
+</td>
+<td ng-show="!orderInProgress()" class="col-xs-2" style="line-height: 50px;">
+    <span>{{ orderItem.quantity }} </span>
+</td>
+<td class="col-xs-2" style="line-height: 50px;">
+    <span>{{orderItem.itemSubTotal | currency}} </span>
+</td>
+<td class="col-xs-2" style="line-height: 50px;"><button ng-show="orderInProgress()" class="sk-btn btn-action-red pull-right" aria-hidden="true" ng-click="removeOrderItem()" >REMOVE</button>
+<button ng-show="orderPurchased()" class="sk-btn btn-action-red pull-right" aria-hidden="true" ng-click="returnItem()" >RETURN ITEM</button>
+</td>

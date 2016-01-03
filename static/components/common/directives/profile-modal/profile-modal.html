@@ -1,0 +1,478 @@
+<ul class="nav nav-tabs" ng-init="activeTab='general';isEditMode=true">
+    <li ng-class="{active: activeTab == 'general'}">
+        <a ng-click="activeTab='general'">General</a>
+    </li>
+    <li ng-class="{active: activeTab == 'paymentMethods'}">
+        <a ng-click="activeTab='paymentMethods'">Gift Cards</a>
+    </li>
+    <li ng-class="{active: activeTab == 'orderHistory'}">
+        <a ng-click="getOrders()"><i class="fa fa-cog fa-spin" ng-show="loadingOrders"></i>Orders</a>
+    </li>
+    <li ng-class="{active: activeTab == 'waivers'}">
+        <a ng-click="activeTab='waivers'">Waivers</a>
+    </li>
+    <li ng-class="{active: activeTab == 'minors'}">
+        <a ng-click="activeTab='minors'">Minors</a>
+    </li>
+</ul>
+<div class="tab-content">
+    <style type="text/css">
+
+    #edit-profile .label-tall {
+        padding-top: 15px;
+    }
+    #edit-profile .input-tall {
+        height: 3.5rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1.25em;
+        font-weight: 100;
+    }
+    .modal li {
+        height: 54px;
+    }
+    </style>
+    <div ng-switch="activeTab">
+        <div ng-switch-when='general'>
+            <h4 class="ml20">CUSTOMER INFORMATION</h4>
+            <form id="edit-profile" class="form-horizontal" name="editProfileForm" novalidate ng-submit="editProfileForm.$invalid || updateAccount()" style="display: flex;">
+            <!-- <alert ng-if="alert" type="alert.type">{{alert.msg}}</alert> -->
+            <div class="col-sm-12" id="contact-information">
+
+                <!-- image and name  - row 1 -->
+                <div class="row well" style="padding: 10px;">
+                    <div class="col-sm-2">
+                        <img ng-show="profile.photo!=null" ng-src="profile.photo" alt="" class="center-block img-circle img-responsive" height="100px">
+                    </div>
+                    <div class="col-sm-5 mt30">
+                        <div class="form-group">
+                            <label class="col-sm-6 control-label">First Name</label>
+                            <div class="col-sm-6">
+                              <p class="form-control-static">{{ profile.firstName }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 mt30">
+                        <div class="form-group">
+                            <label class="col-sm-6 control-label">Last Name</label>
+                            <div class="col-sm-6">
+                              <p class="form-control-static">{{ profile.lastName }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- contact details - row 2 -->
+
+                <div class="row mt10">
+                    <div ng-switch="isEditMode">
+                        <div class="edit-mode" ng-switch-when="true">
+                            <p class="col-sm-12 text-right bg-danger text-danger">Required text in red</p>
+                        </div>
+                    </div>
+                    <!-- column 2 -->
+                    <div class="col-sm-6">
+                        <div class="form-group" ng-switch="isEditMode">
+                            <div ng-switch-when="false">
+                                <label class="col-sm-4 control-label">Date of Birth</label>
+                                <div class="col-sm-8">
+                                  <p class="form-control-static" ng-if="!isEditMode" ng-bind="profile.birthday | date:'MM/dd/yyyy'"></p>
+                                </div>
+                            </div>
+                            <div class="edit-mode" ng-switch-when="true">
+                                <sze-birthday-dropdown form="editProfileForm" is-submit="editProfileForm.$submitted" birthday="editProfile.birthday" label-class="'col-sm-4 control-label'" dropdown-class="'col-sm-8'"></sze-birthday-dropdown>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-switch="isEditMode">
+                            <div ng-switch-when="false">
+                                <label class="col-sm-4 control-label">Gender</label>
+                                <div class="col-sm-8">
+                                  <p class="form-control-static" ng-if="!isEditMode" ng-bind="profile.gender"></p>
+                                </div>
+                            </div>
+                            <div class="edit-mode" ng-switch-when="true">
+                                <label class="control-label col-sm-4 label-tall text-danger" ng-class="{'error': editProfileForm.$submitted && editProfileForm.gender.$invalid}">Gender</label>
+                                <div class="col-sm-8">
+                                    <select name="gender" class="form-control input-tall" ng-model="editProfile.gender" class="form-control" ng-class="{'error': editProfileForm.$submitted && editProfileForm.gender.$invalid}" required>
+                                        <option value="">-- Select One --</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Male">Male</option>
+                                    </select>
+                                    <small class="error" ng-if="editProfileForm.$submitted && editProfileForm.gender.$error.required">This field is required.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-switch="isEditMode">
+                            <div ng-switch-when="false">
+                                <label class="col-sm-4 control-label">Email</label>
+                                <div class="col-sm-8">
+                                  <p class="form-control-static" ng-if="!isEditMode" ng-bind="profile.email"></p>
+                                </div>
+                            </div>
+                            <div class="edit-mode" ng-switch-when="true">
+                                <label class="control-label col-sm-4 label-tall text-danger" ng-class="{'error': editProfileForm.$submitted && editProfileForm.email.$invalid }">
+                                    Email
+                                </label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control input-tall" ng-model="editProfile.email" name="email" ng-class="{'error': editProfileForm.$submitted && editProfileForm.email.$invalid }" sze-email-validate required>
+                                    <small class="error" ng-if="editProfileForm.$submitted && editProfileForm.email.$error.required">This field is required.</small>
+                                    <small class="error" ng-if="editProfileForm.$submitted &&
+                         !editProfileForm.email.$error.required &&
+                         editProfileForm.email.$error.emailValidate">This email is invalid. Format: xxx@xxx.xxx</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-switch="isEditMode">
+                            <div ng-switch-when="false">
+                                <label class="col-sm-4 control-label">Phone</label>
+                                <div class="col-sm-8">
+                                  <p class="form-control-static" ng-if="!isEditMode" ng-bind="profile.phoneNumber"></p>
+                                </div>
+                            </div>
+                            <div class="edit-mode" ng-switch-when="true">
+                                <label class="control-label col-sm-4 label-tall" ng-class="{'error': editProfileForm.$submitted && editProfileForm.phoneNumber.$invalid}">
+                                    Phone
+                                </label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control input-tall" ng-model="editProfile.phoneNumber" name="phoneNumber" ng-pattern=/^[0-9()+-]{1,}$/ ng-class="{'error': editProfileForm.$submitted && editProfileForm.phoneNumber.$invalid }">
+                                    <small class="error" ng-if="editProfileForm.$submitted &&
+                         editProfileForm.phoneNumber.$error.pattern">Please only use 0-9 + ( ) and -.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-switch="isEditMode">
+                            <div ng-switch-when="false">
+                                <label class="col-sm-4 control-label">Mobile</label>
+                                <div class="col-sm-8">
+                                  <p class="form-control-static" ng-if="!isEditMode" ng-bind="profile.mobilePhoneNumber"></p>
+                                </div>
+                            </div>
+                            <div class="edit-mode" ng-switch-when="true">
+                                <label class="control-label col-sm-4 label-tall" ng-class="{'error': editProfileForm.$submitted && editProfileForm.mobilePhoneNumber.$invalid}">
+                                    Mobile
+                                </label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control input-tall" ng-model="editProfile.mobilePhoneNumber" name="mobilePhoneNumber" ng-pattern=/^[0-9()+-]{1,}$/ ng-class="{'error': editProfileForm.$submitted && editProfileForm.mobilePhoneNumber.$invalid}">
+                                    <small class="error" ng-if="editProfileForm.$submitted &&
+                         editProfileForm.mobilePhoneNumber.$error.pattern">Please only use 0-9 + ( ) and -.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- column 3 -->
+                    <div class="col-sm-6">
+                        <div class="form-group" ng-switch="isEditMode">
+                            <div ng-switch-when="false">
+                                <label class="col-sm-4 control-label">Country</label>
+                                <div class="col-sm-8">
+                                  <p class="form-control-static" ng-if="!isEditMode" ng-bind="profile.mobilePhoneNumber"></p>
+                                </div>
+                            </div>
+                            <div class="edit-mode" ng-switch-when="true">
+                                <label class="control-label col-sm-4 label-tall">Country</label>
+                                <div class="col-sm-8">
+                                    <select name="countryCode" class="form-control input-tall" ng-change="getStateList()" ng-if="!isEditMode" ng-bind="profile.personmailingcountrycode">
+                                        <option value="">--Select Country--</option>
+                                        <option ng-repeat="country in countryList" value="{{country.isoCode}}" ng-selected="country.isoCode === editProfile.personmailingcountrycode">{{country.label}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-switch="isEditMode">
+                            <div ng-switch-when="false">
+                                <label class="col-sm-4 control-label">Address</label>
+                                <div class="col-sm-8">
+                                  <p class="form-control-static" ng-if="!isEditMode" ng-bind="profile.personmailingstreet"></p>
+                                </div>
+                            </div>
+                            <div class="edit-mode" ng-switch-when="true">
+                                <label class="control-label col-sm-4 label-tall">Address</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control input-tall" ng-model="editProfile.personmailingstreet" name="address">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-switch="isEditMode">
+                            <div ng-switch-when="false">
+                                <label class="col-sm-4 control-label">City</label>
+                                <div class="col-sm-8">
+                                  <p class="form-control-static" ng-if="!isEditMode" ng-bind="profile.personmailingcity"></p>
+                                </div>
+                            </div>
+                            <div class="edit-mode" ng-switch-when="true">
+                                <label class="control-label col-sm-4 label-tall">City</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control input-tall" ng-model="editProfile.personmailingcity" name="city">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-switch="isEditMode">
+                            <div ng-switch-when="false">
+                                <label class="col-sm-4 control-label">State/Region</label>
+                                <div class="col-sm-8">
+                                  <p class="form-control-static" ng-if="!isEditMode" ng-bind="profile.personmailingstatecode"></p>
+                                </div>
+                            </div>
+                            <div class="edit-mode" ng-switch-when="true">
+                                <label class="control-label col-sm-4 label-tall">State/Region</label>
+                                <div class="col-sm-8">
+                                    <select name="stateCode" class="form-control input-tall" ng-model="editProfile.personmailingstatecode" ng-disabled="!showStateList">
+                                        <option value="">--Select State--</option>
+                                        <option ng-repeat="state in stateList" value="{{state.isoCode}}" ng-selected="state.isoCode === editProfile.personmailingstatecode">{{state.label}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-switch="isEditMode">
+                            <div ng-switch-when="false">
+                                <label class="col-sm-4 control-label">Postal/Zip</label>
+                                <div class="col-sm-8">
+                                  <p class="form-control-static" ng-if="!isEditMode" ng-bind="profile.personmailingpostalcode"></p>
+                                </div>
+                            </div>
+                            <div class="edit-mode" ng-switch-when="true">
+                                <label class="control-label col-sm-4 label-tall text-danger" ng-class="{'error': editProfileForm.$submitted && editProfileForm.postalCode.$invalid}">Postal/Zip</label>
+                                <div class="col-sm-8">
+                                    <input type="text" ng-model="editProfile.personmailingpostalcode" class="form-control input-tall" name="postalCode" ng-class="{'error': editProfileForm.$submitted && editProfileForm.postalCode.$invalid }" required>
+                                    <small class="error" ng-if="editProfileForm.$submitted && editProfileForm.postalCode.$error.required">This field is required.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+
+                <!-- <alert ng-if="alert" type="alert.type">{{alert.msg}}</alert> -->
+                <!-- <ul id="contact-information">
+                    <li class="clearfix" ng-switch="isEditMode">
+                        <div ng-switch-when="false">
+                            <span class="contact-label small-5 columns">Date of Birth1</span>
+                            <span class="contact-detail small-7 columns" ng-if="!isEditMode" ng-bind="profile.birthday | date:'MM/dd/yyyy'"></span>
+                        </div>
+                        <div class="edit-mode" ng-switch-when="true">
+                            <sze-birthday-dropdown form="editProfileForm" is-submit="editProfileForm.$submitted" birthday="editProfile.birthday" label-class="'medium-5 columns contact-label'" dropdown-class="'medium-7 columns'"></sze-birthday-dropdown>
+                        </div>
+                    </li>
+                    <li class="clearfix" ng-switch="isEditMode">
+                        <div ng-switch-when="false">
+                            <span class="contact-label small-5 columns">Gender</span>
+                            <span id="gender-detail" class="contact-detail small-7 columns" ng-if="!isEditMode" ng-bind="profile.gender"></span>
+                        </div>
+                        <div class="edit-mode" ng-switch-when="true">
+                            <label class="contact-label medium-5 columns" ng-class="{'error': editProfileForm.$submitted && editProfileForm.gender.$invalid}">Gender *</label>
+                            <div class="medium-7 columns">
+                                <select name="gender" ng-model="editProfile.gender" ng-class="{'error': editProfileForm.$submitted && editProfileForm.gender.$invalid}" required>
+                                    <option value="">-- Select One --</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Male">Male</option>
+                                </select>
+                                <small class="error" ng-if="editProfileForm.$submitted && editProfileForm.gender.$error.required">This field is required.</small>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="clearfix" ng-switch="isEditMode">
+                        <div ng-switch-when="false">
+                            <span class="contact-label small-5 columns">Email Address</span>
+                            <span class="contact-detail small-7 columns" ng-if="!isEditMode" ng-bind="profile.email"></span>
+                        </div>
+                        <div class="edit-mode" ng-switch-when="true">
+                            <label class="contact-label medium-5 columns" ng-class="{'error': editProfileForm.$submitted && editProfileForm.email.$invalid }">
+                                Email Address *
+                            </label>
+                            <div class="medium-7 columns">
+                                <input type="text" ng-model="editProfile.email" name="email" ng-class="{'error': editProfileForm.$submitted && editProfileForm.email.$invalid }" sze-email-validate required>
+                                <small class="error" ng-if="editProfileForm.$submitted && editProfileForm.email.$error.required">This field is required.</small>
+                                <small class="error" ng-if="editProfileForm.$submitted &&
+                     !editProfileForm.email.$error.required &&
+                     editProfileForm.email.$error.emailValidate">This email is invalid. Format: xxx@xxx.xxx</small>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="clearfix" ng-switch="isEditMode">
+                        <div ng-switch-when="false">
+                            <span class="contact-label small-5 columns">Primary Phone</span>
+                            <span class="contact-detail small-7 columns" ng-if="!isEditMode" ng-bind="profile.phoneNumber"></span>
+                        </div>
+                        <div class="edit-mode" ng-switch-when="true">
+                            <label class="contact-label medium-5 columns" ng-class="{'error': editProfileForm.$submitted && editProfileForm.phoneNumber.$invalid}">
+                                Primary Phone
+                            </label>
+                            <div class="medium-7 columns">
+                                <input type="text" ng-model="editProfile.phoneNumber" name="phoneNumber" ng-pattern=/^[0-9()+-]{1,}$/ ng-class="{'error': editProfileForm.$submitted && editProfileForm.phoneNumber.$invalid }">
+                                <small class="error" ng-if="editProfileForm.$submitted &&
+                     editProfileForm.phoneNumber.$error.pattern">Please only use 0-9 + ( ) and -.</small>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="clearfix" ng-switch="isEditMode">
+                        <div ng-switch-when="false">
+                            <span class="contact-label small-5 columns">Mobile Phone</span>
+                            <span class="contact-detail small-7 columns" ng-if="!isEditMode" ng-bind="profile.mobilePhoneNumber"></span>
+                        </div>
+                        <div class="edit-mode" ng-switch-when="true">
+                            <label class="contact-label medium-5 columns" ng-class="{'error': editProfileForm.$submitted && editProfileForm.mobilePhoneNumber.$invalid}">
+                                Mobile Phone
+                            </label>
+                            <div class="medium-7 columns">
+                                <input type="text" ng-model="editProfile.mobilePhoneNumber" name="mobilePhoneNumber" ng-pattern=/^[0-9()+-]{1,}$/ ng-class="{'error': editProfileForm.$submitted && editProfileForm.mobilePhoneNumber.$invalid}">
+                                <small class="error" ng-if="editProfileForm.$submitted &&
+                     editProfileForm.mobilePhoneNumber.$error.pattern">Please only use 0-9 + ( ) and -.</small>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="clearfix" ng-switch="isEditMode">
+                        <div ng-switch-when="false">
+                            <span class="contact-label small-5 columns">Country</span>
+                            <span class="contact-detail small-7 columns" ng-if="!isEditMode" ng-bind="profile.personmailingcountrycode"></span>
+                        </div>
+                        <div class="edit-mode" ng-switch-when="true">
+                            <label class="contact-label medium-5 columns">Country</label>
+                            <div class="medium-7 columns">
+                                <select name="countryCode" ng-change="getStateList()" ng-model="editProfile.personmailingcountrycode">
+                                    <option value="">--Select Country--</option>
+                                    <option ng-repeat="country in countryList" value="{{country.isoCode}}" ng-selected="country.isoCode === editProfile.personmailingcountrycode">{{country.label}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="clearfix" ng-switch="isEditMode">
+                        <div ng-switch-when="false">
+                            <span class="contact-label small-5 columns">Address</span>
+                            <span class="contact-detail small-7 columns" ng-if="!isEditMode" ng-bind="profile.personmailingstreet"></span>
+                        </div>
+                        <div class="edit-mode" ng-switch-when="true">
+                            <label class="contact-label medium-5 columns">Address</label>
+                            <div class="medium-7 columns">
+                                <input type="text" ng-model="editProfile.personmailingstreet" name="address">
+                            </div>
+                        </div>
+                    </li>
+                    <li class="clearfix" ng-switch="isEditMode">
+                        <div ng-switch-when="false">
+                            <span class="contact-label small-5 columns">City</span>
+                            <span class="contact-detail small-7 columns" ng-if="!isEditMode" ng-bind="profile.personmailingcity"></span>
+                        </div>
+                        <div class="edit-mode" ng-switch-when="true">
+                            <label class="contact-label medium-5 columns">City</label>
+                            <div class="medium-7 columns">
+                                <input type="text" ng-model="editProfile.personmailingcity" name="city">
+                            </div>
+                        </div>
+                    </li>
+                    <li class="clearfix" ng-switch="isEditMode">
+                        <div ng-switch-when="false">
+                            <span class="contact-label small-5 columns">State/Region</span>
+                            <span class="contact-detail small-7 columns" ng-if="!isEditMode" ng-bind="profile.personmailingstatecode"></span>
+                        </div>
+                        <div class="edit-mode" ng-switch-when="true">
+                            <label class="contact-label medium-5 columns">State/Region</label>
+                            <div class="medium-7 columns">
+                                <select name="stateCode" ng-model="editProfile.personmailingstatecode" ng-disabled="!showStateList">
+                                    <option value="">--Select State--</option>
+                                    <option ng-repeat="state in stateList" value="{{state.isoCode}}" ng-selected="state.isoCode === editProfile.personmailingstatecode">{{state.label}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="clearfix" ng-switch="isEditMode">
+                        <div ng-switch-when="false">
+                            <span class="contact-label small-5 columns">Postal/Zip</span>
+                            <span class="contact-detail small-7 columns" ng-if="!isEditMode" ng-bind="profile.personmailingpostalcode"></span>
+                        </div>
+                        <div class="edit-mode" ng-switch-when="true">
+                            <label class="contact-label medium-5 columns" ng-class="{'error': editProfileForm.$submitted && editProfileForm.postalCode.$invalid}">Postal/Zip *</label>
+                            <div class="medium-7 columns">
+                                <input type="text" ng-model="editProfile.personmailingpostalcode" name="postalCode" ng-class="{'error': editProfileForm.$submitted && editProfileForm.postalCode.$invalid }" required>
+                                <small class="error" ng-if="editProfileForm.$submitted && editProfileForm.postalCode.$error.required">This field is required.</small>
+                            </div>
+                        </div>
+                    </li>
+                </ul> -->
+            </form>
+        </div>
+        <div ng-switch-when='paymentMethods'>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Amount</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="giftcard in profile.giftcards">
+                        <td>{{ giftcard.cardNumber }}</td>
+                        <td>{{ giftcard.balance | currency }}</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div ng-switch-when='orderHistory'>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Order Number</th>
+                        <th>Park</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="order in orders track by $index | orderBy:'createdDate'">
+                        <td>{{ order.createdDate | date : 'short' }}</td>
+                        <td>{{ order.orderNumber }}</td>
+                        <td>{{ order.parkName }}</td>
+                        <td>{{ order.totalOrderAmount | currency }}</td>
+                        <td>{{ order.status }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div ng-switch-when='waivers'>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Park</th>
+                        <th>Expiration Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="waiver in profile.waivers">
+                            <td>{{ waiver.park.name }}</td>
+                            <td>{{ waiver.expirationDate | date : 'mediumDate' }}</td>
+                            <td>{{ getWaiverStatus(waiver) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div ng-switch-when='minors'>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Birthday</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="minor in profile.minors">
+                            <td>{{ minor.firstName }} {{ minor.lastName }}</td>
+                            <td>{{ minor.birthday | date : 'mediumDate' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,196 @@
+// bower:scss
+// endbower
+
+$standard-border: 1px solid #DEDEDE;
+$error-color: #E33411;
+
+.browsehappy {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+.footer {
+  margin-top: 5%;
+  width: 100%;
+  height: 200px;
+  background-color: $secondary-color;
+}
+
+/* Main Container Styles  */
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+
+  ng-view > div {
+
+    @media #{$small-up} {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    @media #{$xlarge-up} {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.footer {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Custom page footer */
+.footer {
+  padding-top: 19px;
+}
+
+$error-background-color: #ed4521;
+
+input.error,
+select.error {
+  border: 2px $error-background-color solid;
+}
+
+/* 404 page */
+#page-not-found {
+  img,
+  .button {
+    margin-top: rem-calc(30);
+  }
+}
+
+/* Responsive: Portrait tablets and up */
+@media #{$xlarge-up} {
+  $max-container-width: #{lower-bound($xlarge-range)};
+
+  .container {
+    max-width: $max-container-width;
+  }
+
+  .header,
+  .top-bar {
+    > div {
+      max-width: $max-container-width;
+      margin: 0 auto;
+    }
+  }
+
+  /* Remove the padding we set earlier */
+  .header,
+  .footer {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+
+@media #{$small-only}{
+  html{
+    font-size: 85%;
+  }
+
+  .columns {
+    padding-left:rem-calc(10);
+    padding-right:rem-calc(10);
+  }
+
+  .reveal-modal {
+    min-height: 50vh;
+  }
+}
+
+/* Custom tiny secondary split button - can be seen in Product List page filter */
+
+.custom-split.secondary.filter {
+  font-size: rem-calc(10);
+  padding:rem-calc(7) rem-calc(32) rem-calc(7) rem-calc(7);
+  margin-bottom: rem-calc(4);
+
+  span {
+    width:rem-calc(25);
+
+    .fa {
+      font-size:rem-calc(12)!important;
+    }
+  }
+}
+
+/* Text style for informational form text */
+.form-info-text {
+  font-size: rem-calc(16);
+  font-style: italic;
+  color:$body-color;
+  margin-bottom: rem-calc(8);
+  line-height: rem-calc(20);
+}
+
+.fa-remove,
+.fa-times {
+  color: $error-color;
+}
+
+sze-cart-timer,
+sze-greeting {
+  nav.top-bar {
+    height: 30px !important;
+    line-height: 30px;
+    color: $white;
+    border-bottom: none;
+  }
+}
+sze-cart-timer{
+  nav.top-bar {
+    background-color: $secondary-color;
+  }
+}
+
+sze-greeting {
+  nav.top-bar {
+    background-color: $success-color;
+  }
+}
+
+.datepicker[type="text"][readonly] {
+  background-color: $white;
+}
+
+@media print {
+
+  html {
+    font-size: 75%;
+  }
+
+  body {
+    margin: rem-calc(30);
+    color: $black !important;
+  }
+
+  @for $i from 1 through $total-columns {
+    // .small-#{$i} {
+    //   width: grid-calc($i, $total-columns);
+    // }
+    .medium-#{$i} {
+      width: grid-calc($i, $total-columns);
+    }
+    .large-#{$i} {
+      width: grid-calc($i, $total-columns);
+    }
+  }
+
+  .hide-for-large-only,
+  .hide-for-large-up,
+  .hide-for-small-only,
+  .hide-for-small-up,
+  .hide-for-medium-only,
+  .hide-for-medium-up,
+  .show-for-small-only,
+  .show-for-medium-only {
+    display: none;
+  }
+}

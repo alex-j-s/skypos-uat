@@ -1,0 +1,17 @@
+<div style="margin:-1.875rem;">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="reservationModalLabel">Scan Skyband</h4>
+    </div>
+    <div class="modal-body">
+        <div>
+            <input type="text" class="scanner-field" autofocus ng-model="input" placeholder="12345" />
+            <!--<input type="text" placeholder="SZO-0000000000" ng-model="orderNumber" />-->
+        </div>
+        <div class="modal-footer">
+            <div style="float:right;">
+                <button type="submit" class="btn btn-blue btn-wide" ng-click="dismissModal('Close button pressed')" data-dismiss="modal">CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>

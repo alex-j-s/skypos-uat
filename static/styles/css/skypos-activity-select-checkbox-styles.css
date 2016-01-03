@@ -1,0 +1,118 @@
+body {
+  font-family: sans-serif;
+  font-weight: normal;
+  /*margin: 10px;*/
+  color: #999;
+  background-color: #EEEEEE;
+}
+
+form {
+  /*margin: 40px 0;*/
+}
+
+
+label {
+  width: 100%;
+  margin: 0px;
+  /*border-radius: 3px;*/
+  /*border: 1px solid #D1D3D4*/
+}
+
+/* hide input */
+input.radio:empty {
+  margin-left: -999px;
+  display: none;
+
+}
+
+/* style label */
+input.radio:empty ~ label {
+  position: relative;
+  float: left;
+  line-height: 2.5em;
+  text-indent: 3.25em;
+  /*margin-top: 2em;*/
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 100%;
+  margin: 0px;
+  font-weight: 600;
+}
+
+input.radio:empty ~ label:before {
+  position: absolute;
+  display: block;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  content: '';
+  width: 2.9em;
+  background: #D1D3D4;
+
+  /*border-radius: 3px 0 0 3px;*/
+}
+
+/* toggle hover */
+input.radio:not(:checked) ~ label:before {
+  content:'\f00c';
+  font-family: FontAwesome;
+  text-indent: .9em;
+  color: #C2C2C2;
+  background-color: transparent;
+}
+
+input.radio:not(:checked) ~ label {
+  color: #888;
+}
+
+
+.radio:not(:checked) ~ label .inActive {
+  background-color: #C1C1C1;
+  pointer-events: none;
+  color: white;
+}
+
+.radio:checked ~ label .inActive {
+  background-color: #003BAB;
+  color: white;
+
+}
+
+
+/* toggle on */
+input.radio:checked ~ label:before {
+  content:'\f00c';
+  font-family: FontAwesome;
+  text-indent: .9em;
+  color: white;
+  background-color: #fd732b;
+}
+
+input.radio:checked ~ label {
+  /*color: #777;*/
+  background: #fafafa;
+}
+
+input.radio:checked ~ div{
+  color: #fd732b;
+  position: absolute;
+  margin: 0px 0px 0px 90%;
+  display: block;
+  z-index: 1;
+  width: 28px;
+  height: 36px;
+  font-size: 20pt;
+}
+
+input.radio:not(:checked) ~ div{
+  display: none;
+}
+
+
+/* radio focus */
+input.radio:focus ~ label:before {
+  /*box-shadow: 0 0 0 3px #999;*/
+}

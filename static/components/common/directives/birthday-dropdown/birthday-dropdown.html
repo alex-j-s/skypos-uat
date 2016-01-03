@@ -1,0 +1,51 @@
+<div id="birthday-group"
+     ng-class="{'error': isSubmit && (form.birthdayYear.$error.required ||
+               form.birthdayDay.$error.required ||
+               form.birthdayMonth.$error.required) }">
+
+  <label for="" class="{{labelClass}} label-tall"
+       ng-class="{'error': isSubmit && (form.birthdayYear.$error.required ||
+               form.birthdayDay.$error.required ||
+               form.birthdayMonth.$error.required) }" ng-bind="label + ' *'">
+  </label>
+  <div class="birthday-dropdown {{dropdownClass}}">
+    <div class="small-4" style="padding-right:0.1rem;float:left;">
+      <select name="birthdayMonth"
+              class="input-tall" 
+              ng-change="birthdayCtrl.updateDays(); birthdayCtrl.updateBirthday()"
+              ng-model="birthdayCtrl.birthdayMonth"
+              ng-class="{'error': isSubmit && form.birthdayMonth.$error.required}"
+              required>
+        <option value="">Month</option>
+        <option ng-repeat="month in birthdayCtrl.months" ng-selected="month.value == birthdayCtrl.birthdayMonth" value="{{month.value}}">{{month.label}}</option>
+      </select>
+    </div>
+    <div class="small-4" style="padding-right:0.1rem;padding-left:0.1rem;float:left;">
+      <select name="birthdayDay"
+              class="input-tall" 
+              ng-model="birthdayCtrl.birthdayDay"
+              ng-change="birthdayCtrl.updateBirthday()"
+              ng-class="{'error': isSubmit && form.birthdayDay.$error.required}"
+              required>
+        <option value="">Day</option>
+        <option ng-repeat="day in birthdayCtrl.days" ng-selected="day == birthdayCtrl.birthdayDay" value="{{day}}">{{day}}</option>
+      </select>
+    </div>
+    <div class="small-4" style="padding-left:0.1rem;float:left;">
+      <select name="birthdayYear"
+              class="input-tall" 
+              ng-model="birthdayCtrl.birthdayYear"
+              ng-change="birthdayCtrl.updateDays(); birthdayCtrl.updateBirthday()"
+              ng-class="{'error': isSubmit && form.birthdayYear.$error.required}"
+              required>
+        <option value="">Year</option>
+        <option ng-repeat="year in birthdayCtrl.years" ng-selected="year === birthdayCtrl.birthdayYear" value="{{year}}">{{year}}</option>
+      </select>
+    </div>
+    <small class="error"
+        ng-if="isSubmit &&
+                 ( form.birthdayYear.$error.required ||
+                 form.birthdayDay.$error.required ||
+                 form.birthdayMonth.$error.required )">This field is required.</small>
+  </div>
+</div>

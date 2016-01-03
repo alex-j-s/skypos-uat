@@ -1,0 +1,103 @@
+<div class="row">
+    <div ng-click="toggleProfileModal(jumper)" class="col-xs-1"><img ng-show="jumper.photo" ng-src="/{{jumper.photo}}" alt="{{jumper.firstName+ ' '+jumper.lastName}}" class="img-jumper" /></div>
+    <div ng-click="toggleProfileModal(jumper)" class="col-xs-3"><b>{{jumper.firstName+ ' '+jumper.lastName}} </b> ({{getAge(jumper.birthday)}})
+        <br>
+        <span class="text-muted">{{jumper.email}}</span>
+    </div>
+    <div class="col-xs-3">
+        <div ng-switch="getWaiverStatus()">
+            <div ng-switch-when="No Waiver">
+                <button class="sk-btn btn-red" ng-click="kickOffWaiverProcess()">No Waiver
+                    <i class="waiver-inactive glyphicon glyphicon-new-window"></i>
+                </button>
+            </div>
+            <div ng-switch-when="Pending">
+                <button class="sk-btn btn-warning" ng-click="toggleApprovalModal()">Pending
+                    <i class="waiver-pending glyphicon glyphicon-new-window"></i>
+                </button>
+            </div>
+            <div ng-switch-when="Expired">
+                <button class="sk-btn btn-red" ng-click="kickOffWaiverProcess()">Expired
+                    <i class="waiver-inactive glyphicon glyphicon-new-window"></i>
+                </button>
+            </div>
+            <div ng-switch-when="Approved">
+                <button class="sk-btn btn-success" ng-click="">Active
+                </button </div>
+                <div ng-switch-when="In Progress">
+                    <button class="sk-btn btn-warning" ng-click="toggleApprovalModal()">In Progress
+                        <i class="waiver-pending fa fa-cog fa-spin"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-4">
+        <div class="row">
+            <div class="col-xs-6" ng-repeat="addon in getAddOns()">
+                <div class="cell-combo">
+                    <div class="switch-toggle switch-sz pull-left" ng-click="addon.jumpers['_'+jumper.id+'_'] = !addon.jumpers['_'+jumper.id+'_']">
+                        <button class="sk-btn" ng-class="{'btn-default':!addon.jumpers['_'+jumper.id+'_']}">Yes</button>
+                        <button class="sk-btn" ng-class="{'btn-default':addon.jumpers['_'+jumper.id+'_']}">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-1" style="vertical-align:middle;"><i class="fa fa-trash" ng-click="removeJumper(jumper.participantId)"></i></div>
+    <modal visible="showApprovalModal" title="Waiver Approval">
+        <div class="row">
+            <dl class="dl-horizontal">
+                <dt><strong>Name</strong></dt>
+                <dd>{{ jumper.firstName + ' ' + jumper.lastName }}</dd>
+            </dl>
+        </div>
+        <div class="row">
+            <dl class="dl-horizontal">
+                <dt><strong>Birthday</strong></dt>
+                <dd>{{ jumper.birthday | date : 'mediumDate' }}</dd>
+            </dl>
+        </div>
+        <div class="row">
+            <dl class="dl-horizontal">
+                <dt><strong>Email</strong></dt>
+                <dd>{{ jumper.email }}</dd>
+            </dl>
+        </div>
+        <div class="row">
+            <dl class="dl-horizontal">
+                <dt><strong>Gender</strong></dt>
+                <dd>{{ jumper.gender }}</dd>
+            </dl>
+        </div>
+        <div class="row">
+            <dl class="dl-horizontal">
+                <dt><strong>Signature</strong></dt>
+                <dd>
+                    <img ng-show="hasSigImage" ng-src="{{signatureData}}" />
+                    <span ng-hide="hasSigImage">{{ waiver.signature }}</span>
+                </dd>
+            </dl>
+        </div>
+        <div class="row">
+            <div class="table">
+                <div class="row">
+                    <div class="col-xs-4">Name</div>
+                    <div class="col-xs-4">Birthday</div>
+                    <div class="col-xs-4">Gender</div>
+                </div>
+                <div class="row" ng-repeat="minor in jumper.minors">
+                    <div class="col-xs-4">{{ minor.firstName + ' ' + minor.lastName }}</div>
+                    <div class="col-xs-4">{{ minor.birthday | date : 'mediumDate' }}</div>
+                    <div class="col-xs-4">{{ minor.gender }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <center>
+                <button type="button" class="btn btn-red btn-wide" data-dismiss="modal" ng-click="kickOffWaiverProcess()">Decline & Resign</button>
+                <button type="button" class="btn btn-blue btn-wide" data-dismiss="modal" ng-click="approveWaiver()">Approve</button>
+            </center>
+        </div>
+    </modal>
+</div>

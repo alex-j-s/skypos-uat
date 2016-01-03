@@ -1,0 +1,103 @@
+<div class="container" id="guest">
+    <div class="row">
+        <div class="col-sm-offset-1 col-sm-5">
+            <form id="existingCustomer" class="guest-container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>EXISTING GUEST</h3>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-12">
+                        <input type="text" class="form-control" id="phoneNumberEmail" placeholder="Phone Number or Email Address" ng-model="criteria.numOrEmail">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" id="firstNameEC" placeholder="First Name" ng-model="criteria.firstName">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" id="lastNameEC" placeholder="Last Name" ng-model="criteria.lastName">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-6 order-label">
+                        Have an order number?
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" id="orderNumber" placeholder="Order Number" ng-model="criteria.orderNumber">
+                    </div>
+                </div>
+                <button type="button" class="sk-btn btn-blue btn-xl" ng-click="doGuestSearch(criteria)" ng-disable="!canSearch(criteria">Search</button>
+            </form>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="band mt30">
+                        <div class="col-md-6 order-label">
+                            SkyBand guest search
+                        </div>
+                        <div class="col-md-6">
+                            <a href="" data-toggle="modal" data-target="#skybandsearch" class="sk-btn btn-orange btn-xl"><i class="fa fa-barcode"></i> Search</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-5">
+            <div class="guest-container" style="border-left: 1px #ddd solid; padding-left: 2rem;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>ADD NEW GUEST</h3>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" placeholder="First Name" ng-model="newGuest.firstName">
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" placeholder="Last Name" ng-model="newGuest.lastName">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-sm-12">
+                        <input type="email" class="form-control" placeholder="Email" ng-model="newGuest.email">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-sm-12">
+                        <select class="form-control" ng-model="newGuest.gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-sm-12">
+                        <sze-birthday-dropdown form="form" is-submit="form.$submitted" birthday="newGuest.birthday" label="Birthday"></sze-birthday-dropdown>
+                    </div>
+                </div>
+                <button type="submit" class="sk-btn btn-blue btn-xl" ng-click="addGuest(newGuest)">Add Guest</button>
+            </div>
+        </div>
+    </div>
+    <!-- Skyband Search -->
+    <div class="modal fade" id="skybandsearch" tabindex="-1" role="dialog" aria-labelledby="skybandsearch">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Skyband Search</h4>
+                </div>
+                <div class="modal-body">
+                    Scan Skyband ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="sk-btn btn-blue">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<sze-footer-navigation order="order" next="goToJumpersScreen" prev="goToActivitiesScreen" next-label="Jumpers" prev-label="Activity" current="'guest'"></sze-footer-navigation>
