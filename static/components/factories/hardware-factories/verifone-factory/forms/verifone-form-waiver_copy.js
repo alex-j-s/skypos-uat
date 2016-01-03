@@ -101,6 +101,8 @@ angular.module('skyZoneApp')
 			});
 		}
 		
+		fac.capturedSigData = false;
+		
 		fac.sigCapResponder = function(response,acceptedResponse) {
 			
 			return new Promise(function(resolve,reject) {
@@ -121,6 +123,10 @@ angular.module('skyZoneApp')
 					var numOfPackets = Math.ceil((totalSize / packetSize));
 					fac.numOfPackets = numOfPackets;
 					console.log('[HWCOMM] - NUMBER OF PACKETS   : ', numOfPackets);
+					
+					if ( totalSize > 0 ) {
+						fac.capturedSigData = true;
+					}
 					
 				} else {
 					console.log('[HWCOM] - unfortunatly not sig meta, bro.')
@@ -386,7 +392,10 @@ angular.module('skyZoneApp')
 			acceptedResponse: '',
 			listen: true,
 			shouldRespond:true,
-			next: function() { return fac.collectSignatureData }
+			next: function() { 
+				if ( fac.capturedSigData ) { return fac.collectSignatureData }
+				return fac.initDecline;
+			}
 		}
 		
 		fac.collectSignatureData = {
@@ -410,7 +419,9 @@ angular.module('skyZoneApp')
 					// link.click();			
 							
 					return fac.initAccept;
-				}
+				} else {
+					return fac.initDecline;
+				} 
 				return fac.collectSignatureData;
 			}
 		}
