@@ -209,7 +209,7 @@ angular.module('skyZoneApp')
 			fac.currentIndex = 1;
 			fac.minorIndex = 0;
 			fac.legalPageIndex = 0;
-			fac.accept = true;
+			fac.accepted = true;
 		
 			
 			fac.signatureCaptured = false;
