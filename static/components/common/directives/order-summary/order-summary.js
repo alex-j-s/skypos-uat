@@ -1,14 +1,15 @@
 'use strict';
 
 angular.module('skyZoneApp')
-    .directive('skyposOrderSummary', ['$rootScope', 'OrderService', function($rootScope, OrderService) {
+    .directive('skyposOrderSummary', ['$rootScope', '$location', '$routeParams', 'OrderService', function($rootScope, $location, $routeParams, OrderService) {
         // Runs during compile
         return {
             // name: '',
             // priority: 1,
             // terminal: true,
             scope: {
-                'order': '='
+                'order': '=',
+                'park':'='
             }, // {} = isolate, true = child, false/undefined = no change
             controller: function($scope, $element, $attrs, $transclude) {},
             // require: 'ngModel', // Array = multiple requires, ? = optional, ^ = check parent elements
@@ -63,18 +64,34 @@ angular.module('skyZoneApp')
                 }
 
                 $scope.cancelOrder = function() {
-                    //TODO: need specs on what to call -- update status does not work
-                    console.log('todo, cancel order');
 
-                    //$scope.order.status = 'Cancelled';
-                    //$rootScope.$broadcast('szeShowLoading');
-                    // OrderService.updateOrder($scope.order.id, $scope.order).then(function(result) {
-                    // 	$rootScope.$broadcast('szeHideLoading');
-                    // 	console.log('cancelled?: ', result);
-                    // },function(err) {
-                    // 	$rootScope.$broadcast('szeHideLoading');
-                    // 	$rootScope.$broadcast('szeError', 'Failed to cancel order: ', err);
-                    // });
+                    $rootScope.$broadcast('szeConfirm', {
+                    title: 'Cancel Order?',
+                    message: 'Continue will release the current reservation and naviagte to the Start screen. Continue? ',
+                    confirm: {
+                        label: 'Continue',
+                        action: function($clickEvent) {
+                            
+                            $rootScope.$broadcast('szeShowLoading');
+                            angular.forEach($scope.order.orderItems, function(item) {
+                                if ( item.reservation ) {
+                                    OrderService.deleteOrderLineItem($scope.order.id, item.id).then(function(result) {
+                                        $rootScope.$broadcast('szeHideLoading');
+                                        $location.path('/skypos/start/' + $routeParams.parkUrlSegment);
+                                        return;
+                                    }, logErrorStopLoading);
+                                }
+                            });
+                        }
+                    },
+                    cancel: {
+                        label: 'Cancel',
+                        action: function($clickEvent) {
+                            return;
+
+                        }
+                    }
+                })
 
                 }
 
