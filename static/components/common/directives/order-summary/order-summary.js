@@ -66,8 +66,8 @@ angular.module('skyZoneApp')
                 $scope.cancelOrder = function() {
 
                     $rootScope.$broadcast('szeConfirm', {
-                    title: 'Cancel Order?',
-                    message: 'Continue will release the current reservation and naviagte to the Start screen. Continue? ',
+                    title: 'Cancel Transaction?',
+                    message: 'Cancelling this transaction will release the current reservation and naviagte to the Start screen. Continue?',
                     confirm: {
                         label: 'Continue',
                         action: function($clickEvent) {
@@ -85,7 +85,7 @@ angular.module('skyZoneApp')
                         }
                     },
                     cancel: {
-                        label: 'Cancel',
+                        label: 'Close',
                         action: function($clickEvent) {
                             return;
 

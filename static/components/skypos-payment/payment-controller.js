@@ -57,6 +57,12 @@ angular.module('skyZoneApp')
         $scope.popDrawer = false;
         $scope.printReciept = function(order) {
             // $scope.order = order;
+
+            // display message for change:
+            $scope.popDrawer = false
+            
+
+
             if ( $scope.orderPurchased() ) {
                 EpsonService.printReciept(order,$scope.park,$scope.guest,"Sky Zone Copy","SALE",false,true);
                 EpsonService.printReciept(order,$scope.park,$scope.guest,"Customer Copy","SALE",$scope.popDrawer,false);

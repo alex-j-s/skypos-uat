@@ -121,9 +121,14 @@ angular.module('skyZoneApp')
 					var numOfPackets = Math.ceil((totalSize / packetSize));
 					fac.numOfPackets = numOfPackets;
 					console.log('[HWCOMM] - NUMBER OF PACKETS   : ', numOfPackets);
+
+					if ( totalSize === 0 ) {
+						fac.accepted = false;
+					}
 					
 				} else {
 					console.log('[HWCOM] - unfortunatly not sig meta, bro.')
+					fac.accepted = false;
 				}
 				
 				resolve([6]);
@@ -386,7 +391,14 @@ angular.module('skyZoneApp')
 			acceptedResponse: '',
 			listen: true,
 			shouldRespond:true,
-			next: function() { return fac.collectSignatureData }
+			next: function() { 
+
+				if ( !fac.accepted ) {
+					return fac.initDecline;
+				}
+
+				return fac.collectSignatureData 
+			}
 		}
 		
 		fac.collectSignatureData = {
