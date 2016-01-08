@@ -63,8 +63,11 @@ angular.module('skyZoneApp')
                 if(order.orderAccount.customer){
                     return order.orderAccount.customer.id;
                 }
-                else{
+                else if(order.orderAccount.group){
                     return order.orderAccount.group.id;
+                }
+                else{
+                    return -1;
                 }
             }
             console.log('++++ GUEST SEARCH RESULT: ', result);
