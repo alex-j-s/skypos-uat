@@ -167,21 +167,19 @@ angular.module('skyZoneApp')
             return $filter('currency')(value / 100);
         };
 
-        $scope.getChangedOwed = function(cash) {
-            if (cash == "" || cash == null || cash == undefined) {
-                cash = 0;
-            }
+        $scope.cashInput = $scope.order.totalAmountDue;
 
-            var change = (parseInt(cash) / 100) - $scope.order.totalAmountDue;
+        $scope.getChangedOwed = function() {
+            var change = ($scope.cashInput) - $scope.order.totalAmountDue;
             return $filter('currency')(change);
         }
 
         $scope.submitCashPayment = function(amount) {
-            console.log('submitting cash payment: ', amount / 100);
+            console.log('submitting cash payment: ', amount);
 
-            var changeDue = (amount/100) - $scope.order.totalAmountDue;
+            var changeDue = (amount) - $scope.order.totalAmountDue;
 
-            var payload = OrderService.createCashPayment(amount / 100);
+            var payload = OrderService.createCashPayment(amount);
 
             $rootScope.$broadcast('szeDismissError')
             $rootScope.$broadcast('szeShowLoading');
@@ -193,6 +191,10 @@ angular.module('skyZoneApp')
                     // setTimeout($scope.printReciept,3000);
                 }, logErrorStopLoading);
         };
+
+        $scope.creditCardDataComplete = function() {
+            return $scope.cashInput <= 0 
+        }
 
 
         ////////// END CASH //////////
@@ -297,6 +299,8 @@ angular.module('skyZoneApp')
                 'amount':$scope.order.totalAmountDue
             }
             $scope.selectedCreditField = 'ccn';
+
+            $scope.showModal = false;
         };
         
         
@@ -389,7 +393,7 @@ angular.module('skyZoneApp')
         ////////// CHECK MODAL /////////
         $scope.check = {
             'checkNumber':'',
-            'amount':$scope.order.totalAmountDue * 100
+            'amount':$scope.order.totalAmountDue
         };
         $scope.selectedCheckField = 'checkNumber';
         
@@ -403,7 +407,7 @@ angular.module('skyZoneApp')
 
             $rootScope.$broadcast('szeDismissError')
             $rootScope.$broadcast('szeShowLoading');
-            var payload = OrderService.createCheckPayment($scope.check.amount / 100,$scope.check.checkNumber,$filter('date')(new Date(),'yyyy-MM-dd'));
+            var payload = OrderService.createCheckPayment($scope.check.amount,$scope.check.checkNumber,$filter('date')(new Date(),'yyyy-MM-dd'));
             
             console.log('check payment: ', payload);
             
@@ -416,7 +420,7 @@ angular.module('skyZoneApp')
             
             $scope.check = {
                 'checkNumber':'',
-                'amount':$scope.order.totalAmountDue * 100
+                'amount':$scope.order.totalAmountDue
             }
             
         };

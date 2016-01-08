@@ -119,7 +119,7 @@
                         <div class="form-group">
                             <div class="col-sm-8 pull-right">
                                 <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="cashReceived" placeholder="" ng-value="getNumberString(cashInputValue)">
+                                    <input type="text" class="form-control" id="cashReceived" placeholder="" ng-model="cashInput">
                                 </div>
                                 <div class="col-sm-12">
                                     <span class="text-muted col-sm-6 sub-text text-right" for="cashReceived">Cash Received</span>
@@ -130,7 +130,7 @@
                         <div class="form-group">
                             <div class="col-sm-8 pull-right">
                                 <div class="col-sm-12">
-                                    <span class="outputtext">{{ getChangedOwed(cashInputValue) }}</span>
+                                    <span class="outputtext">{{ cashInput - order.totalAmountDue | currency }}</span>
                                     <!-- <input type="text" class="form-control" id="changedOwed" placeholder=""> -->
                                 </div>
                                  <div class="col-sm-12">
@@ -141,13 +141,13 @@
                     </form>
                 </div>
                 <div class="col-sm-5 mb20">
-                    <numkeypad isNumOnly='false' fullAmount='order.totalAmountDue' ng-model="cashInputValue"> </numkeypad>
+                    <numkeypad ng-model="cashInput"> </numkeypad>
                 </div>
                 
             </div>
             <div class="modal-footer">
                 <center>
-                    <button type="button" class="btn btn-blue btn-wide" data-dismiss="modal" ng-click="submitCashPayment(cashInputValue)">SUBMIT PAYMENT</button>
+                    <button type="button" class="btn btn-blue btn-wide" data-dismiss="modal" ng-disabled="cashDataComplete()" ng-click="submitCashPayment(cashInput)">SUBMIT PAYMENT</button>
                 </center>
             </div>
         </div>
@@ -189,7 +189,7 @@
                         <div class="form-group">
                             <label class="side-text control-label col-sm-6" for="checkAmount" style="padding-right: 0px">Amount</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" ng-focus="checkFieldFocused('amount')" id="checkAmount" ng-value="getNumberString(check.amount)" placeholder="">
+                                <input type="text" class="form-control" ng-focus="checkFieldFocused('amount')" id="checkAmount" ng-model="check.amount" placeholder="">
                             </div>
                         </div>
                     </form>
@@ -200,7 +200,7 @@
             </div>
             <div class="modal-footer">
                 <center>
-                    <button type="button" class="btn btn-blue btn-wide" ng-click="submitCheckPayment()" data-dismiss="modal">SUBMIT PAYMENT</button>
+                    <button type="button" class="btn btn-blue btn-wide" ng-disable="" ng-click="submitCheckPayment()" data-dismiss="modal">SUBMIT PAYMENT</button>
                 </center>
             </div>
         </div>
@@ -248,10 +248,10 @@
                         <div class="form-group">
                             <label class="side-text control-label col-sm-6" for="expires" style="padding-right: 0px">Expires</label>
                             <div class="col-sm-3">
-                                <input type="text" class="form-control" id="expiresM" ng-focus="creditFieldFocused('expM')" maxlength="2" ng-model="card.expM" placeholder="MM">
+                                <input type="text" class="form-control" id="expiresM" maxlength="2" ng-focus="creditFieldFocused('expM')" ng-model="card.expM" placeholder="MM">
                             </div>
                             <div class="col-sm-3">
-                                <input type="text" class="form-control" maxlength="2" id="expiresY" ng-focus="creditFieldFocused('expY')" ng-model="card.expY" placeholder="YY">
+                                <input type="text" class="form-control" id="expiresY" maxlength="2" ng-focus="creditFieldFocused('expY')" ng-model="card.expY" placeholder="YY">
                             </div>
                         </div>
                         <div class="form-group">
@@ -298,7 +298,7 @@
                         <div class="form-group">
                             <label class="side-text control-label col-sm-6" for="cardNumber" style="padding-right: 0px">Amount</label>
                             <div class="col-sm-6">
-                                <input currency-input-field type="text" class="form-control" id="giftcardamount" ng-focus="giftCardFieldFocused('amount')" placeholder="" ng-model="giftCard.amount">
+                                <input type="text" class="form-control" id="giftcardamount" ng-focus="giftCardFieldFocused('amount')" placeholder="" ng-model="giftCard.amount">
                             </div>
                         </div>
                     </form>
