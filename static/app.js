@@ -132,6 +132,18 @@ angular
                 templateUrl:'static/components/skypos-offers/offers-layout.html',
                 controller:'SPOffersController'
             })
+            .when('/skypos/offers/:parkUrlSegment/:orderId', {
+                resolve:{
+                    Catalog:CatalogResolve,
+                    Order:OrderResolve,
+                    Guest:function(){return false;}
+                },
+                data: {
+                    authorizedRoles: [USER_ROLES.pos_mgr, USER_ROLES.pos_user]
+                },
+                templateUrl:'static/components/skypos-offers/offers-layout.html',
+                controller:'SPOffersController'
+            })
             .when('/skypos/offers/:parkUrlSegment/:guestId/:orderId', {
                 resolve:{
                     Catalog:CatalogResolve,

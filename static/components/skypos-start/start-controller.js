@@ -58,7 +58,7 @@ angular.module('skyZoneApp')
 
             function getGuestId(order){
                 if(!order || !order.orderAccount){
-                    logErrorHideLoading('Sorry, there\'s a problem with that order.');
+                    return -1;
                 }
                 if(order.orderAccount.customer){
                     return order.orderAccount.customer.id;
@@ -85,7 +85,13 @@ angular.module('skyZoneApp')
 
             if(result){
                 console.log(result)
-                $scope.goToJumpersScreen(getGuestId(result), result.id);
+                if(getGuestId(result) !== -1){
+                    $scope.goToJumpersScreen(getGuestId(result), result.id);
+                }
+                else{
+                    $location.path('/skypos/offers/'+Park.parkUrlSegment+'/'+result.id);
+
+                }
             }else{
                 logErrorHideLoading('Unable to locate order. Please try again.');
             }
