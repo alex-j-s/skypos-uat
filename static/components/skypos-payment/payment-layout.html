@@ -108,7 +108,7 @@
 </div>
 
 
-<modal  title="{{modelTitle}}" visible="showModal" id="payment">
+<modal title="{{modelTitle}}" visible="showModal" id="paymentModal">
     <div ng-switch on="modelType">
         
         <div ng-switch-when="cash">
@@ -141,7 +141,7 @@
                     </form>
                 </div>
                 <div class="col-sm-5 mb20">
-                    <numkeypad ng-model="cashInputValue"> </numkeypad>
+                    <numkeypad isNumOnly='false' fullAmount='order.totalAmountDue' ng-model="cashInputValue"> </numkeypad>
                 </div>
                 
             </div>
@@ -275,7 +275,7 @@
 
             <div class="modal-footer">
                 <center>
-                    <button type="button" class="btn btn-blue btn-wide" ng-click="submitCreditCardPayment()" data-dismiss="modal">SUBMIT PAYMENT</button>
+                    <button type="button" class="btn btn-blue btn-wide" ng-disabled="creditCardDataComplete()" ng-click="submitCreditCardPayment()" data-dismiss="modal">SUBMIT PAYMENT</button>
                     <!-- <button type="button" class="btn btn-blue btn-wide" ng-click="kickOffPaymentProcess()" data-dismiss="modal">CAPTURE PAYMENT</button> -->
                 </center>
             </div>
@@ -298,7 +298,7 @@
                         <div class="form-group">
                             <label class="side-text control-label col-sm-6" for="cardNumber" style="padding-right: 0px">Amount</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" id="cardNumber" ng-focus="giftCardFieldFocused('amount')" placeholder="" ng-value="getNumberString(giftCard.amount)">
+                                <input currency-input-field type="text" class="form-control" id="giftcardamount" ng-focus="giftCardFieldFocused('amount')" placeholder="" ng-model="giftCard.amount">
                             </div>
                         </div>
                     </form>
@@ -310,7 +310,7 @@
             </div>
             <div class="modal-footer">
                 <center>
-                    <button type="button" class="btn btn-blue btn-wide" ng-click="submitGiftCardPayment(giftCardNumber)" data-dismiss="modal">SUBMIT PAYMENT</button>
+                    <button type="button" class="btn btn-blue btn-wide" ng-disabled="giftCardDataComplete()" onclick="$('#paymentModal').modal('hide')" ng-click="submitGiftCardPayment()" data-dismiss="modal">SUBMIT PAYMENT</button>
                 </center>
             </div>
         </div>
@@ -495,7 +495,7 @@
                 </form>
             </div>
             <div class="col-sm-6 mb20">
-                <numkeypad ng-model="auth[selectedAuthField]"> </numkeypad>
+                <numkeypad isNumOnly='true' ng-model="auth[selectedAuthField]"> </numkeypad>
             </div>
         </div>
         <div class="modal-footer">

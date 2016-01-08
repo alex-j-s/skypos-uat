@@ -200,32 +200,38 @@ angular.module('skyZoneApp')
         ////////// GIFTCARD MODAL //////////
 
         $scope.giftCard = {
-            'giftCardNumber': '',
-            'amount': $scope.order.totalAmountDue * 100
+            'giftCardNumber': null,
+            'amount': $scope.order.totalAmountDue
         }
         $scope.selectedGiftCardField = 'giftCardNumber';
 
-        $scope.submitGiftCardPayment = function(cardNumber) {
-            console.log('submitting giftcard payment: ', cardNumber);
+        $scope.submitGiftCardPayment = function() {
+            console.log('submitting giftcard payment: ', $scope.giftCard.giftCardNumber, $scope.giftCard.amount);
 
-            var payload = OrderService.createGiftCardPayment(cardNumber,$scope.giftCard.amount / 100);
+            var payload = OrderService.createGiftCardPayment($scope.giftCard.giftCardNumber,$scope.giftCard.amount);
 
             $rootScope.$broadcast('szeShowLoading');
 
             $rootScope.$broadcast('szeDismissError')
             OrderService.addGiftCardPayment($scope.order.id, payload)   //.then(OrderService.updateOrderStatus,logErrorStopLoading)
                 .then(function(order) {
-                    console.log('order updated gift card', order)
+                    //console.log('order updated gift card', order)
                     $rootScope.$broadcast('szeHideLoading');
                     // setTimeout($scope.printReciept,3000);
                 }, logErrorStopLoading);
             
             $scope.giftCard = {
-                'giftCardNumber': '',
-                'amount': $scope.order.totalAmountDue * 100
+                'giftCardNumber': null,
+                'amount': $scope.order.totalAmountDue
             }
             $scope.selectedGiftCardField = 'giftCardNumber';
+
+            $scope.showModal = false
         };
+
+        $scope.giftCardDataComplete = function(e) {
+            return !$scope.giftCard.giftCardNumber || $scope.giftCard.amount <= 0;
+        }
 
 
         $scope.giftCardFieldFocused = function(field) {
@@ -250,6 +256,18 @@ angular.module('skyZoneApp')
         $scope.selectedCreditField = 'ccn'
         $scope.capturingPayment = false;
 
+        $scope.creditCardDataComplete = function(e) {
+            console.log('credit card data complete: ', !$scope.card.ccn ||
+                    !$scope.card.expM ||
+                    !$scope.card.expY ||
+                    !$scope.card.cvv ||
+                    $scope.card.amount <= 0, $scope.card);
+            return !$scope.card.ccn ||
+                    !$scope.card.expM ||
+                    !$scope.card.expY ||
+                    !$scope.card.cvv ||
+                    $scope.card.amount <= 0;
+        }
         $scope.creditFieldFocused = function(field) {
             console.log('focused')
             $scope.selectedCreditField = field;
@@ -272,13 +290,13 @@ angular.module('skyZoneApp')
                 }, logErrorStopLoading);
 
             $scope.card = {
-                'cnn':'',
-                'expM':'',
-                'expY':'',
-                'cvv':'',
-                'amount':$scope.order.totalAmountDue * 100
+                'cnn':null,
+                'expM':null,
+                'expY':null,
+                'cvv':null,
+                'amount':$scope.order.totalAmountDue
             }
-            $scope.selectedCreditField = 'ccn'
+            $scope.selectedCreditField = 'ccn';
         };
         
         
