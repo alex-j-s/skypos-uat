@@ -57,8 +57,6 @@ angular.module('skyZoneApp')
         };
 
         $scope.addGuest = function(guest){
-            logErrorHideLoading('Coming soon!');
-            return;
 
             $rootScope.$broadcast('szeDismissError')
             $rootScope.$broadcast('szeShowLoading')
