@@ -18,12 +18,14 @@ angular.module('skyZoneApp')
      
       if (data.success) {
         console.log('[HWCOMM] -- RFID Response: ', data.message);
+        HardwareService.appendConsoleOutputArray('[HWCOMM] -- RFID Response: ' + data.message);
         if ( self.callback != null ) { 
           self.callback(data.message); 
         }
         self.callback = null;
       } else {
         console.log('[HWCOMM] -- No RFID Tag in Range.');
+        HardwareService.appendConsoleOutputArray('[HWCOMM] -- No RFID Tag in Range');
         if ( self.errorCallback != null ) { self.errorCallback("No Tag in Range"); }
         self.errorCallback = null;
       }
@@ -33,6 +35,7 @@ angular.module('skyZoneApp')
       self.callback = callback;
       console.log('[HWCOMM] -- 1 rfid callback: ', self.callback);
       self.errorCallback = errorCallback;
+      HardwareService.appendConsoleOutputArray('[HWCOMM] -- Sending read command to RFID reader');
       HardwareService.socket.emit('rfid-read');
     }
 }]);

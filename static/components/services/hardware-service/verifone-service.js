@@ -30,19 +30,23 @@ angular.module('skyZoneApp')
     
     HardwareService.socket.on('serial-response', function(data) {     
       console.log('[HWCOMM] - response from verifone: ', data);
+      HardwareService.appendConsoleOutputArray('response recieved from mx925');
       
       self.currentFormEvent.responder(data.response,self.currentFormEvent.acceptedResponse).then(function(command) {
         if ( command != null ) {
           console.log('[HWCOMM] - response accetped: ', command);
+          HardwareService.appendConsoleOutputArray('response accepted from mx925');
           var shouldRespond = false;
           if ( self.currentFormEvent.shouldRespond != undefined ) {
             shouldRespond = self.currentFormEvent.shouldRespond;
           }
+          HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(command()))
           HardwareService.socket.emit('serial-write', { connectionId: self.connectionId, command: command, shouldRespond:shouldRespond });
         }
         self.formContinue();
       }, function(message) { 
         console.log('[HWCOMM] - response not accepted: ',  message);
+        HardwareService.appendConsoleOutputArray('[HWCOMM] -- ERROR: response rejected from mx925, suggest reset');
       });
     })
     
@@ -63,6 +67,7 @@ angular.module('skyZoneApp')
       self.onComplete = function(data) { return null; }
       
       console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(self.currentFormEvent.command()));
+      HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(self.currentFormEvent.command()))
       HardwareService.socket.emit('serial-write', { connectionId:self.connectionId, command: self.currentFormEvent.command(),shouldRespond:true });
     }
     
@@ -81,6 +86,7 @@ angular.module('skyZoneApp')
       self.currentFormEvent = VerifoneWaiverForm.init;
       
       console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(self.currentFormEvent.command()));
+      HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(self.currentFormEvent.command()));
       HardwareService.socket.emit('serial-write', { connectionId:self.connectionId, command: self.currentFormEvent.command(),shouldRespond:true });
       
     }
@@ -96,6 +102,7 @@ angular.module('skyZoneApp')
       self.currentForm.reset();
       
       console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(self.currentFormEvent.command()));
+      HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(self.currentFormEvent.command()));
       HardwareService.socket.emit('serial-write', { connectionId: self.connectionId, command: self.currentFormEvent.command(),shouldRespond:true });
     }
     
@@ -108,6 +115,7 @@ angular.module('skyZoneApp')
       self.onComplete = callback;
       
       console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(self.currentFormEvent.command()));
+      HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(self.currentFormEvent.command()));
       HardwareService.socket.emit('serial-write', { connectionId: self.connectionId, command: self.currentFormEvent.command(),shouldRespond:true });
     }
     
@@ -134,12 +142,14 @@ angular.module('skyZoneApp')
         console.log('no command', self.currentFormEvent);
         if ( self.currentFormEvent.listen ) {
           console.log('[HWCOMM] - Hey! Listen!');
+          HardwareService.appendConsoleOutputArray('[HWCOMM] -- listening for user response on mx925')
           HardwareService.socket.emit('serial-listen', { connectionId: self.connectionId });
         }
         return
       }
       
-      console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(command));      
+      console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(command)); 
+      HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(command));     
       HardwareService.socket.emit('serial-write', { connectionId: self.connectionId, command: command, shouldRespond:true }); 
     };
     
