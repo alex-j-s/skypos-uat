@@ -40,7 +40,7 @@ angular.module('skyZoneApp')
           if ( self.currentFormEvent.shouldRespond != undefined ) {
             shouldRespond = self.currentFormEvent.shouldRespond;
           }
-          HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(command()))
+          HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(command));
           HardwareService.socket.emit('serial-write', { connectionId: self.connectionId, command: command, shouldRespond:shouldRespond });
         }
         self.formContinue();
@@ -66,7 +66,7 @@ angular.module('skyZoneApp')
       
       self.onComplete = function(data) { return null; }
       
-      console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(self.currentFormEvent.command()));
+      console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(self.currentFormEvent.command));
       HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(self.currentFormEvent.command()))
       HardwareService.socket.emit('serial-write', { connectionId:self.connectionId, command: self.currentFormEvent.command(),shouldRespond:true });
     }
@@ -85,7 +85,7 @@ angular.module('skyZoneApp')
       
       self.currentFormEvent = VerifoneWaiverForm.init;
       
-      console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(self.currentFormEvent.command()));
+      console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(self.currentFormEvent.command));
       HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(self.currentFormEvent.command()));
       HardwareService.socket.emit('serial-write', { connectionId:self.connectionId, command: self.currentFormEvent.command(),shouldRespond:true });
       
@@ -101,7 +101,7 @@ angular.module('skyZoneApp')
       self.onComplete = callback;
       self.currentForm.reset();
       
-      console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(self.currentFormEvent.command()));
+      console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(self.currentFormEvent.command));
       HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(self.currentFormEvent.command()));
       HardwareService.socket.emit('serial-write', { connectionId: self.connectionId, command: self.currentFormEvent.command(),shouldRespond:true });
     }
@@ -114,7 +114,7 @@ angular.module('skyZoneApp')
       self.currentFormEvent = VerifonePaymentCompleteForm.init;
       self.onComplete = callback;
       
-      console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(self.currentFormEvent.command()));
+      console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(self.currentFormEvent.command));
       HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(self.currentFormEvent.command()));
       HardwareService.socket.emit('serial-write', { connectionId: self.connectionId, command: self.currentFormEvent.command(),shouldRespond:true });
     }
