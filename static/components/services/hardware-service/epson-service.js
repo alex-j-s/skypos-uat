@@ -35,7 +35,6 @@ angular.module('skyZoneApp')
       command += ecf.titleSection("Sky Zone "+park.name,park.address.street,park.address.city+", "+park.address.stateCode+" "+park.address.postalCode, park.phone,recieptTitle);
       var today = new Date();
       var dateString = $filter('date')(today,'short');
-      console.log('TODAY DATE STRING: ', dateString);
       var orderKeys = ['Order','Date'];
       var orderValues = [order['id'],dateString];
       if( guest ) {
@@ -53,8 +52,8 @@ angular.module('skyZoneApp')
           var names = [item['product']['name']];
           if ( item.reservation ) {
             var dateTimeString = ""
-            if ( item.reservation.startDate ) { dateTimeString += item.reservation.startDate }
-            if ( item.reservation.reservationItems[0] ) { dateTimeString += " " + item.reservation.reservationItems[0].startTime + " - " + item.reservation.reservationItems[0].endTime }
+            if ( item.reservation.startDate ) { dateTimeString += $filter('date')(item.reservation.startDate,'shortDate') }
+            if ( item.reservation.reservationItems[0] ) { dateTimeString += " " + toTimeString(item.reservation.reservationItems[0].startTime) + " - " + toTimeString(item.reservation.reservationItems[0].endTime) }
             if ( dateTimeString.length > 0 ) { names.push(dateTimeString) }
           }
           var price = $filter('currency')(item['totalAmount']);
@@ -118,6 +117,16 @@ angular.module('skyZoneApp')
         
         HardwareService.socket.emit('usb-write', { connectionId: self.connectionId, command:command });
     };
+    
+    
+    // helper
+    var toTimeString= function(str) {
+            var a = str.split(':')
+            var d = new Date();
+            d.setHours(a[0]);
+            d.setMinutes(a[1]);
+            return $filter('date')(d,'shortTime');
+        }
     
 
   }]);
