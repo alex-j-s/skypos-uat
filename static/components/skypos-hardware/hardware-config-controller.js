@@ -15,11 +15,18 @@ angular.module('skyZoneApp')
 							VerifoneService.clearAndShowIdle()
 						}
 					},
+                    {
+                        title:'Restart App',
+                        action: function() {
+                            console.log('restart app');
+                            VerifoneService.restartApp();
+                        }
+                    },
 					{
 						title:'Reboot',
 						action: function() {
-							// TODO: 
-							console.log('reboot')
+							console.log('reboot');
+                            VerifoneService.rebootTerminal();
 						}
 					}]
 				},

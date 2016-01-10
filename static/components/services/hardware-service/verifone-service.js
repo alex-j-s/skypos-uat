@@ -58,6 +58,16 @@ angular.module('skyZoneApp')
       
     }
     
+    self.rebootTerminal = function() {
+      HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(VerifoneCommandFactory.reboot.request()));
+      HardwareService.socket.emit('serial-write', { connectionId:self.connectionId, command: VerifoneCommandFactory.reboot.request(),shouldRespond:false });
+    }
+    
+    self.restartApp = function() {
+      HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(VerifoneCommandFactory.restartApp.request()));
+      HardwareService.socket.emit('serial-write', { connectionId:self.connectionId, command: VerifoneCommandFactory.restartApp.request(),shouldRespond:false });  
+    }
+    
     self.clearAndShowIdle = function() {
       console.log('[HWCOMM] - idle screen init');
       
