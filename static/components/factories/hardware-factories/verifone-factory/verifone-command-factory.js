@@ -378,6 +378,30 @@ angular.module('skyZoneApp')
 				return barray;
 			}
 		}
+        
+        fac.reboot = {
+            request: function() {
+                var command = fac.STX;
+                command += 'XRST';
+                command += fac.ETX;
+                var barray = fac.stringToByteArray(command);
+                barray.push(fac.calcLRC(barray));
+				return barray;
+            },
+            response: null
+        }
+        
+        fac.restartApp = {
+            request: function() {
+                var command = fac.STX;
+                command += 'XRSTAPP';
+                command += fac.ETX;
+                var barray = fac.stringToByteArray(command);
+                barray.push(fac.calcLRC(barray));
+				return barray;
+            },
+            response: null
+        }
 		
 				
 		return fac;

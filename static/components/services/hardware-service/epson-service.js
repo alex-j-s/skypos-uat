@@ -24,6 +24,7 @@ angular.module('skyZoneApp')
    } 
     
     self.testPrint = function() {
+      HardwareService.appendConsoleOutputArray('[HWCOMM] -- Sending Epson test print command.');
       HardwareService.socket.emit('usb-write', { connectionId: self.connectionId, command:EpsonCommandFactory.testPrint() });
     }
     

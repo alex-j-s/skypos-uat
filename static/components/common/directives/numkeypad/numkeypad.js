@@ -18,10 +18,7 @@ angular.module('skyZoneApp')
             // name: '',
             // priority: 1,
             // terminal: true,
-            scope: {
-                isNumOnly:'=',
-                fullAmount:'='
-            }, // {} = isolate, true = child, false/undefined = no change
+            // scope: {}, // {} = isolate, true = child, false/undefined = no change
             controller: function($scope, $element, $attrs, $transclude) {},
             require: 'ngModel', // Array = multiple requires, ? = optional, ^ = check parent elements
             restrict: 'E', // E = Element, A = Attribute, C = Class, M = Comment
@@ -35,6 +32,10 @@ angular.module('skyZoneApp')
                 $scope.keypadValue = 0;
 
                 $scope.numKeyPressed = function(keyValue) {
+
+                    if ( !ngModal.$viewValue ) {
+                        ngModal.$setViewValue("");
+                    }
 
                     console.log('key pressed: ', keyValue);
 
@@ -57,11 +58,20 @@ angular.module('skyZoneApp')
                 }
 
                 $scope.deleteKeyValue = function(keyValue) {
-                    var str = $scope.keypadValue.toString();
-                    var newValue = str.substring(0,str.length-1)
-                    $scope.keypadValue = newValue;
+                    // var str = $scope.keypadValue.toString();
+                    // var newValue = str.substring(0,str.length-1)
+                    // $scope.keypadValue = newValue;
+                    // ngModal.$setViewValue(newValue);
+
+                    var str = ngModal.$viewValue.toString();
+                    var newValue = str.substring(0,str.length-1);
                     ngModal.$setViewValue(newValue);
 
+                }
+
+                $scope.decimalKeyPressed = function() {
+                    if ( ngModal.$viewValue.toString().indexOf('.') == -1 )
+                    ngModal.$setViewValue(ngModal.$viewValue.toString() + '.');
                 }
             }
         };
