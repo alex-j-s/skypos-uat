@@ -15,6 +15,15 @@ angular.module('skyZoneApp')
                     }
                 })
             },
+            removeJumper: function(jumperId){
+                angular.forEach(addOnStatus, function(addon){
+                    angular.forEach(addon.jumpers, function(jumper, key) {
+                        if(key === '_'+jumperId+'_'){
+                            addon.jumpers[key] = false;
+                        }
+                    })
+                })  
+            },
             setStatus: function(productId, jumperId, status) {
                 addOnStatus['_' + productId + '_'].jumpers['_' + jumperId + '_'] = status;
             },
@@ -62,6 +71,8 @@ angular.module('skyZoneApp')
                     })
                 });
             }
+            
+            
 
             $scope.getAddOns = function() {
                 return AddOnStatus.getStatus();

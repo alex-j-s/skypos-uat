@@ -66,6 +66,8 @@ angular.module('skyZoneApp')
 
                     OrderService.deleteOrderParticipant($scope.order.id, participantId).then(function(result) {
                         WaiverStatus.setStatus(jumperId, null);
+                        console.log('jumperId: ', jumperId)
+                        AddOnStatus.removeJumper(jumperId);
                         $rootScope.$broadcast('szeHideLoading');
                         $rootScope.$broadcast('szeOrderUpdated', result);
                         $scope.order = result;
