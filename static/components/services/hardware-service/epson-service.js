@@ -36,14 +36,12 @@ angular.module('skyZoneApp')
       var today = new Date();
       var dateString = $filter('date')(today,'short');
       console.log('TODAY DATE STRING: ', dateString);
-      var orderKeys = ['Order','Till','Date'];
-      var orderValues = [order['id'],order.till.sfId,dateString];
-      if(guest){
+      var orderKeys = ['Order','Date'];
+      var orderValues = [order['id'],dateString];
+      if( guest ) {
         orderKeys.push('Guest');
-        orderKeys.push('Guest Id');
 
         orderValues.push(guest.firstName + " " + guest.lastName);
-        orderValues.push(guest.sfId);
       }
       command += ecf.orderSection(orderKeys,orderValues);
       
@@ -53,6 +51,12 @@ angular.module('skyZoneApp')
           var item = order['orderItems'][i];
           var quantity = item['quantity'];
           var names = [item['product']['name']];
+          if ( item.reservation ) {
+            var dateTimeString = ""
+            if ( item.reservation.startDate ) { dateTimeString += item.reservation.startDate }
+            if ( item.reservation.reservationItems[0] ) { dateTimeString += " " + item.reservation.reservationItems[0].startTime + " - " + item.reservation.reservationItems[0].endTime }
+            if ( dateTimeString.length > 0 ) { names.push(dateTimeString) }
+          }
           var price = $filter('currency')(item['totalAmount']);
           command += ecf.saleLineItem(quantity,names,price)
       }
