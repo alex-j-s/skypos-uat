@@ -96,12 +96,13 @@ angular.module('skyZoneApp')
             } else {
                 for ( var i in reservation.reservationItems ) {
                     var item = reservation.reservationItems[i];
+                    var date = $filter('date')( reservation.startDate,'EEE MMM dd, yyyy' );
                     for ( var g = 0;g<item.numberOfGuests;g++ ) {
                         var parkName = "Sky Zone " + order.parkName;
                         var startTime = $scope.toTimeString(item.startTime);
                         var endTime = $scope.toTimeString(item.endTime);
                         var productName = products[productIds.indexOf(item.resourceSfId)].name;
-                        var date = $filter('date')( order.startDate,'EEE MMM dd, yyyy');
+                        //var date = $filter('date')( order.startDate,'EEE MMM dd, yyyy');
                         
                         BocaService.printTicket(parkName,startTime,endTime,productName,date);
                     }
