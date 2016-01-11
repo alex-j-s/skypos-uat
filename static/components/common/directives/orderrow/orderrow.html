@@ -38,6 +38,5 @@
 <td class="col-xs-2" style="line-height: 50px;">
     <span>{{orderItem.itemSubTotal | currency}} </span>
 </td>
-<td class="col-xs-2" style="line-height: 50px;"><button ng-show="orderInProgress()" class="sk-btn btn-action-red pull-right" aria-hidden="true" ng-click="removeOrderItem()" >REMOVE</button>
-<button ng-show="orderPurchased()" class="sk-btn btn-action-red pull-right" aria-hidden="true" ng-click="returnItem()" >RETURN ITEM</button>
+<td class="col-xs-2" style="line-height: 50px;"><button class="sk-btn btn-action-red pull-right" aria-hidden="true" ng-click="removeOrderItem(orderItem)" ng-bind="buttonLabel()"></button>
 </td>

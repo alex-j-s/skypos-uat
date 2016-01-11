@@ -20,17 +20,45 @@ angular.module('skyZoneApp')
             templateUrl:'static/components/common/directives/orderrow/orderrow.html',
             link: function($scope, $element) {
 
+                console.log('orderrow', $scope.$parent.$parent)
 
-
-                $scope.removeOrderItem = function() {
-                    $rootScope.$broadcast('szeShowLoading');
-                    OrderService.deleteOrderLineItem($scope.order.id,$scope.order.orderItems[$scope.$index].id).then(function(result) {
-                        console.log('order updated.');
-                    },function(err) {
-                        $rootScope.$broadcast('szeHideLoading');
-                        $rootScope.$broadcast('szeError', 'Failed to Remove Order Item: ', err);
-                    });
+                $scope.removeOrderItem = function(item) {
+                    if(!$scope.isPurchased()){
+                        $rootScope.$broadcast('szeShowLoading');
+                        OrderService.deleteOrderLineItem($scope.order.id,item.id).then(function(result) {
+                            console.log('order updated.');
+                        },function(err) {
+                            $rootScope.$broadcast('szeHideLoading');
+                            $rootScope.$broadcast('szeError', 'Failed to Remove Order Item: ', err);
+                        });
+                    }
+                    else{
+                        //do return call to create return order
+                        OrderService.createReturn($scope.order.id, $scope.park.id).then(function(returnOrder){
+                            console.log(returnOrder);
+                            //attach orderItem to return order
+                            OrderService.returnLineItem(returnOrder.id, OrderService.createLineItem(item.id, item.quantity)).then(function(retOrder){
+                                console.log('retOrder',retOrder)
+                                //calc refund amount associated w orderItem
+                                //attach refund for amount of orderItem, ref largest payment avail on orig order, adding until refund amount met
+                                //process to complete refund
+                                //print receipts for original and return
+                                //show return processed message
+                            })
+                        }, function(err){
+                            $rootScope.$broadcast('szeHideLoading');
+                            $rootScope.$broadcast('szeError', 'Failed to Remove Order Item: ', err);
+                        });
+                    }
                 }
+
+                $scope.isPurchased = function(){
+                    return $scope.$parent.$parent.orderPurchased();
+                }
+
+                $scope.buttonLabel = function(){
+                    return (!$scope.isPurchased())? 'Remove':'Return';
+                };
 
                 $scope.returnItem = function() {
                     // TODO:
