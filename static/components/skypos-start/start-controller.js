@@ -143,20 +143,6 @@ angular.module('skyZoneApp')
                     'label': 'New Order',
                     'action': newMerchandiseOrder
                 }]
-            },
-            {   'id': 3, 
-                'label': 'Event Coordinator',
-                'actions':[{
-                    'label': 'New Order',
-                    'action': newJumpTimeOrder
-                }, {
-                    'label': 'Find Reservation',
-                    'action': findReservation
-                }, {
-                    'label': 'Merchandise',
-                    'action': newMerchandiseOrder
-                }
-                ]
             }
         ];
 
