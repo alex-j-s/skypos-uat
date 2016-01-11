@@ -64,7 +64,7 @@ angular.module('skyZoneApp')
       var keys = ["Sub Total","Tax","Order Total","Total Recieved","Change"];
       var tax = order['taxAmount']
       var total = order["totalOrderAmount"];
-      var change = order["totalAmountDue"];
+      var change = order["changeDue"];
       var totalRecieved = total - change;
       var subtotal = total - tax;
       var values = [$filter('currency')(subtotal),$filter('currency')(tax),$filter('currency')(total),$filter('currency')(totalRecieved),$filter('currency')(change)];
