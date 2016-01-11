@@ -43,21 +43,45 @@ angular.module('skyZoneApp')
                 $scope.refundOrder = function() {
 
                     console.log('refund order')
+                    
+                    
+                    function getPaymentEndpoint(recTypeName){
+                        if(recTypeName === 'Cash'){
+                            return 'cash'
+                        }
+                        else if(recTypeName === 'Gift Card'){
+                            return 'gift-card'
+                        }
+                        else if(recTypeName === 'Credit Card'){
+                            return 'credit-card'
+                        }
+                        else if(recTypeName === 'Check'){
+                            return 'check'
+                        }
+                        
+                    }
+                    
+                    function getRefundablePayments(allPayments){
+                        return allPayments;
+                    }
 
                     $rootScope.$broadcast('szeShowLoading');
-
-                    for (var i in $scope.order.payments) {
-                        var payment = $scope.order.payments[i];
+                    
+                    var payments = getRefundablePayments($scope.order.payments);
+                    
+                    for (var i in payments) {
+                        var payment = payments[i];
                         console.log('refunding payment: ', payment);
 
-                        var paymentType = "";
+                        var paymentType = getPaymentEndpoint(payment.recordType.name);
 
-
-                        OrderService.refundPayment($scope.order.id, payment, 'credit-card')
+                        
+                        OrderService.refundPayment($scope.order.id, payment, paymentType)
                             .then(OrderService.updateOrderStatus, logErrorStopLoading)
                             .then(function(order) {
                                 console.log('order updated order refund')
                                 $rootScope.$broadcast('szeHideLoading');
+                                //todo pop drawer, print receipt w refund
                             }, logErrorStopLoading)
                     }
 
