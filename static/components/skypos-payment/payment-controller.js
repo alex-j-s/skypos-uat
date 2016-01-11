@@ -57,6 +57,12 @@ angular.module('skyZoneApp')
         $scope.popDrawer = false;
         $scope.printReciept = function(order) {
             // $scope.order = order;
+
+            // display message for change:
+            $scope.popDrawer = false
+            
+
+
             if ( $scope.orderPurchased() ) {
                 EpsonService.printReciept(order,$scope.park,$scope.guest,"Sky Zone Copy","SALE",false,true);
                 EpsonService.printReciept(order,$scope.park,$scope.guest,"Customer Copy","SALE",$scope.popDrawer,false);
@@ -90,12 +96,13 @@ angular.module('skyZoneApp')
             } else {
                 for ( var i in reservation.reservationItems ) {
                     var item = reservation.reservationItems[i];
+                    var date = $filter('date')( reservation.startDate,'EEE MMM dd, yyyy' );
                     for ( var g = 0;g<item.numberOfGuests;g++ ) {
                         var parkName = "Sky Zone " + order.parkName;
                         var startTime = $scope.toTimeString(item.startTime);
                         var endTime = $scope.toTimeString(item.endTime);
                         var productName = products[productIds.indexOf(item.resourceSfId)].name;
-                        var date = $filter('date')( order.startDate,'EEE MMM dd, yyyy');
+                        //var date = $filter('date')( order.startDate,'EEE MMM dd, yyyy');
                         
                         BocaService.printTicket(parkName,startTime,endTime,productName,date);
                     }
@@ -161,21 +168,19 @@ angular.module('skyZoneApp')
             return $filter('currency')(value / 100);
         };
 
-        $scope.getChangedOwed = function(cash) {
-            if (cash == "" || cash == null || cash == undefined) {
-                cash = 0;
-            }
+        $scope.cashInput = $scope.order.totalAmountDue;
 
-            var change = (parseInt(cash) / 100) - $scope.order.totalAmountDue;
+        $scope.getChangedOwed = function() {
+            var change = ($scope.cashInput) - $scope.order.totalAmountDue;
             return $filter('currency')(change);
         }
 
         $scope.submitCashPayment = function(amount) {
-            console.log('submitting cash payment: ', amount / 100);
+            console.log('submitting cash payment: ', amount);
 
-            var changeDue = (amount/100) - $scope.order.totalAmountDue;
+            var changeDue = (amount) - $scope.order.totalAmountDue;
 
-            var payload = OrderService.createCashPayment(amount / 100);
+            var payload = OrderService.createCashPayment(amount);
 
             $rootScope.$broadcast('szeDismissError')
             $rootScope.$broadcast('szeShowLoading');
@@ -188,38 +193,48 @@ angular.module('skyZoneApp')
                 }, logErrorStopLoading);
         };
 
+        $scope.creditCardDataComplete = function() {
+            return $scope.cashInput <= 0 
+        }
+
 
         ////////// END CASH //////////
 
         ////////// GIFTCARD MODAL //////////
 
         $scope.giftCard = {
-            'giftCardNumber': '',
-            'amount': $scope.order.totalAmountDue * 100
+            'giftCardNumber': null,
+            'amount': $scope.order.totalAmountDue
         }
         $scope.selectedGiftCardField = 'giftCardNumber';
 
-        $scope.submitGiftCardPayment = function(cardNumber) {
-            console.log('submitting giftcard payment: ', cardNumber);
+        $scope.submitGiftCardPayment = function() {
+            console.log('submitting giftcard payment: ', $scope.giftCard.giftCardNumber, $scope.giftCard.amount);
 
-            var payload = OrderService.createGiftCardPayment(cardNumber,$scope.giftCard.amount / 100);
+            var payload = OrderService.createGiftCardPayment($scope.giftCard.giftCardNumber,$scope.giftCard.amount);
 
             $rootScope.$broadcast('szeShowLoading');
 
             $rootScope.$broadcast('szeDismissError')
             OrderService.addGiftCardPayment($scope.order.id, payload)   //.then(OrderService.updateOrderStatus,logErrorStopLoading)
                 .then(function(order) {
-                    console.log('order updated gift card', order)
+                    //console.log('order updated gift card', order)
                     $rootScope.$broadcast('szeHideLoading');
                     // setTimeout($scope.printReciept,3000);
                 }, logErrorStopLoading);
             
             $scope.giftCard = {
-                'giftCardNumber': '',
-                'amount': $scope.order.totalAmountDue * 100
+                'giftCardNumber': null,
+                'amount': $scope.order.totalAmountDue
             }
             $scope.selectedGiftCardField = 'giftCardNumber';
+
+            $scope.showModal = false
         };
+
+        $scope.giftCardDataComplete = function(e) {
+            return !$scope.giftCard.giftCardNumber || $scope.giftCard.amount <= 0;
+        }
 
 
         $scope.giftCardFieldFocused = function(field) {
@@ -244,6 +259,18 @@ angular.module('skyZoneApp')
         $scope.selectedCreditField = 'ccn'
         $scope.capturingPayment = false;
 
+        $scope.creditCardDataComplete = function(e) {
+            console.log('credit card data complete: ', !$scope.card.ccn ||
+                    !$scope.card.expM ||
+                    !$scope.card.expY ||
+                    !$scope.card.cvv ||
+                    $scope.card.amount <= 0, $scope.card);
+            return !$scope.card.ccn ||
+                    !$scope.card.expM ||
+                    !$scope.card.expY ||
+                    !$scope.card.cvv ||
+                    $scope.card.amount <= 0;
+        }
         $scope.creditFieldFocused = function(field) {
             console.log('focused')
             $scope.selectedCreditField = field;
@@ -266,13 +293,15 @@ angular.module('skyZoneApp')
                 }, logErrorStopLoading);
 
             $scope.card = {
-                'cnn':'',
-                'expM':'',
-                'expY':'',
-                'cvv':'',
-                'amount':$scope.order.totalAmountDue * 100
+                'cnn':null,
+                'expM':null,
+                'expY':null,
+                'cvv':null,
+                'amount':$scope.order.totalAmountDue
             }
-            $scope.selectedCreditField = 'ccn'
+            $scope.selectedCreditField = 'ccn';
+
+            $scope.showModal = false;
         };
         
         
@@ -365,7 +394,7 @@ angular.module('skyZoneApp')
         ////////// CHECK MODAL /////////
         $scope.check = {
             'checkNumber':'',
-            'amount':$scope.order.totalAmountDue * 100
+            'amount':$scope.order.totalAmountDue
         };
         $scope.selectedCheckField = 'checkNumber';
         
@@ -379,7 +408,7 @@ angular.module('skyZoneApp')
 
             $rootScope.$broadcast('szeDismissError')
             $rootScope.$broadcast('szeShowLoading');
-            var payload = OrderService.createCheckPayment($scope.check.amount / 100,$scope.check.checkNumber,$filter('date')(new Date(),'yyyy-MM-dd'));
+            var payload = OrderService.createCheckPayment($scope.check.amount,$scope.check.checkNumber,$filter('date')(new Date(),'yyyy-MM-dd'));
             
             console.log('check payment: ', payload);
             
@@ -392,7 +421,7 @@ angular.module('skyZoneApp')
             
             $scope.check = {
                 'checkNumber':'',
-                'amount':$scope.order.totalAmountDue * 100
+                'amount':$scope.order.totalAmountDue
             }
             
         };

@@ -126,6 +126,9 @@ angular.module('skyZoneApp')
                             $rootScope.order = rslt;
                             $rootScope.$broadcast('szeOrderUpdated', $rootScope.order);
                             def.resolve($rootScope.order)
+                        } else if($rootScope.isReturn){
+                            $rootScope.isReturn = false;
+                            def.resolve(rslt);
                         } else {
                             def.resolve(self.getOrder($rootScope.order.id));
                         }
@@ -164,6 +167,21 @@ angular.module('skyZoneApp')
                 updateOrderHandler('POST', '/api/orders', new Order(orderInfo))
                     .success(function(order) {
                         $rootScope.order = order;
+                        deferred.resolve(order);
+                    })
+                    .error(function(error) {
+                        deferred.reject(error);
+                    });
+
+                return deferred.promise;
+            };
+
+            self.createReturn = function(orderId, parkId) {
+                var deferred = PromiseFactory.getInstance();
+                $rootScope.isReturn = true;
+                updateOrderHandler('POST', '/api/orders/'+orderId+'/return', {'orderId':orderId, 'parkId':parkId})
+                    .success(function(order) {
+                        // $rootScope.order = order;
                         deferred.resolve(order);
                     })
                     .error(function(error) {
@@ -400,6 +418,20 @@ angular.module('skyZoneApp')
                 return deferred.promise;
             };
 
+            self.returnLineItem = function(orderId, lineItem){
+                var deferred = PromiseFactory.getInstance();
+                lineItem.orderId = orderId;
+                updateOrderHandler('POST', '/api/orders/' + orderId + '/return/line-items', lineItem)
+                    .success(function(order) {
+                        console.log(order);
+                        deferred.resolve(order);
+                    })
+                    .error(function(error) {
+                        deferred.reject(error);
+                    });
+                return deferred.promise;
+            };
+
             self.updateOrderLineItem = function(orderId, lineItemId, lineItem) {
                 lineItem.orderId = orderId;
                 return updateOrderHandler('PUT', '/api/orders/' + orderId + '/line-items/' + lineItemId, lineItem);
@@ -479,7 +511,6 @@ angular.module('skyZoneApp')
                 var payload = {
                     'transactionId': payment.transactionId,
                     'paymentType': 'Refund',
-                    // 'transactionId': payment.transactionId,
                     'amountType': 'Standard Deposit',
                     'orderId': orderId
                 }

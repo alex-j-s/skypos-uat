@@ -29,10 +29,10 @@ angular.module('skyZoneApp')
 
         }
 
-        function bookEvent(){
-                $rootScope.$broadcast('szeError', 'Coming Soon!');
+        // function bookEvent(){
+        //         $rootScope.$broadcast('szeError', 'Coming Soon!');
 
-        }
+        // }
 
         function newMerchandiseOrder(){
                 $location.path('/skypos/offers/'+Park.parkUrlSegment)
@@ -46,9 +46,6 @@ angular.module('skyZoneApp')
         }, {
             'label': 'Find Reservation',
             'action': findReservation
-        }, {
-            'label': 'Book Event',
-            'action': bookEvent
         }, {
             'label': 'Merchandise',
             'action': newMerchandiseOrder
@@ -135,9 +132,6 @@ angular.module('skyZoneApp')
                     'label': 'Find Reservation',
                     'action': findReservation
                 }, {
-                    'label': 'Book Event',
-                    'action': bookEvent
-                }, {
                     'label': 'Merchandise',
                     'action': newMerchandiseOrder
                 }]
@@ -158,9 +152,6 @@ angular.module('skyZoneApp')
                 }, {
                     'label': 'Find Reservation',
                     'action': findReservation
-                }, {
-                    'label': 'Book Event',
-                    'action': bookEvent
                 }, {
                     'label': 'Merchandise',
                     'action': newMerchandiseOrder
