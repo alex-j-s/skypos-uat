@@ -65,6 +65,12 @@
               <dd>{{ order.totalAmountDue | currency }}</dd>
             </dl>
         </div>
+        <div class="remaining" ng-show="order.changeDue && order.changeDue > 0">
+            <dl class="dl-horizontal">
+              <dt>Change Due</dt>
+              <dd>{{ order.changeDue | currency }}</dd>
+            </dl>
+        </div>
     </div>
 </div>
 <!-- <div class="panel panel-primary" style="border-radius:0px; padding: 0px;margin: 0px;">
