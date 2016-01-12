@@ -43,21 +43,40 @@ angular.module('skyZoneApp')
                 $scope.refundOrder = function() {
 
                     console.log('refund order')
+                    return logErrorStopLoading('Coming soon!');
+                    
+                    
+                    function getPaymentEndpoint(recTypeName){
+                        if(recTypeName === 'Cash'){
+                            return 'cash'
+                        }
+                        else if(recTypeName === 'Gift Card'){
+                            return 'gift-card'
+                        }
+                        else if(recTypeName === 'Credit Card'){
+                            return 'credit-card'
+                        }
+                        else if(recTypeName === 'Check'){
+                            return 'check'
+                        }
+                        
+                    }
 
                     $rootScope.$broadcast('szeShowLoading');
-
-                    for (var i in $scope.order.payments) {
-                        var payment = $scope.order.payments[i];
+                    
+                    for (var i in $scope.existingPayments) {
+                        var payment = $scope.existingPayments[i];
                         console.log('refunding payment: ', payment);
 
-                        var paymentType = "";
+                        var paymentType = getPaymentEndpoint(payment.recordType.name);
 
-
-                        OrderService.refundPayment($scope.order.id, payment, 'credit-card')
+                        
+                        OrderService.refundPayment($scope.order.id, payment, paymentType)
                             .then(OrderService.updateOrderStatus, logErrorStopLoading)
                             .then(function(order) {
                                 console.log('order updated order refund')
                                 $rootScope.$broadcast('szeHideLoading');
+                                //todo pop drawer, print receipt w refund
                             }, logErrorStopLoading)
                     }
 
