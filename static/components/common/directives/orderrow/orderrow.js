@@ -33,11 +33,14 @@ angular.module('skyZoneApp')
                         });
                     }
                     else{
+                        $rootScope.$broadcast('szeHideLoading');
+                            $rootScope.$broadcast('szeError', 'Coming soon!');
+                        return;
                         //do return call to create return order
                         OrderService.createReturn($scope.order.id, $scope.park.id).then(function(returnOrder){
                             console.log(returnOrder);
                             //attach orderItem to return order
-                            OrderService.returnLineItem(returnOrder.id, OrderService.createLineItem(item.id, item.quantity)).then(function(retOrder){
+                            OrderService.returnLineItem(returnOrder.id, OrderService.createLineItem(item.product.id, item.quantity)).then(function(retOrder){
                                 console.log('retOrder',retOrder)
                                 //calc refund amount associated w orderItem
                                 //attach refund for amount of orderItem, ref largest payment avail on orig order, adding until refund amount met

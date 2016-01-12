@@ -43,6 +43,7 @@ angular.module('skyZoneApp')
                 $scope.refundOrder = function() {
 
                     console.log('refund order')
+                    return logErrorStopLoading('Coming soon!');
                     
                     
                     function getPaymentEndpoint(recTypeName){
@@ -60,17 +61,11 @@ angular.module('skyZoneApp')
                         }
                         
                     }
-                    
-                    function getRefundablePayments(allPayments){
-                        return allPayments;
-                    }
 
                     $rootScope.$broadcast('szeShowLoading');
                     
-                    var payments = getRefundablePayments($scope.order.payments);
-                    
-                    for (var i in payments) {
-                        var payment = payments[i];
+                    for (var i in $scope.existingPayments) {
+                        var payment = $scope.existingPayments[i];
                         console.log('refunding payment: ', payment);
 
                         var paymentType = getPaymentEndpoint(payment.recordType.name);
