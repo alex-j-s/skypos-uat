@@ -21,6 +21,10 @@ angular.module('skyZoneApp')
     	$scope.park = Park;
         
         $scope.returnOrder;
+        
+        $scope.hasReturn = function(){
+          return ($scope.returnOrder && $scope.returnOrder.id);  
+        };
 
 		$scope.showModal = false;
 
