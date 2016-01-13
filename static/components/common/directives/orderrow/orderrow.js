@@ -12,7 +12,7 @@
  */
 
 angular.module('skyZoneApp')
-    .directive('skyzoneOrderRow', ['$rootScope','OrderService', function($rootScope, OrderService) {
+    .directive('skyzoneOrderRow', ['$rootScope','OrderService','EpsonService', function($rootScope, OrderService, EpsonService) {
 
         return {
             restrict: 'EA',
@@ -48,8 +48,8 @@ angular.module('skyZoneApp')
                                 .then(function(retOrder){
                                     console.log('retOrder',retOrder)
                                     //print return receipt
-                                    EpsonService.printReciept(retOrder,$scope.park,$scope.guest,"Sky Zone Copy","RETURN",false,true);
-                                    EpsonService.printReciept(retOrder,$scope.park,$scope.guest,"Customer Copy","RETURN",false,false);
+                                    EpsonService.printReturnReciept(retOrder,$scope.park,$scope.guest,"Sky Zone Copy","RETURN",false,true);
+                                    EpsonService.printReturnReciept(retOrder,$scope.park,$scope.guest,"Customer Copy","RETURN",false,false);
                                 }, function(err){
                                     $rootScope.$broadcast('szeHideLoading');
                                     $rootScope.$broadcast('szeError', 'Failed to Remove Order Item: ', err);
