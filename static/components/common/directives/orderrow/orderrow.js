@@ -22,7 +22,12 @@ angular.module('skyZoneApp')
 
                 function logErrorStopLoading(err) {
                     $rootScope.$broadcast('szeHideLoading');
-                    $rootScope.$broadcast('szeError', 'Failed to process order: ' + JSON.stringify(err));
+                    $rootScope.$broadcast('szeError', JSON.stringify(err));
+                    $scope.showModal = false;
+                }
+                function logSuccessStopLoading(msg) {
+                    $rootScope.$broadcast('szeHideLoading');
+                    $rootScope.$broadcast('szeSuccess', msg);
                     $scope.showModal = false;
                 }
                 
@@ -39,10 +44,11 @@ angular.module('skyZoneApp')
                         });
                     }
                     else{
-                        // $rootScope.$broadcast('szeHideLoading');
+                        $rootScope.$broadcast('szeShowLoading');
                         //     $rootScope.$broadcast('szeError', 'Coming soon!');
                         // return;
                         //do return call to create return order
+                        $scope.populateExistingPayments($scope.order.payments);
                         OrderService.createReturn($scope.order.id, $scope.park.id).then(function(returnOrder){
                             console.log(returnOrder);
                             //attach orderItem to return order
@@ -94,7 +100,7 @@ angular.module('skyZoneApp')
                             if(foundIt){
                                 return;
                             }
-                            if(pmt.recordType.name === 'Cash'){
+                            if(pmt.recordType.name === 'Cash' || pmt.recordType.name === 'Check'){
                                 if(pmt.amount >= amt){
                                     foundIt = true;
                                     out = pmt;
@@ -143,7 +149,7 @@ angular.module('skyZoneApp')
                                 if(amt - payment.amount > 0){
                                     $scope.createRefundForAmount(amt-payment.amount);
                                 }else{
-                                    logErrorStopLoading('Refund created for returned item. Complete transaction to finalize and issue refund');
+                                    logSuccessStopLoading('Refund created for returned item. Complete transaction to finalize and issue refund');
                                 }
                                 // $rootScope.$broadcast('szeHideLoading');
                                 //todo pop drawer, print receipt w refund
@@ -172,6 +178,74 @@ angular.module('skyZoneApp')
                             $rootScope.$broadcast('szeHideLoading');
                             $rootScope.$broadcast('szeError', 'Failed to Update Order Item: ', err);
                         });
+                    }
+                }
+                
+                $scope.populateExistingPayments = function(payments) {
+                    $scope.existingPayments = [];
+
+                    var voids = [];
+                    var auths = [];
+                    var caps = [];
+                    var sales = [];
+                    var voided = false;
+
+                    angular.forEach(payments, function(payment, index) {
+                        if (payment.transactionType === 'Authorize') {
+                            payment.isCancellable = true;
+                            auths.push(payment);
+                        }
+                        if (payment.transactionType === 'Capture') {
+                            caps.push(payment);
+                        }
+                        if (payment.transactionType === 'Void') {
+                            voids.push(payment);
+                        }
+                        if (payment.transactionType === 'Sale') {
+                            sales.push(payment);
+                        }
+                    });
+
+                    angular.forEach(voids, function(voidPayment, indexA) {
+
+                        voided = false;
+                        angular.forEach(auths, function(authPayment, voidIndex) {
+                            if (authPayment.id === voidPayment.transactionId) {
+                                voided = voidIndex;
+                                authPayment.isCancellable = false;
+                            }
+                        });
+                        if (voided !== false) {
+                            auths.splice(voided, 1);
+                        }
+                           
+                        voided = false; 
+                        angular.forEach(sales, function(salePayment, saleIndex) {
+                            if (salePayment.id === voidPayment.transactionId) {
+                                voided = saleIndex
+                                salePayment.isCancellable = false;
+                            }
+                        });
+                        if (voided !== false) {
+                            sales.splice(voided, 1);
+                        }
+
+                    });
+
+                    // angular.forEach(caps, function(capPayment, indexC){
+                    //     angular.forEach(auths, function(authPayment, index){
+                    //         if(authPayment.id === capPayment.transactionId){
+                    //             authPayment.isCancellable = false;
+
+                    //         }
+                    //     });
+
+                    // });
+
+                    if (caps.length > 0) {
+                        $scope.existingPayments = caps.concat(sales);
+                    } else {
+                        $scope.existingPayments = auths.concat(sales);
                     }
                 }
             }

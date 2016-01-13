@@ -217,6 +217,10 @@ angular.module('skyZoneApp')
                 $rootScope.$on('szeError', function(evt, error){
                 	$scope.alert = AlertService.getError((error && error.message)?error.message:error);
                 })
+                $rootScope.$on('szeSuccess', function(evt, error){
+                	$scope.alert = AlertService.getError((error && error.message)?error.message:error);
+                    $scope.alert.type = 'success';
+                })
 
                 $rootScope.$on('szeDismissError', function(evt, error){
                 	$scope.alert = null;
