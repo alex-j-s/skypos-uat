@@ -510,6 +510,7 @@ angular.module('skyZoneApp')
                 var def = $q.defer();
 
                 var payload = {
+                    'amount':payment.amount,
                     'transactionId': payment.transactionId,
                     'paymentType': 'Refund',
                     'amountType': 'Standard Deposit',
