@@ -33,21 +33,27 @@ angular.module('skyZoneApp')
                         });
                     }
                     else{
-                        $rootScope.$broadcast('szeHideLoading');
-                            $rootScope.$broadcast('szeError', 'Coming soon!');
-                        return;
+                        // $rootScope.$broadcast('szeHideLoading');
+                        //     $rootScope.$broadcast('szeError', 'Coming soon!');
+                        // return;
                         //do return call to create return order
                         OrderService.createReturn($scope.order.id, $scope.park.id).then(function(returnOrder){
                             console.log(returnOrder);
                             //attach orderItem to return order
-                            OrderService.returnLineItem(returnOrder.id, OrderService.createLineItem(item.product.id, item.quantity)).then(function(retOrder){
-                                console.log('retOrder',retOrder)
-                                //calc refund amount associated w orderItem
-                                //attach refund for amount of orderItem, ref largest payment avail on orig order, adding until refund amount met
-                                //process to complete refund
-                                //print receipts for original and return
-                                //show return processed message
-                            })
+                            OrderService.returnLineItem(returnOrder.id, OrderService.createLineItem(item.product.id, item.quantity))
+                                .then(OrderService.updateReturnOrderStatus, function(err){
+                                    $rootScope.$broadcast('szeHideLoading');
+                                    $rootScope.$broadcast('szeError', 'Failed to Remove Order Item: ', err);
+                                })
+                                .then(function(retOrder){
+                                    console.log('retOrder',retOrder)
+                                    //print return receipt
+                                    EpsonService.printReciept(retOrder,$scope.park,$scope.guest,"Sky Zone Copy","RETURN",false,true);
+                                    EpsonService.printReciept(retOrder,$scope.park,$scope.guest,"Customer Copy","RETURN",false,false);
+                                }, function(err){
+                                    $rootScope.$broadcast('szeHideLoading');
+                                    $rootScope.$broadcast('szeError', 'Failed to Remove Order Item: ', err);
+                                })
                         }, function(err){
                             $rootScope.$broadcast('szeHideLoading');
                             $rootScope.$broadcast('szeError', 'Failed to Remove Order Item: ', err);

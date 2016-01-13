@@ -43,7 +43,7 @@ angular.module('skyZoneApp')
                 $scope.refundOrder = function() {
 
                     console.log('refund order')
-                    return logErrorStopLoading('Coming soon!');
+                    // return logErrorStopLoading('Coming soon!');
                     
                     
                     function getPaymentEndpoint(recTypeName){

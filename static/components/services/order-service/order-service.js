@@ -421,6 +421,7 @@ angular.module('skyZoneApp')
             self.returnLineItem = function(orderId, lineItem){
                 var deferred = PromiseFactory.getInstance();
                 lineItem.orderId = orderId;
+                $rootScope.isReturn = true;
                 updateOrderHandler('POST', '/api/orders/' + orderId + '/return/line-items', lineItem)
                     .success(function(order) {
                         console.log(order);
@@ -604,6 +605,11 @@ angular.module('skyZoneApp')
 
             //     return def.promise;
             // };
+            
+            self.updateReturnOrderStatus = function(retOrder){
+                $rootScope.isReturn = true;
+                return self.processOrder(retOrder, 'Refunded')  
+            };
 
             self.updateOrderStatus = function(order) {
                 console.log('updateOrderStatus: ', order);
