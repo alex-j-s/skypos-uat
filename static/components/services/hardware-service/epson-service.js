@@ -28,7 +28,9 @@ angular.module('skyZoneApp')
       HardwareService.socket.emit('usb-write', { connectionId: self.connectionId, command:EpsonCommandFactory.testPrint() });
     }
     
-    self.printReciept = function(order,park,guest,recieptTitle,saleTitle,popDrawer,sigCopy) {
+    self.printReciept = function(order,park,guest,recieptTitle,saleTitle,sigCopy) {
+      
+      var popDrawer = false;
       
       var ecf = EpsonCommandFactory;
       var command = ecf.initPrinter();
@@ -70,22 +72,50 @@ angular.module('skyZoneApp')
       var values = [$filter('currency')(subtotal),$filter('currency')(tax),$filter('currency')(total),$filter('currency')(totalRecieved),$filter('currency')(change)];
       command += ecf.totalSection(keys,values,2);
             
-      for (var i in order.payments) {
-        var payment = order.payments[i];
-        
-        if ( payment.transactionType != 'Capture' ) {
-        
-          if ( payment.recordType.name == "Credit Card" ) {
-            var keys = ['Payment Type','creditCardNumber','Card Type','Amount']
-            var values = [payment.recordType.name,payment.creditCardNumber,payment.creditCardType,$filter('currency')(payment.amount)];
-            command += ecf.orderSection(keys,values);
-          } else  {
-            var keys = ['Payment Type','Amount']
-            var values = [payment.recordType.name,$filter('currency')(payment.amount)];
-            command += ecf.orderSection(keys,values);
-          }
+       var refundedPayments = [];
+                
+        for (var i in order.payments) {
+            var payment = order.payments[i];
+            
+            if (payment.recordType.name == 'Cash' || payment.recordType.name == 'Check') {
+                popDrawer = true;
+            }
+            
+            if ( payment.transactionType != 'Capture' ) {
+            
+                if ( payment.paymentType == 'Refund' ) {
+                    refundedPayments.push(payment);
+                } else {
+            
+                    if ( payment.recordType.name == "Credit Card" ) {
+                        var keys = ['Payment Type','creditCardNumber','Card Type','Amount']
+                        var values = [payment.recordType.name,payment.creditCardNumber,payment.creditCardType,$filter('currency')(payment.amount)];
+                        command += ecf.orderSection(keys,values);
+                    } else  {
+                        var keys = ['Payment Type','Amount']
+                        var values = [payment.recordType.name,$filter('currency')(payment.amount)];
+                        command += ecf.orderSection(keys,values);
+                    }
+                }
+            }
         }
-      }
+        
+        if ( refundedPayments.length  > 0 ) {
+            
+        command += ecf.leftAlignTitleText('Refunded Payments: ');
+        for ( var i in refundedPayments ) {
+            var payment = refundedPayments[i];
+            if ( payment.recordType.name == "Credit Card" ) {
+                        var keys = ['Payment Type','creditCardNumber','Card Type','Amount']
+                        var values = [payment.recordType.name,payment.creditCardNumber,payment.creditCardType,$filter('currency')(payment.amount)];
+                        command += ecf.orderSection(keys,values);
+                    } else  {
+                        var keys = ['Payment Type','Amount']
+                        var values = [payment.recordType.name,$filter('currency')(payment.amount)];
+                        command += ecf.orderSection(keys,values);
+                    }
+        }
+       }
       
       if ( sigCopy ) {
         command += ecf.paymentSection();
@@ -112,7 +142,7 @@ angular.module('skyZoneApp')
       
     }
     
-    self.printReturnReciept = function(order,park,guest,recieptTitle,saleTitle,popDrawer,sigCopy) {
+    self.printReturnReciept = function(order,park,guest,recieptTitle,saleTitle,sigCopy) {     
         var ecf = EpsonCommandFactory;
         var command = ecf.initPrinter();
         command += ecf.titleSection("Sky Zone "+park.name,park.address.street,park.address.city+", "+park.address.stateCode+" "+park.address.postalCode, park.phone,recieptTitle);
@@ -152,23 +182,46 @@ angular.module('skyZoneApp')
         var subtotal = total - tax;
         var values = [$filter('currency')(subtotal),$filter('currency')(tax),$filter('currency')(total),$filter('currency')(totalRecieved)];
         command += ecf.totalSection(keys,values,2);
+          
+        var refundedPayments = [];
                 
         for (var i in order.payments) {
             var payment = order.payments[i];
             
             if ( payment.transactionType != 'Capture' ) {
             
-            if ( payment.recordType.name == "Credit Card" ) {
-                var keys = ['Payment Type','creditCardNumber','Card Type','Amount']
-                var values = [payment.recordType.name,payment.creditCardNumber,payment.creditCardType,$filter('currency')(payment.amount)];
-                command += ecf.orderSection(keys,values);
-            } else  {
-                var keys = ['Payment Type','Amount']
-                var values = [payment.recordType.name,$filter('currency')(payment.amount)];
-                command += ecf.orderSection(keys,values);
-            }
+                if ( payment.paymentType == 'Refund' ) {
+                    refundedPayments.push(payment);
+                } else {
+            
+                    if ( payment.recordType.name == "Credit Card" ) {
+                        var keys = ['Payment Type','creditCardNumber','Card Type','Amount']
+                        var values = [payment.recordType.name,payment.creditCardNumber,payment.creditCardType,$filter('currency')(payment.amount)];
+                        command += ecf.orderSection(keys,values);
+                    } else  {
+                        var keys = ['Payment Type','Amount']
+                        var values = [payment.recordType.name,$filter('currency')(payment.amount)];
+                        command += ecf.orderSection(keys,values);
+                    }
+                }
             }
         }
+       
+       if ( refundedPayments.length  > 0 ) {
+        command += ecf.leftAlignTitleText('Refunded Payments: ');
+        for ( var i in refundedPayments ) {
+            var payment = refundedPayments[i];
+            if ( payment.recordType.name == "Credit Card" ) {
+                        var keys = ['Payment Type','creditCardNumber','Card Type','Amount']
+                        var values = [payment.recordType.name,payment.creditCardNumber,payment.creditCardType,$filter('currency')(payment.amount)];
+                        command += ecf.orderSection(keys,values);
+                    } else  {
+                        var keys = ['Payment Type','Amount']
+                        var values = [payment.recordType.name,$filter('currency')(payment.amount)];
+                        command += ecf.orderSection(keys,values);
+                    }
+        }
+       }
         
         if ( sigCopy ) {
             command += ecf.paymentSection();
@@ -180,17 +233,10 @@ angular.module('skyZoneApp')
         command += ecf.barcode("ORDER",order.id);
         
         command += ecf.cut();
-        
-        if ( popDrawer ) {
-            command += ecf.openDrawer();
-        }
-        
-        
-        
+        command += ecf.openDrawer();
+             
         console.log('[HWCOM] - command to send to printer: ', command);
-        
-        
-        
+         
         HardwareService.socket.emit('usb-write', { connectionId: self.connectionId, command:command });     
     }
     

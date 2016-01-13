@@ -214,6 +214,11 @@ angular.module('skyZoneApp')
                 return command
         };
         
+        fac.leftAlignTitleText = function(text) {
+            var command  = fac.CTL_LF + fac.TXT_ALIGN_LT + fac.TXT_NORMAL + text + fac.CTL_LF;
+            return command;
+        }
+        
         fac.totalSection = function(keys,values,spacerIndex) {
                 var command = fac.CTL_LF + fac.TXT_ALIGN_LT + fac.TXT_NORMAL;
                 
