@@ -1,6 +1,8 @@
 angular.module('skyZoneApp')
     .controller('SPStartController', function($scope, $modal, $filter, $location, Park, OrderService, $rootScope,ReservationService, NavService, WaiverStatus) {
         
+        
+        $rootScope.hasReturn = false;
 
         $scope.searchCriteria = {
             orderNumber:null,

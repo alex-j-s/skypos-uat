@@ -26,6 +26,11 @@ angular.module('skyZoneApp')
                     $rootScope.$broadcast('szeError', 'Failed to process order: ' + JSON.stringify(err));
                     $scope.showModal = false;
                 }
+                function logSuccessStopLoading(msg) {
+                    $rootScope.$broadcast('szeHideLoading');
+                    $rootScope.$broadcast('szeSuccess', msg);
+                    $scope.showModal = false;
+                }
 
                 $rootScope.$on('szeOrderUpdated', function(event, order) {
                     $scope.populateExistingPayments(order.payments);
@@ -43,7 +48,7 @@ angular.module('skyZoneApp')
                 $scope.refundOrder = function() {
 
                     console.log('refund order')
-                    return logErrorStopLoading('Coming soon!');
+                    // return logErrorStopLoading('Coming soon!');
                     
                     
                     function getPaymentEndpoint(recTypeName){
@@ -75,7 +80,7 @@ angular.module('skyZoneApp')
                             .then(OrderService.updateOrderStatus, logErrorStopLoading)
                             .then(function(order) {
                                 console.log('order updated order refund')
-                                $rootScope.$broadcast('szeHideLoading');
+                                logSuccessStopLoading('Order successfully refunded. Complete transaction to issue payment.');
                                 //todo pop drawer, print receipt w refund
                             }, logErrorStopLoading)
                     }
