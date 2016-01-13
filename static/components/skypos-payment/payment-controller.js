@@ -19,6 +19,8 @@ angular.module('skyZoneApp')
     	$scope.order = Order;
     	$scope.guest = Guest;
     	$scope.park = Park;
+        
+        $scope.returnOrder;
 
 		$scope.showModal = false;
 
@@ -535,7 +537,8 @@ angular.module('skyZoneApp')
                 }
                 else{
                     //handle order processing
-                    if($scope.order.status === 'In Progress' || $scope.order.status === 'Reserved'){
+                    if($scope.order.status === 'In Progress' || $scope.order.status === 'Reserved'
+                    || $scope.returnOrder){
                         OrderService.updateOrderStatus($scope.order)
                             .then($scope.printReciept, logErrorStopLoading)
                             .then($scope.printTicket, logErrorStopLoading)

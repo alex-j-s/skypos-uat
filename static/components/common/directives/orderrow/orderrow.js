@@ -59,6 +59,7 @@ angular.module('skyZoneApp')
                                 })
                                 .then(function(retOrder){
                                     console.log('retOrder',retOrder)
+                                    $scope.$parent.$parent.returnOrder = retOrder;
                                     //print return receipt
                                     EpsonService.printReturnReciept(retOrder,$scope.park,$scope.guest,"Sky Zone Copy","RETURN",false,true);
                                     EpsonService.printReturnReciept(retOrder,$scope.park,$scope.guest,"Customer Copy","RETURN",false,false);
