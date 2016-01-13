@@ -60,19 +60,20 @@ angular.module('skyZoneApp')
         ////////// END ORDER STATUS //////////
         
         ////////// HARDWARE INTEGRATION ///////////
-        $scope.popDrawer = false;
         $scope.printReciept = function(order) {
             // $scope.order = order;
 
             // display message for change:
-            $scope.popDrawer = false
             
 
 
             if ( $scope.orderPurchased() ) {
-                EpsonService.printReciept(order,$scope.park,$scope.guest,"Sky Zone Copy","SALE",false,true);
-                EpsonService.printReciept(order,$scope.park,$scope.guest,"Customer Copy","SALE",$scope.popDrawer,false);
-                $scope.popDrawer = false;
+                EpsonService.printReciept(order,$scope.park,$scope.guest,"Sky Zone Copy","SALE",true);
+                EpsonService.printReciept(order,$scope.park,$scope.guest,"Customer Copy","SALE",false);
+                if ( $scope.returnOrder ) {
+                    EpsonService.printReturnReciept($scope.returnOrder,$scope.park,$scope.guest,"Sky Zone Copy","RETURN",true);
+                    EpsonService.printReturnReciept($scope.returnOrder,$scope.park,$scope.guest,"Customer Copy","RETURN",false);
+                }
             }   
             return $q.when(order);
 
@@ -194,7 +195,6 @@ angular.module('skyZoneApp')
                 .then(function(order) {
                     console.log('order updated cash', order)
                     $rootScope.$broadcast('szeHideLoading');
-                    $scope.popDrawer = true;
                     // setTimeout($scope.printReciept,3000);
                 }, logErrorStopLoading);
         };
