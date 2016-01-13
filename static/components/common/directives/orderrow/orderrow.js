@@ -12,7 +12,7 @@
  */
 
 angular.module('skyZoneApp')
-    .directive('skyzoneOrderRow', ['$rootScope','OrderService', function($rootScope, OrderService) {
+    .directive('skyzoneOrderRow', ['$rootScope','OrderService','EpsonService', function($rootScope, OrderService, EpsonService) {
 
         return {
             restrict: 'EA',
@@ -54,8 +54,8 @@ angular.module('skyZoneApp')
                                 .then(function(retOrder){
                                     console.log('retOrder',retOrder)
                                     //print return receipt
-                                    EpsonService.printReciept(retOrder,$scope.park,$scope.guest,"Sky Zone Copy","RETURN",false,true);
-                                    EpsonService.printReciept(retOrder,$scope.park,$scope.guest,"Customer Copy","RETURN",false,false);
+                                    EpsonService.printReturnReciept(retOrder,$scope.park,$scope.guest,"Sky Zone Copy","RETURN",false,true);
+                                    EpsonService.printReturnReciept(retOrder,$scope.park,$scope.guest,"Customer Copy","RETURN",false,false);
                                     $scope.createRefundForAmount(retOrder.orderAmount);
                                 }, function(err){
                                     $rootScope.$broadcast('szeHideLoading');
@@ -134,6 +134,9 @@ angular.module('skyZoneApp')
                     var payment = $scope.getPaymentForRefund(amt);
                     var paymentType = getPaymentEndpoint(payment.recordType.name);
                     console.log('refunding payment: ', payment)
+                    if(payment.amount > amt){
+                        payment.amount = amt;
+                    }
                     OrderService.refundPayment($scope.order.id, payment, paymentType)
                             //.then(OrderService.updateOrderStatus, logErrorStopLoading)
                             .then(function(order) {
