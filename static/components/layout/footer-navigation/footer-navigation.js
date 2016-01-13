@@ -43,7 +43,11 @@ angular.module('skyZoneApp')
                 $scope.hasOrder = function(){
                     return ($scope.order && $scope.order.id)
                 };
-
+                
+                $scope.getCompleteStyle = function(){
+                  return ($rootScope.hasReturn)?'background-color: #43AC6A;border-color: #3a945b;':'';  
+                };
+                
                 $scope.showOrderNotes = function() {
                     if(!$scope.hasOrder()){
                         return;

@@ -60,6 +60,7 @@ angular.module('skyZoneApp')
                                 .then(function(retOrder){
                                     console.log('retOrder',retOrder)
                                     $scope.$parent.$parent.returnOrder = retOrder;
+                                    $rootScope.hasReturn = true;
                                     //print return receipt
                                     $scope.createRefundForAmount(retOrder.orderAmount);
                                 }, function(err){
