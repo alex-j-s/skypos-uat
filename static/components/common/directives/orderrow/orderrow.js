@@ -20,6 +20,12 @@ angular.module('skyZoneApp')
             templateUrl:'static/components/common/directives/orderrow/orderrow.html',
             link: function($scope, $element) {
 
+                function logErrorStopLoading(err) {
+                    $rootScope.$broadcast('szeHideLoading');
+                    $rootScope.$broadcast('szeError', 'Failed to process order: ' + JSON.stringify(err));
+                    $scope.showModal = false;
+                }
+                
                 console.log('orderrow', $scope.$parent.$parent)
 
                 $scope.removeOrderItem = function(item) {
@@ -50,6 +56,7 @@ angular.module('skyZoneApp')
                                     //print return receipt
                                     EpsonService.printReciept(retOrder,$scope.park,$scope.guest,"Sky Zone Copy","RETURN",false,true);
                                     EpsonService.printReciept(retOrder,$scope.park,$scope.guest,"Customer Copy","RETURN",false,false);
+                                    $scope.createRefundForAmount(retOrder.orderAmount);
                                 }, function(err){
                                     $rootScope.$broadcast('szeHideLoading');
                                     $rootScope.$broadcast('szeError', 'Failed to Remove Order Item: ', err);
@@ -60,6 +67,85 @@ angular.module('skyZoneApp')
                         });
                     }
                 }
+                
+                $scope.getPaymentForRefund = function(amt){
+                    var out = {};
+                    var biggest = null;
+                    var foundIt = false;
+                    angular.forEach($scope.existingPayments, function(pmt, ind){
+                        if(foundIt){
+                            return;
+                        }
+                        if(pmt.recordType.name === 'Credit Card'){
+                            if(pmt.amount >= amt){
+                                foundIt = true;
+                                out = pmt;
+                            }
+                            else if(!biggest || biggest.amount < pmt.amount){
+                                biggest = pmt;
+                            }
+                        }
+                        
+                    })  
+                    if(foundIt){
+                        return out;
+                    }else{
+                        angular.forEach($scope.existingPayments, function(pmt, ind){
+                            if(foundIt){
+                                return;
+                            }
+                            if(pmt.recordType.name === 'Cash'){
+                                if(pmt.amount >= amt){
+                                    foundIt = true;
+                                    out = pmt;
+                                }
+                                else if(!biggest || biggest.amount < pmt.amount){
+                                    biggest = pmt;
+                                }
+                            }
+                        }) 
+                        if(foundIt){
+                            return out;
+                        } 
+                        else{
+                            return biggest;
+                        }
+                    }
+                };
+                
+                $scope.createRefundForAmount = function(amt){
+                    
+                    function getPaymentEndpoint(recTypeName){
+                        if(recTypeName === 'Cash'){
+                            return 'cash'
+                        }
+                        else if(recTypeName === 'Gift Card'){
+                            return 'gift-card'
+                        }
+                        else if(recTypeName === 'Credit Card'){
+                            return 'credit-card'
+                        }
+                        else if(recTypeName === 'Check'){
+                            return 'check'
+                        }
+                        
+                    }
+                    
+                    var payment = $scope.getPaymentForRefund(amt);
+                    var paymentType = getPaymentEndpoint(payment.recordType.name);
+                    console.log('refunding payment: ', payment)
+                    OrderService.refundPayment($scope.order.id, payment, paymentType)
+                            //.then(OrderService.updateOrderStatus, logErrorStopLoading)
+                            .then(function(order) {
+                                if(amt - payment.amount > 0){
+                                    $scope.createRefundForAmount(amt-payment.amount);
+                                }else{
+                                    logErrorStopLoading('Refund created for returned item. Complete transaction to finalize and issue refund');
+                                }
+                                // $rootScope.$broadcast('szeHideLoading');
+                                //todo pop drawer, print receipt w refund
+                            }, logErrorStopLoading)
+                };
 
                 $scope.isPurchased = function(){
                     return $scope.$parent.$parent.orderPurchased();
@@ -69,24 +155,21 @@ angular.module('skyZoneApp')
                     return (!$scope.isPurchased())? 'Remove':'Return';
                 };
 
-                $scope.returnItem = function() {
-                    // TODO:
-                    console.log('TODO: return item')
-                }
-
                 $scope.updateOrderQuantity = function()
                 {
                     console.log('scope', $scope);
                     var lineItem = $scope.order.orderItems[$scope.$index];
                     console.log('update order quantity: ', lineItem.quantity);
                     $rootScope.$broadcast('szeShowLoading');
-                    OrderService.updateOrderLineItem($scope.order.id, lineItem.id,OrderService.createLineItem(lineItem.product.id,lineItem.quantity,null)).then(function(result) {
-                        console.log('order updated.');
-                        $rootScope.$broadcast('szeHideLoading');
-                    }, function(err) {
-                        $rootScope.$broadcast('szeHideLoading');
-                        $rootScope.$broadcast('szeError', 'Failed to Update Order Item: ', err);
-                    });
+                    if(!$scope.isPurchased()){
+                        OrderService.updateOrderLineItem($scope.order.id, lineItem.id,OrderService.createLineItem(lineItem.product.id,lineItem.quantity,null)).then(function(result) {
+                            console.log('order updated.');
+                            $rootScope.$broadcast('szeHideLoading');
+                        }, function(err) {
+                            $rootScope.$broadcast('szeHideLoading');
+                            $rootScope.$broadcast('szeError', 'Failed to Update Order Item: ', err);
+                        });
+                    }
                 }
             }
         };
