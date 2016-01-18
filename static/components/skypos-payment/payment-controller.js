@@ -558,7 +558,7 @@ angular.module('skyZoneApp')
 
                 if(order.paymentStatus === 'Fully Paid'){
 
-                    var msg = (order.changeDue)?'Change Due: '+$filter('currency')(changeDue):'No Change Due.';
+                    var msg = (order.changeDue)?'Change Due: '+$filter('currency')(order.changeDue):'No Change Due.';
 
                     $rootScope.$broadcast('szeConfirm', {
                         title: msg,
@@ -583,18 +583,21 @@ angular.module('skyZoneApp')
                                     controller: function($scope, $modalInstance){
                                         $scope.giftCard = {};
                                         $scope.activateGiftCard = function(gc){
+                                            $rootScope.$broadcast('szeShowLoading');
                                             GiftCardsService.issueCard(GiftCardsService.createIssueGiftCard(gc.cardNumber, gc.amount, $scope.order.id))
                                                 .success(function(result){
                                                     console.log('giftcard issued: ',result);
+                                                    $rootScope.$broadcast('szeHideLoading');
+                                                    $modalInstance.close(result);
                                                 })
                                                 .error(logErrorStopLoading)
                                         };
                                     }
                                 })
 
-                                gcModal.result.then( function (skybandId) {
+                                gcModal.result.then( function (giftCardResult) {
                                     $rootScope.$broadcast('szeShowLoading');
-                                    ReservationService.findReservation({skybandId: skybandId}).then($scope.openResSearchModal, logErrorStopLoading)
+                                    $scope.goToStartScreen(order);
                                 }, function(reason){
 
                                 })
