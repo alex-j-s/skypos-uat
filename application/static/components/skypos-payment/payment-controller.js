@@ -558,52 +558,52 @@ angular.module('skyZoneApp')
 
                 if(order.paymentStatus === 'Fully Paid'){
 
-                    var msg = (order.changeDue)?'Change Due: '+$filter('currency')(order.changeDue):'No Change Due.';
+                    // var msg = (order.changeDue)?'Change Due: '+$filter('currency')(order.changeDue):'No Change Due.';
 
-                    $rootScope.$broadcast('szeConfirm', {
-                        title: msg,
-                        message: '',
-                        confirm: {
-                            label: 'Return to Start',
-                            action: function($clickEvent) {
+                    // $rootScope.$broadcast('szeConfirm', {
+                    //     title: msg,
+                    //     message: '',
+                    //     confirm: {
+                    //         label: 'Return to Start',
+                    //         action: function($clickEvent) {
                                 //go to start
                                 $location.path('/skypos/start/'+Park.parkUrlSegment);
-                            }
-                        },
-                        cancel: {
-                            label: 'Activate Gift Card',
-                            action: function($clickEvent) {
-                                var gcModal = $modal.open({
-                                    animation: true,
-                                    size:'md',
-                                    templateUrl: 'static/components/skypos-payment/gift-card-issuance.html',
-                                    link: function(scope, elem, attr){
-                                        elem.find('#cardNumber').focus();
-                                    },
-                                    controller: function($scope, $modalInstance){
-                                        $scope.giftCard = {};
-                                        $scope.activateGiftCard = function(gc){
-                                            $rootScope.$broadcast('szeShowLoading');
-                                            GiftCardsService.issueCard(GiftCardsService.createIssueGiftCard(gc.cardNumber, gc.amount, $scope.order.id))
-                                                .success(function(result){
-                                                    console.log('giftcard issued: ',result);
-                                                    $rootScope.$broadcast('szeHideLoading');
-                                                    $modalInstance.close(result);
-                                                })
-                                                .error(logErrorStopLoading)
-                                        };
-                                    }
-                                })
+                    //         }
+                    //     },
+                    //     cancel: {
+                    //         label: 'Activate Gift Card',
+                    //         action: function($clickEvent) {
+                    //             var gcModal = $modal.open({
+                    //                 animation: true,
+                    //                 size:'md',
+                    //                 templateUrl: 'static/components/skypos-payment/gift-card-issuance.html',
+                    //                 link: function(scope, elem, attr){
+                    //                     elem.find('#cardNumber').focus();
+                    //                 },
+                    //                 controller: function($scope, $modalInstance){
+                    //                     $scope.giftCard = {};
+                    //                     $scope.activateGiftCard = function(gc){
+                    //                         $rootScope.$broadcast('szeShowLoading');
+                    //                         GiftCardsService.issueCard(GiftCardsService.createIssueGiftCard(gc.cardNumber, gc.amount, $scope.order.id))
+                    //                             .success(function(result){
+                    //                                 console.log('giftcard issued: ',result);
+                    //                                 $rootScope.$broadcast('szeHideLoading');
+                    //                                 $modalInstance.close(result);
+                    //                             })
+                    //                             .error(logErrorStopLoading)
+                    //                     };
+                    //                 }
+                    //             })
 
-                                gcModal.result.then( function (giftCardResult) {
-                                    $rootScope.$broadcast('szeShowLoading');
-                                    $scope.goToStartScreen(order);
-                                }, function(reason){
+                    //             gcModal.result.then( function (giftCardResult) {
+                    //                 $rootScope.$broadcast('szeShowLoading');
+                    //                 $scope.goToStartScreen(order);
+                    //             }, function(reason){
 
-                                })
-                            }
-                        }
-                    })
+                    //             })
+                    //         }
+                    //     }
+                    // })
 
                 }
             };
