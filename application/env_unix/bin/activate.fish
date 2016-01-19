@@ -32,7 +32,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/blainerothrock/Development/skypos-flask/env_unix"
+set -gx VIRTUAL_ENV "/Users/blainerothrock/Development/skypos-flask/application/env_unix"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
