@@ -215,7 +215,7 @@ angular.module('skyZoneApp')
 
 
             $scope.refreshJumpers = function(order) {
-                console.log(order)
+                console.log('***LOOK: ', order);
                 $scope.order = order;
                 $scope.showModal = false;
                 $rootScope.$broadcast('szeHideLoading')

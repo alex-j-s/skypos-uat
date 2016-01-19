@@ -1,6 +1,6 @@
 <div class="row">
-    <div ng-click="toggleProfileModal(jumper)" class="col-xs-1"><img ng-show="jumper.photo" ng-src="/{{jumper.photo}}" alt="{{jumper.firstName+ ' '+jumper.lastName}}" class="img-jumper" /></div>
-    <div ng-click="toggleProfileModal(jumper)" class="col-xs-3"><b>{{jumper.firstName+ ' '+jumper.lastName}} </b> ({{getAge(jumper.birthday)}})
+    <div ng-click="$parent.$parent.toggleProfileModal(jumper)" class="col-xs-1"><img ng-show="jumper.photo" ng-src="/{{jumper.photo}}" alt="{{jumper.firstName+ ' '+jumper.lastName}}" class="img-jumper" /></div>
+    <div ng-click="$parent.$parent.toggleProfileModal(jumper)" class="col-xs-3"><b>{{jumper.firstName+ ' '+jumper.lastName}} </b> ({{getAge(jumper.birthday)}})
         <br>
         <span class="text-muted">{{jumper.email}}</span>
     </div>

@@ -12,8 +12,8 @@
  */
 
 angular.module('skyZoneApp')
-    .directive('jumperrow', ['$rootScope', 'VerifoneService', 'OrderService', 'WaiverService', 'UserService', 'WaiverStatus', 'AddOnStatus', 
-        function($rootScope, VerifoneService, OrderService, WaiverService, UserService, WaiverStatus, AddOnStatus) {
+    .directive('jumperrow', ['$rootScope', 'VerifoneService', 'OrderService', 'WaiverService', 'UserService', 'WaiverStatus', 'AddOnStatus','ProfileService', 
+        function($rootScope, VerifoneService, OrderService, WaiverService, UserService, WaiverStatus, AddOnStatus, ProfileService) {
 
         return {
             restrict: 'EA',
@@ -152,7 +152,13 @@ angular.module('skyZoneApp')
 
                     var lDoc = $scope.$parent.$parent.waiver;
                     $scope.waiverInProgress = false;
-                    VerifoneService.startWaiver($scope.jumper, lDoc, function(data) {
+                    var jumperToSign = $scope.jumper;
+                    if ( ProfileService.isMinor($scope.jumper) ) {
+                        console.log('****user is minor****');
+                        jumperToSign = $scope.$parent.$parent.guest;
+                        console.log('jumper to sign: ', jumperToSign);
+                    }
+                    VerifoneService.startWaiver(jumperToSign, lDoc, function(data) {
                         console.log('Verifone has won the battle!', data.signature);
                         setTimeout(VerifoneService.clearAndShowIdle, 3000);
                         if (!data.success) {
@@ -160,13 +166,13 @@ angular.module('skyZoneApp')
                             return;
                         };
                         var agreement = {
-                            'primarySignature': "AG the boss"
+                            'primarySignature': "TODO: SIGNATURE"
                         };
                         $scope.hasSigImage = true;
                         //$scope.jumper.email = "agilbert+webtest@appirio.com";
-                        $scope.jumper.gender = "Male";
-                        WaiverService.createWaiver(lDoc.id, $scope.park.id, [$scope.jumper], $scope.jumper.minors, agreement).then(function(result) {
-                            WaiverStatus.setStatus($scope.jumper.id, $scope.getWaiverStatus())
+                        //$scope.jumper.gender = "Male";
+                        WaiverService.createWaiver(lDoc.id, $scope.park.id, [jumperToSign],jumperToSign.minors, agreement).then(function(result) {
+                            WaiverStatus.setStatus(jumperToSign.id, $scope.getWaiverStatus())
                             console.log('waiverSigned: ', result);
                             //$scope.$parent.$parent.sigRecieved(data.signature,result.data.waivers[0],$scope.jumper.id);
                             $scope.jumper = result.data;
