@@ -78,7 +78,10 @@ angular.module('skyZoneApp')
       
       console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(self.currentFormEvent.command));
       HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(self.currentFormEvent.command()))
-      HardwareService.socket.emit('serial-write', { connectionId:self.connectionId, command: self.currentFormEvent.command(),shouldRespond:true });
+      HardwareService.socket.emit('serial-write', { connectionId:self.connectionId, command: self.currentFormEvent.command(),shouldRespond:self.currentFormEvent.shouldRespond == undefined ? true : self.currentFormEvent.shouldRespond });
+      if ( self.currentFormEvent.shouldRespond == false ) {
+          self.formContinue();
+        }
     }
     
     self.startWaiver = function(customer,waiver,callback) {
@@ -97,7 +100,10 @@ angular.module('skyZoneApp')
       
       console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(self.currentFormEvent.command));
       HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(self.currentFormEvent.command()));
-      HardwareService.socket.emit('serial-write', { connectionId:self.connectionId, command: self.currentFormEvent.command(),shouldRespond:true });
+      HardwareService.socket.emit('serial-write', { connectionId:self.connectionId, command: self.currentFormEvent.command(),shouldRespond:self.currentFormEvent.shouldRespond == undefined ? true : self.currentFormEvent.shouldRespond });
+      if ( self.currentFormEvent.shouldRespond == false ) {
+          self.formContinue();
+        }
       
     }
     
@@ -113,7 +119,10 @@ angular.module('skyZoneApp')
       
       console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(self.currentFormEvent.command));
       HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(self.currentFormEvent.command()));
-      HardwareService.socket.emit('serial-write', { connectionId: self.connectionId, command: self.currentFormEvent.command(),shouldRespond:true });
+      HardwareService.socket.emit('serial-write', { connectionId: self.connectionId, command: self.currentFormEvent.command(),shouldRespond:self.currentFormEvent.shouldRespond == undefined ? true : self.currentFormEvent.shouldRespond });
+      if ( self.currentFormEvent.shouldRespond == false ) {
+          self.formContinue();
+        }
     }
     
     self.completePayment = function(text,callback) {
@@ -126,7 +135,10 @@ angular.module('skyZoneApp')
       
       console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(self.currentFormEvent.command));
       HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(self.currentFormEvent.command()));
-      HardwareService.socket.emit('serial-write', { connectionId: self.connectionId, command: self.currentFormEvent.command(),shouldRespond:true });
+      HardwareService.socket.emit('serial-write', { connectionId: self.connectionId, command: self.currentFormEvent.command(),shouldRespond:self.currentFormEvent.shouldRespond == undefined ? true : self.currentFormEvent.shouldRespond });
+      if ( self.currentFormEvent.shouldRespond == false ) {
+          self.formContinue();
+        }
     }
     
     self.onComplete = null
@@ -159,8 +171,21 @@ angular.module('skyZoneApp')
       }
       
       console.log('[HWCOMM] - to send: ', VerifoneCommandFactory.readableString(command)); 
-      HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(command));     
-      HardwareService.socket.emit('serial-write', { connectionId: self.connectionId, command: command, shouldRespond:true }); 
+      HardwareService.appendConsoleOutputArray('[HWCOMM] -- sending to mx925: ' + VerifoneCommandFactory.readableString(command));
+      if ( self.currentFormEvent.delay ) {
+        console.log('*****DELAY*****');
+        $timeout(function() {
+          HardwareService.socket.emit('serial-write', { connectionId: self.connectionId, command: command, shouldRespond:self.currentFormEvent.shouldRespond == undefined ? true : self.currentFormEvent.shouldRespond });
+          if ( self.currentFormEvent.shouldRespond == false ) {
+          self.formContinue();
+        }
+        },self.currentFormEvent.delay)
+      }else {     
+        HardwareService.socket.emit('serial-write', { connectionId: self.connectionId, command: command, shouldRespond:self.currentFormEvent.shouldRespond == undefined ? true : self.currentFormEvent.shouldRespond });
+        if ( self.currentFormEvent.shouldRespond == false ) {
+          self.formContinue();
+        }
+      }
     };
     
 

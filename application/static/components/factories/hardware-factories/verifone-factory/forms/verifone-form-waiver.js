@@ -4,7 +4,7 @@
 angular.module('skyZoneApp')
 
 
-.factory('VerifoneWaiverForm',['$filter','VerifoneCommandFactory', function($filter,VerifoneCommandFactory) {
+.factory('VerifoneWaiverForm',['$filter','$timeout','VerifoneCommandFactory', function($filter,$timeout,VerifoneCommandFactory) {
 		var fac = {}
 	
 		fac.waiver = {};
@@ -332,7 +332,15 @@ angular.module('skyZoneApp')
 			command: function() { return VerifoneCommandFactory.initForm.request('waiver-signature-page') },
 			responder: fac.acknowledgeResponse,
 			acceptedResponse: VerifoneCommandFactory.initForm.response(),
-			next: function() { return fac.setSigTitle }
+			next: function() { return fac.disableSigForm }
+		}
+
+		fac.disableSigForm = {
+			command: function() { return VerifoneCommandFactory.enableForm.request(false) },
+            responder: fac.nullResponder,
+            acceptedResponse: VerifoneCommandFactory.enableForm.response(),
+            shouldRespond:false,
+            next: function() { return fac.setSigTitle }
 		}
 		
 		fac.setSigTitle = {
@@ -382,7 +390,15 @@ angular.module('skyZoneApp')
 			command: function() { return VerifoneCommandFactory.captureSignatureData.request() },
 			responder: fac.nullResponder,
 			acceptedResponse: VerifoneCommandFactory.captureSignatureData.response(),
-			next: function() { return fac.listenForSignatureCapture }
+			next: function() { return fac.enableSigForm }
+		}
+
+		fac.enableSigForm = {
+			command: function() { return VerifoneCommandFactory.enableForm.request(true) },
+            responder: fac.nullResponder,
+            acceptedResponse: VerifoneCommandFactory.enableForm.response(),
+            shouldRespond:false,
+            next: function() { return fac.listenForSignatureCapture }
 		}
 		
 		fac.listenForSignatureCapture = {
@@ -430,13 +446,28 @@ angular.module('skyZoneApp')
 		// END SIGNATURE
 		
 		// LEGAL DOC
-		
+        
 		fac.initLegalDocForm = {
 			command: function() { return VerifoneCommandFactory.initForm.request('waiver-title') },
 			responder: fac.acknowledgeResponse,
 			acceptedResponse: VerifoneCommandFactory.initForm.response(),
-			next: function() { return fac.setLegalDocTitle }	
+			next: function() { return fac.disableLegalDocForm }	
 		};
+        
+        fac.disableLegalDocForm = {
+            command: function() { return VerifoneCommandFactory.enableForm.request(false) },
+            responder: fac.nullResponder,
+            acceptedResponse: VerifoneCommandFactory.enableForm.response(),
+            shouldRespond:false,
+            next: function() { return fac.displayLegalDocText }
+        }
+        
+        fac.displayLegalDocText = {
+			command: function() { return VerifoneCommandFactory.addTextBoxText.request('12',fac.waiver.legalDocumentItems[fac.legalPageIndex].content) },
+			responder: fac.displayTextResponder,
+			acceptedResponse: VerifoneCommandFactory.addTextBoxText.response(),
+			next: function() { return fac.setLegalDocTitle }
+		}
 		
 		fac.setLegalDocTitle = {
 			command: function() { return VerifoneCommandFactory.setFormParam.request('10', "[TEST] Torrance Waiver") },
@@ -449,7 +480,7 @@ angular.module('skyZoneApp')
 			command: function() { return VerifoneCommandFactory.setFormParam.request('11',"Page " + ( fac.legalPageIndex + 1 ) + " of " + (fac.waiver.legalDocumentItems.length)) },
 			responder: fac.acknowledgeResponse,
 			acceptedResponse: VerifoneCommandFactory.setFormParam.response(),
-			next: function() { return fac.displayLegalDocText }
+			next: function() { return fac.showLegalDocForm }
 		}
 		
 		// fac.displayLegalDocText = {
@@ -459,21 +490,24 @@ angular.module('skyZoneApp')
 		// 	next: function() { return fac.showLegalDocForm }
 		// }
 		
-		fac.displayLegalDocText = {
-			command: function() { return VerifoneCommandFactory.addTextBoxText.request('12',fac.waiver.legalDocumentItems[fac.legalPageIndex].content) },
-			responder: fac.displayTextResponder,
-			acceptedResponse: VerifoneCommandFactory.addTextBoxText.response(),
-			next: function() { return fac.showLegalDocForm }
-		}
 		
 		fac.showLegalDocForm = {
 			command: function() { return VerifoneCommandFactory.showForm.request() },
 			responder: fac.acknowledgeResponse,
 			acceptedResponse: VerifoneCommandFactory.showForm.response(),
-			next: function() { return fac.listenForLegalDocResonse }
+			next: function() { 
+				return fac.enableLegalDocForm 
+			}
 		}
-		
-		
+        
+        fac.enableLegalDocForm = {
+            command: function() { return VerifoneCommandFactory.enableForm.request(true) },
+            responder: fac.nullResponder,
+            acceptedResponse: VerifoneCommandFactory.enableForm.response(),
+            shouldRespond:false,
+            delay:500,
+            next: function() { return fac.listenForLegalDocResonse }
+        }		
 		
 		fac.listenForLegalDocResonse = {
 			command: function() { return null },

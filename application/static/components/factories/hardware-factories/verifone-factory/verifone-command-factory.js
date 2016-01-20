@@ -149,6 +149,25 @@ angular.module('skyZoneApp')
 				return barray;
 			}
 		}
+        
+        fac.enableForm = {
+            request : function(enabled) {
+                var command = fac.STX;
+                command += 'XEFM' + fac.FS;
+                command += enabled  ? '1' : '0';
+                command += fac.ETX;
+                var barray = fac.stringToByteArray(command);
+				barray.push(fac.calcLRC(barray)); 
+				return barray;
+            },
+            response : function() {
+                var command = fac.ACK;
+				var barray = fac.stringToByteArray(command);
+				// barray.push(fac.calcLRC(barray));
+				return barray;
+            }
+        }
+        
 		fac.initForm = {
 			// rawRequest: function(formName) {
 			// 	//var command = fac.STX;
