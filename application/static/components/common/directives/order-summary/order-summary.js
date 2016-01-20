@@ -97,15 +97,23 @@ angular.module('skyZoneApp')
                         action: function($clickEvent) {
                             
                             $rootScope.$broadcast('szeShowLoading');
-                            angular.forEach($scope.order.orderItems, function(item) {
-                                if ( item.reservation ) {
-                                    OrderService.deleteOrderLineItem($scope.order.id, item.id).then(function(result) {
-                                        $rootScope.$broadcast('szeHideLoading');
-                                        $location.path('/skypos/start/' + $routeParams.parkUrlSegment);
-                                        return;
-                                    }, logErrorStopLoading);
-                                }
-                            });
+                            if($scope.order.orderItems){
+                                angular.forEach($scope.order.orderItems, function(item) {
+                                    if ( item.reservation ) {
+                                        OrderService.deleteOrderLineItem($scope.order.id, item.id).then(function(result) {
+                                            OrderService.deleteLocalOrder();
+                                            $rootScope.$broadcast('szeHideLoading');
+                                            $location.path('/skypos/start/' + $routeParams.parkUrlSegment);
+                                            return;
+                                        }, logErrorStopLoading);
+                                    }
+                                });
+                            }
+                            else{
+                                OrderService.deleteLocalOrder();
+                                $rootScope.$broadcast('szeHideLoading');
+                                
+                            }
                         }
                     },
                     cancel: {
