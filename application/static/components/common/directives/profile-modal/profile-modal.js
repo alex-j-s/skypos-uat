@@ -1,5 +1,5 @@
 angular.module('skyZoneApp')
-	.directive('profileModal', ['$rootScope','OrderService', function($rootScope,OrderService){
+	.directive('profileModal', ['$rootScope','OrderService','ProfileService','StorageService','LookupService', function($rootScope,OrderService,ProfileService,StorageService,LookupService){
 		// Runs during compile
 		return {
 			// name: '',
@@ -23,6 +23,7 @@ angular.module('skyZoneApp')
 				$scope.isEditMode = false;
 				$scope.loadingOrders = false;
 				$scope.orders = {};
+				$scope.canEdit = StorageService.handleGet('role') === 'pos_mgr';
 				$scope.getOrders = function() {
 					$scope.activeTab = 'orderHistory'
 					//if ( Object.keys($scope.orders).length != 0 ) { return; }
@@ -56,6 +57,61 @@ angular.module('skyZoneApp')
 					} else {
 						return 'pending';
 					}
+				}
+
+				$scope.startEditMode = function() {
+					$scope.getCountryList();
+					if ( $scope.profile.personmailingcountrycode ) {
+						$scope.getStateList($scope.profile.personmailingcountrycode);
+					}
+					$scope.isEditMode = true;
+				}
+
+
+
+				$scope.cancelEditMode = function() {
+					console.log('ROLE: ', $scope.role);
+					$scope.isEditMode = false;
+				}
+
+				$scope.submitEdit = function() {
+					$scope.isEditMode = false;
+					$rootScope.$broadcast('szeShowLoading');
+					ProfileService.updateCustomerInformation($scope.profile.id,$scope.editProfile).then(function(result) {
+						console.log('update successful', result);
+						OrderService.getOrder($rootScope.order.id).then(function(result) {
+							$rootScope.$broadcast('szeHideLoading');
+						}, function(err) {
+							$rootScope.$broadcast('szeHideLoading');
+							$rootScope.$broadcast('szeError', err);
+						});
+					}, function(err) {
+						console.log('there was an error updating the profile: ', err);
+						$rootScope.$broadcast('szeHideLoading');
+						$rootScope.$broadcast('szeError', err);
+					})
+				}
+
+				$scope.countryList = [];
+				$scope.stateList = [];
+
+				$scope.getCountryList = function() {
+					LookupService.getCountryList().then(function(result) {
+						console.log('countries: ', result);
+						$scope.countryList = result.data;
+					}, function(err) {
+						console.log('error getting countries: ', err);
+					})
+				}
+
+				$scope.getStateList = function(isoCode) {
+					console.log('country code: ', isoCode ? isoCode : $scope.editProfile.personmailingcountrycode)
+					LookupService.getStateList(isoCode ? isoCode : $scope.editProfile.personmailingcountrycode).then(function(result) {
+						console.log('state list: ', result);
+						$scope.stateList = result.data;
+					}, function(err) {
+						console.log('err state list: ', err);
+					})
 				}
 
 			}

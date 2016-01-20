@@ -34,30 +34,59 @@
     </style>
     <div ng-switch="activeTab">
         <div ng-switch-when='general'>
-            <h4 class="ml20">CUSTOMER INFORMATION</h4>
+            <h4 class="ml20">
+                CUSTOMER INFORMATION
+                <button class="sk-btn btn-orange pull-right" ng-class="{hidden:isEditMode||!canEdit}" ng-click="startEditMode()">Edit</button>
+            </h4>
             <form id="edit-profile" class="form-horizontal" name="editProfileForm" novalidate ng-submit="editProfileForm.$invalid || updateAccount()" style="display: flex;">
             <!-- <alert ng-if="alert" type="alert.type">{{alert.msg}}</alert> -->
             <div class="col-sm-12" id="contact-information">
-
+                <div ng-switch="isEditMode">
+                        <div class="edit-mode" ng-switch-when="true">
+                            <p class="col-sm-12 text-right bg-danger text-danger">Required text in red</p>
+                        </div>
+                    </div>
                 <!-- image and name  - row 1 -->
                 <div class="row well" style="padding: 10px;">
                     <div class="col-sm-2">
                         <img ng-show="profile.photo!=null" ng-src="profile.photo" alt="" class="center-block img-circle img-responsive" height="100px">
                     </div>
                     <div class="col-sm-5 mt30">
-                        <div class="form-group">
-                            <label class="col-sm-6 control-label">First Name</label>
-                            <div class="col-sm-6">
-                              <p class="form-control-static">{{ profile.firstName }}</p>
+                        <div class="form-group" ng-switch="isEditMode">
+                            <div ng-switch-when="false">
+                                <label class="col-sm-6 control-label">First Name</label>
+                                <div class="col-sm-6">
+                                  <p class="form-control-static">{{ profile.firstName }}</p>
+                                </div>
+                            </div>
+                            <div ng-switch-when="true">
+                                <label class="control-label col-sm-4 label-tall text-danger" ng-class="{'error': editProfileForm.$submitted }">
+                                    First Name
+                                </label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control input-tall" ng-model="editProfile.firstName" name="firstName" ng-class="{'error': editProfileForm.$submitted }" required>
+                                    <small class="error" ng-if="editProfileForm.$submitted">This field is required.</small>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-5 mt30">
-                        <div class="form-group">
-                            <label class="col-sm-6 control-label">Last Name</label>
-                            <div class="col-sm-6">
-                              <p class="form-control-static">{{ profile.lastName }}</p>
+                        <div class="form-group" ng-switch="isEditMode">
+                            <div ng-switch-when="false">
+                                <label class="col-sm-6 control-label">Last Name</label>
+                                <div class="col-sm-6">
+                                 <p class="form-control-static">{{ profile.lastName }}</p>
+                                </div>
                             </div>
+                            <div ng-switch-when="true">
+                                <label class="control-label col-sm-4 label-tall text-danger" ng-class="{'error': editProfileForm.$submitted && editProfileForm.email.$invalid }">
+                                    Last Name
+                                </label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control input-tall" ng-model="editProfile.lastName" name="lastName" ng-class="{'error': editProfileForm.$submitted }" required>
+                                    <small class="error" ng-if="editProfileForm.$submitted">This field is required.</small>
+                                </div>
+                            </div> 
                         </div>
                     </div>
                 </div>
@@ -65,11 +94,6 @@
                 <!-- contact details - row 2 -->
 
                 <div class="row mt10">
-                    <div ng-switch="isEditMode">
-                        <div class="edit-mode" ng-switch-when="true">
-                            <p class="col-sm-12 text-right bg-danger text-danger">Required text in red</p>
-                        </div>
-                    </div>
                     <!-- column 2 -->
                     <div class="col-sm-6">
                         <div class="form-group" ng-switch="isEditMode">
@@ -171,15 +195,15 @@
                             <div ng-switch-when="false">
                                 <label class="col-sm-4 control-label">Country</label>
                                 <div class="col-sm-8">
-                                  <p class="form-control-static" ng-if="!isEditMode" ng-bind="profile.mobilePhoneNumber"></p>
+                                  <p class="form-control-static" ng-if="!isEditMode" ng-bind="profile.personmailingcountrycode"></p>
                                 </div>
                             </div>
                             <div class="edit-mode" ng-switch-when="true">
                                 <label class="control-label col-sm-4 label-tall">Country</label>
                                 <div class="col-sm-8">
-                                    <select name="countryCode" class="form-control input-tall" ng-change="getStateList()" ng-if="!isEditMode" ng-bind="profile.personmailingcountrycode">
-                                        <option value="">--Select Country--</option>
-                                        <option ng-repeat="country in countryList" value="{{country.isoCode}}" ng-selected="country.isoCode === editProfile.personmailingcountrycode">{{country.label}}</option>
+                                    <select name="personmailingcountrycode" class="form-control input-tall" ng-model="editProfile.personmailingcountrycode" ng-change="getStateList()">
+                                        <option value="">-- Select One --</option>
+                                        <option ng-repeat="country in countryList" ng-selected="country.isoCode === editProfile.personmailingcountrycode" ng-value="country.isoCode">{{ country.label }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -225,9 +249,9 @@
                             <div class="edit-mode" ng-switch-when="true">
                                 <label class="control-label col-sm-4 label-tall">State/Region</label>
                                 <div class="col-sm-8">
-                                    <select name="stateCode" class="form-control input-tall" ng-model="editProfile.personmailingstatecode" ng-disabled="!showStateList">
+                                    <select name="stateCode" class="form-control input-tall" ng-model="editProfile.personmailingstatecode">
                                         <option value="">--Select State--</option>
-                                        <option ng-repeat="state in stateList" value="{{state.isoCode}}" ng-selected="state.isoCode === editProfile.personmailingstatecode">{{state.label}}</option>
+                                        <option ng-repeat="state in stateList" ng-value="state.isoCode" ng-selected="state.isoCode === editProfile.personmailingstatecode">{{ state.label }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -249,6 +273,12 @@
                             </div>
                         </div>
                     </div> 
+                </div>
+                <div class="modal-footer" ng-class="{hidden:!isEditMode}">
+                    <center>
+                        <button type="button" class="btn btn-blue btn-wide" data-dismiss="modal" ng-click="submitEdit()">SAVE</button>
+                        <button class="btn btn-red btn-wide" ng-click="cancelEditMode()">CANCEL</button>
+                    </center>
                 </div>
             </div>
 
