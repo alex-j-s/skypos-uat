@@ -112,6 +112,7 @@ angular.module('skyZoneApp')
                             else{
                                 OrderService.deleteLocalOrder();
                                 $rootScope.$broadcast('szeHideLoading');
+                                $location.path('/skypos/start/' + $routeParams.parkUrlSegment);
                                 
                             }
                         }
