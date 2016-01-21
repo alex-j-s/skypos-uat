@@ -31,7 +31,7 @@ angular.module('skyZoneApp')
 					}]
 				},
 				{
-					name: 'Epson Reciept Printer',
+					name: 'Epson Receipt Printer',
 					status: null,
 					actions: [{
 						title: 'Test Print',
