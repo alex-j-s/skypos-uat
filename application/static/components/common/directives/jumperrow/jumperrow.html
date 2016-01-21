@@ -7,7 +7,7 @@
     <div class="col-xs-3">
         <div ng-switch="getWaiverStatus()">
             <div ng-switch-when="No Waiver">
-                <button class="sk-btn btn-red" ng-click="kickOffWaiverProcess()">No Waiver
+                <button ng-disabled="waiverInProgress" class="sk-btn btn-red" ng-click="kickOffWaiverProcess()">No Waiver
                     <i class="waiver-inactive glyphicon glyphicon-new-window"></i>
                 </button>
             </div>
@@ -17,18 +17,17 @@
                 </button>
             </div>
             <div ng-switch-when="Expired">
-                <button class="sk-btn btn-red" ng-click="kickOffWaiverProcess()">Expired
+                <button ng-disabled="waiverInProgress" class="sk-btn btn-red" ng-click="kickOffWaiverProcess()">Expired
                     <i class="waiver-inactive glyphicon glyphicon-new-window"></i>
                 </button>
             </div>
             <div ng-switch-when="Approved">
                 <button class="sk-btn btn-success" ng-click="">Active
                 </button </div>
-                <div ng-switch-when="In Progress">
-                    <button class="sk-btn btn-warning" ng-click="toggleApprovalModal()">In Progress
-                        <i class="waiver-pending fa fa-cog fa-spin"></i>
-                    </button>
-                </div>
+            </div>
+            <div ng-switch-when="In Progress">
+                <button class="sk-btn btn-orange" ng-click="">In Progress
+                </button </div>
             </div>
         </div>
     </div>

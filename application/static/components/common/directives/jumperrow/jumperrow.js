@@ -27,6 +27,13 @@ angular.module('skyZoneApp')
             link: function($scope, $element) {
 
 
+                $scope.$watch(function(scope) {
+                    return scope.$parent.$parent.waiverInProgress;
+                }, function(newValue,oldValue) {
+                    console.log('value changed: ', newValue);
+                    $scope.waiverInProgress = newValue;
+                });
+
                 function init() {
                     WaiverStatus.setStatus($scope.jumper.id, $scope.getWaiverStatus())
                     console.log('scope: ', $scope);
@@ -59,6 +66,9 @@ angular.module('skyZoneApp')
                     }
 
                 }
+
+                $scope.waiverInProgress = $scope.$parent.$parent.waiverInProgress;
+                $scope.jumperWaiverInProgress = false;
 
                 $scope.removeJumper = function(participantId) {
                     $rootScope.$broadcast('szeShowLoading');
@@ -104,7 +114,7 @@ angular.module('skyZoneApp')
                     //     }
                     // }
 
-                    if ($scope.waiverInProgress) {
+                    if ( $scope.jumperWaiverInProgress == true ) {
                         return "In Progress";
                     }
 
@@ -146,23 +156,24 @@ angular.module('skyZoneApp')
                 //$scope.$parent.$parent.waiverInProgress = false;
                 //$scope.showSignatureModal = false;
                 $scope.kickOffWaiverProcess = function() {
-                    $scope.waiverInProgress = false
                         //$scope.$parent.$parent.waiverInProgress = true;
                     console.log('Verifone! I choose you!');
 
                     var lDoc = $scope.$parent.$parent.waiver;
-                    $scope.waiverInProgress = false;
                     var jumperToSign = $scope.jumper;
                     if ( ProfileService.isMinor($scope.jumper) ) {
                         console.log('****user is minor****');
                         jumperToSign = $scope.$parent.$parent.guest;
                         console.log('jumper to sign: ', jumperToSign);
                     }
+                    $scope.$parent.$parent.waiverInProgress = true;
+                    $scope.waiverInProgress = true;
+                    $scope.jumperWaiverInProgress = true;
                     VerifoneService.startWaiver(jumperToSign, lDoc, function(data) {
                         console.log('Verifone has won the battle!', data.signature);
                         setTimeout(VerifoneService.clearAndShowIdle, 3000);
                         if (!data.success) {
-                            $scope.waiverInProgress = false;
+                            //$scope.waiverInProgress = false;
                             return;
                         };
                         var agreement = {
@@ -176,10 +187,16 @@ angular.module('skyZoneApp')
                             console.log('waiverSigned: ', result);
                             //$scope.$parent.$parent.sigRecieved(data.signature,result.data.waivers[0],$scope.jumper.id);
                             $scope.jumper = result.data;
+                            $scope.$parent.$parent.waiverInProgress = false;
                             $scope.waiverInProgress = false;
+                            $scope.jumperWaiverInProgress = false;
                             $scope.signatureData = "data:image/bmp;base64," + data.signature;
                         }, function(err) {
                             console.log('ERR PUSHING WAIVER: ', err);
+                            $scope.$parent.$parent.waiverInProgress = false;
+                            $scope.waiverInProgress = false;
+                            $scope.jumperWaiverInProgress = false;
+                            $scope.$apply();
                         })
                     });
                 };

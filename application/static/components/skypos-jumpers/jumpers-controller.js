@@ -61,6 +61,8 @@ angular.module('skyZoneApp')
             $scope.waiver = Waiver;
             console.log($scope.guest, $scope.park, $scope.order);
 
+            $scope.waiverInProgress = false;
+
             function init() {
                 AddOnStatus.setAddons($scope.park.product);
                 var tempStatus = null;
