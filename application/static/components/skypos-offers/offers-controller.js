@@ -107,7 +107,7 @@ angular.module('skyZoneApp')
 
             $scope.addproductToOrder = function(p) {
                 $rootScope.$broadcast('szeShowLoading');
-                if(OrderService.productExistsOnOrder(order, p)){
+                if(OrderService.productExistsOnOrder($scope.order, p)){
                     console.log('ADD TO ORDER');
                     OrderService.addLineItemToOrder($scope.order.id, OrderService.createLineItem(p.id, p.viewQuantity)).then(function(result) {
                         //$scope.order = result;
