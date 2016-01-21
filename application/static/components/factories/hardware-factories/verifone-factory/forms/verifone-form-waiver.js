@@ -344,7 +344,7 @@ angular.module('skyZoneApp')
 		}
 		
 		fac.setSigTitle = {
-			command: function() { return VerifoneCommandFactory.setFormParam.request('10', "[TEST] Torrance Waiver") },
+			command: function() { return VerifoneCommandFactory.setFormParam.request('10', fac.waiver.title) },
 			responder: fac.acknowledgeResponse,
 			acceptedResponse: VerifoneCommandFactory.setFormParam.response(),
 			next: function() { return fac.setSignPageNumber }
@@ -470,7 +470,7 @@ angular.module('skyZoneApp')
 		}
 		
 		fac.setLegalDocTitle = {
-			command: function() { return VerifoneCommandFactory.setFormParam.request('10', "[TEST] Torrance Waiver") },
+			command: function() { return VerifoneCommandFactory.setFormParam.request('10', fac.waiver.title) },
 			responder: fac.acknowledgeResponse,
 			acceptedResponse: VerifoneCommandFactory.setFormParam.response(),
 			next: function() { return fac.setLegalDocPageNumber }
