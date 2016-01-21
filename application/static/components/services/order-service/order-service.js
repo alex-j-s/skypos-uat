@@ -822,7 +822,19 @@ angular.module('skyZoneApp')
                 return def.promise;
             };
 
+            
 
+            self.productExistsOnOrder = function(order, product){
+                var out = false;
+
+                angular.forEach(order.orderItems, function(orderItem, index){
+                    if(orderItem.product && orderItem.product.id === product.id){
+                        out = true;
+                    }
+                });
+
+                return out;
+            };
 
             self.getTotalJumpSlots = function() {};
 
