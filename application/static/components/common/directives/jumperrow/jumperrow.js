@@ -173,7 +173,12 @@ angular.module('skyZoneApp')
                         console.log('Verifone has won the battle!', data.signature);
                         setTimeout(VerifoneService.clearAndShowIdle, 3000);
                         if (!data.success) {
-                            //$scope.waiverInProgress = false;
+                            $scope.$parent.$parent.waiverInProgress = false;
+                            $scope.waiverInProgress = false;
+                            $scope.jumperWaiverInProgress = false;
+                            if(!$scope.$$phase) {
+                                $scope.$apply();
+                            }
                             return;
                         };
                         var agreement = {
@@ -191,12 +196,17 @@ angular.module('skyZoneApp')
                             $scope.waiverInProgress = false;
                             $scope.jumperWaiverInProgress = false;
                             $scope.signatureData = "data:image/bmp;base64," + data.signature;
+                            if(!$scope.$$phase) {
+                                $scope.$apply();
+                            }
                         }, function(err) {
                             console.log('ERR PUSHING WAIVER: ', err);
                             $scope.$parent.$parent.waiverInProgress = false;
                             $scope.waiverInProgress = false;
                             $scope.jumperWaiverInProgress = false;
-                            $scope.$apply();
+                            if(!$scope.$$phase) {
+                                $scope.$apply();
+                            }
                         })
                     });
                 };
