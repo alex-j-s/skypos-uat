@@ -171,16 +171,18 @@ angular.module('skyZoneApp')
                     $scope.jumperWaiverInProgress = true;
                     VerifoneService.startWaiver(jumperToSign, lDoc, function(data) {
                         console.log('Verifone has won the battle!', data.signature);
-                        setTimeout(VerifoneService.clearAndShowIdle, 3000);
-                        if (!data.success) {
-                            $scope.$parent.$parent.waiverInProgress = false;
-                            $scope.waiverInProgress = false;
-                            $scope.jumperWaiverInProgress = false;
-                            if(!$scope.$$phase) {
+                        setTimeout(function() {
+                           VerifoneService.clearAndShowIdle()
+                            if (!data.success) {
+                                $scope.$parent.$parent.waiverInProgress = false;
+                                $scope.waiverInProgress = false;
+                                $scope.jumperWaiverInProgress = false;
+                                if(!$scope.$$phase) {
                                 $scope.$apply();
-                            }
-                            return;
-                        };
+                                }
+                                return;
+                            };
+                        }, 2000);
                         var agreement = {
                             'primarySignature': "TODO: SIGNATURE"
                         };
