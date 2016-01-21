@@ -180,9 +180,9 @@ angular.module('skyZoneApp')
                                 if(!$scope.$$phase) {
                                 $scope.$apply();
                                 }
-                            };
+                            }
                         }, 2000);
-                        if (!data.success) { return; }
+                        if ( !data.success ) { return; }
                         var agreement = {
                             'primarySignature': "TODO: SIGNATURE"
                         };
