@@ -87,7 +87,7 @@ angular.module('skyZoneApp')
     self.startWaiver = function(customer,waiver,callback) {
       // TODO: should populate with data (user, minors, legaldocument, etc.)
       
-      console.log('[HWCOMM] - starting waiver process: ', customer);
+      console.log('[HWCOMM] - starting waiver process: ', customer, waiver);
       
       self.currentForm = VerifoneWaiverForm;
       
