@@ -320,6 +320,7 @@ angular.module('skyZoneApp')
             $rootScope.$broadcast('szeDismissError')
           console.log('capturing payment information from verifone');
           $scope.capturingPayment = true;
+          $scope.card.amount = $scope.order.totalAmountDue;
           var amountString = $filter('currency')($scope.card.amount);
           VerifoneService.startPayment(amountString,function(data) {
              
