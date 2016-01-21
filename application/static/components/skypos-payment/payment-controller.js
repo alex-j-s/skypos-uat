@@ -81,7 +81,7 @@ angular.module('skyZoneApp')
         };
         
         $scope.printTicket = function(order) {
-            // $scope.order = order;
+            console.log('*****PRINTING TICKET: ', order);
 
             var def = $q.defer();
             
@@ -99,7 +99,7 @@ angular.module('skyZoneApp')
                 return product.sfId;
             });
             
-            if ( reservation == null ||  reservation.reservationItems == null || reservation.reservationItems.length == 0 ) {
+            if ( reservation == null ||  reservation.reservationItems == null || reservation.reservationItems.length == 0 || $scope.returnOrder ) {
                 def.resolve(order);
             } else {
                 for ( var i in reservation.reservationItems ) {
