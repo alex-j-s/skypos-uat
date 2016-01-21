@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('skyZoneApp')
-    .controller('SPOffersController', ['$scope', '$rootScope', '$location', 'Catalog', 'Guest', 'Order', 'OrderService', 'ProductService', 'CatalogService', 'NavService', '$routeParams',
-        function($scope, $rootScope, $location, Catalog, Guest, Order, OrderService, ProductService, CatalogService, NavService, $routeParams) {
+    .controller('SPOffersController', ['$scope', '$q', '$rootScope', '$location', 'Catalog', 'Guest', 'Order', 'OrderService', 'ProductService', 'CatalogService', 'NavService', '$routeParams',
+        function($scope, $q, $rootScope, $location, Catalog, Guest, Order, OrderService, ProductService, CatalogService, NavService, $routeParams) {
             
 
             function logErrorStopLoading(err) {
