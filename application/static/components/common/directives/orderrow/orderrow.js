@@ -34,7 +34,7 @@ angular.module('skyZoneApp')
                 console.log('orderrow', $scope.$parent.$parent)
 
                 $scope.removeOrderItem = function(item) {
-                    if(!$scope.isPurchased()){
+                    if($scope.inProgress()){
                         $rootScope.$broadcast('szeShowLoading');
                         OrderService.deleteOrderLineItem($scope.order.id,item.id).then(function(result) {
                             console.log('order updated.');
@@ -158,7 +158,10 @@ angular.module('skyZoneApp')
 
                 $scope.isPurchased = function(){
                     return $scope.$parent.$parent.orderPurchased();
-                }
+                };
+                $scope.inProgress = function(){
+                    return $scope.$parent.$parent.orderInProgress();
+                };
 
                 $scope.buttonLabel = function(){
                     return (!$scope.isPurchased())? 'Remove':'Return';

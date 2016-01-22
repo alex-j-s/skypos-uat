@@ -587,9 +587,12 @@ angular.module('skyZoneApp')
                                             $rootScope.$broadcast('szeShowLoading');
                                             GiftCardsService.issueCard(GiftCardsService.createIssueGiftCard(gc.cardNumber, gc.amount, $scope.order.id))
                                                 .success(function(result){
+                                                    alert(result.resultText)
+                                                    if(!result.isFailure){
+                                                        $modalInstance.close(result);
+                                                    }
                                                     console.log('giftcard issued: ',result);
                                                     $rootScope.$broadcast('szeHideLoading');
-                                                    $modalInstance.close(result);
                                                 })
                                                 .error(logErrorStopLoading)
                                         };
@@ -610,11 +613,19 @@ angular.module('skyZoneApp')
             };
 
             $scope.goToOffersScreen = function(){
+                 if($scope.guest){
                 NavService.goToRoute('offers', {
                     'parkUrlSegment':Park.parkUrlSegment,
                     'orderId':$scope.order.id,
                     'guestId':$scope.guest.id
                 });
+            }else{
+                NavService.goToRoute('offers', {
+                    'parkUrlSegment':Park.parkUrlSegment,
+                    'orderId':$scope.order.id
+                });
+            }
+
             };
 
         ////////// END NAV //////////
