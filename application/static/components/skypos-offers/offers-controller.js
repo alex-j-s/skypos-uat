@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('skyZoneApp')
-    .controller('SPOffersController', ['$scope', '$rootScope', '$location', 'Catalog', 'Guest', 'Order', 'OrderService', 'ProductService', 'CatalogService', 'NavService', '$routeParams',
-        function($scope, $rootScope, $location, Catalog, Guest, Order, OrderService, ProductService, CatalogService, NavService, $routeParams) {
+    .controller('SPOffersController', ['$scope', '$q', '$rootScope', '$location', 'Catalog', 'Guest', 'Order', 'OrderService', 'ProductService', 'CatalogService', 'NavService', '$routeParams',
+        function($scope, $q, $rootScope, $location, Catalog, Guest, Order, OrderService, ProductService, CatalogService, NavService, $routeParams) {
             
 
             function logErrorStopLoading(err) {
@@ -106,12 +106,21 @@ angular.module('skyZoneApp')
             };
 
             $scope.addproductToOrder = function(p) {
-                console.log('ADD TO ORDER');
                 $rootScope.$broadcast('szeShowLoading');
-                OrderService.addLineItemToOrder($scope.order.id, OrderService.createLineItem(p.id, p.viewQuantity)).then(function(result) {
-                    //$scope.order = result;
-                    console.log('order updated');
-                }, logErrorStopLoading)
+                if(!OrderService.productExistsOnOrder($scope.order, p)){
+                    console.log('ADD TO ORDER');
+                    OrderService.addLineItemToOrder($scope.order.id, OrderService.createLineItem(p.id, p.viewQuantity)).then(function(result) {
+                        //$scope.order = result;
+                        $rootScope.$broadcast('szeHideLoading');
+                        console.log('order updated');
+                    }, logErrorStopLoading)
+                }
+                else{
+                    $scope.updateLineItem(p).then(function(){
+                        $rootScope.$broadcast('szeHideLoading');
+
+                    }, logErrorStopLoading)
+                }
             };
 
             /* Note: these methods do not contain logic to determine the operation needed. 
@@ -137,7 +146,7 @@ angular.module('skyZoneApp')
                 var def = $q.defer();
 
                 OrderService.addLineItemToOrder($scope.order.id,
-                        OrderService.createAddOnLineItem(product.id, product.viewQuantity))
+                        OrderService.createLineItem(product.id, product.viewQuantity))
                     .then(function(order) {
                         $scope.order = order;
                         def.resolve($scope.order);
