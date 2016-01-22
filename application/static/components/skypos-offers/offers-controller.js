@@ -186,11 +186,18 @@ angular.module('skyZoneApp')
             };
 
             $scope.goToPaymentScreen = function(){
-                NavService.goToRoute('payment', {
-                    'parkUrlSegment':$routeParams.parkUrlSegment,
-                    'orderId':$scope.order.id,
-                    'guestId':$scope.guest.id
-                });
+                if($scope.guest){
+                    NavService.goToRoute('payment', {
+                        'parkUrlSegment':$routeParams.parkUrlSegment,
+                        'orderId':$scope.order.id,
+                        'guestId':$scope.guest.id
+                    });
+                }else{
+                    NavService.goToRoute('payment', {
+                        'parkUrlSegment':$routeParams.parkUrlSegment,
+                        'orderId':$scope.order.id
+                    });
+                }
             };
             $scope.goToJumpersScreen = function(){
                 NavService.goToRoute('jumpers', {

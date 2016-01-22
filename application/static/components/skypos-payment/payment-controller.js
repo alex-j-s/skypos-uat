@@ -320,6 +320,7 @@ angular.module('skyZoneApp')
             $rootScope.$broadcast('szeDismissError')
           console.log('capturing payment information from verifone');
           $scope.capturingPayment = true;
+          $scope.card.amount = $scope.order.totalAmountDue;
           var amountString = $filter('currency')($scope.card.amount);
           VerifoneService.startPayment(amountString,function(data) {
              
@@ -573,34 +574,37 @@ angular.module('skyZoneApp')
                         cancel: {
                             label: 'Activate Gift Card',
                             action: function($clickEvent) {
-                                // var gcModal = $modal.open({
-                                //     animation: true,
-                                //     size:'md',
-                                //     templateUrl: 'static/components/skypos-payment/gift-card-issuance.html',
-                                //     link: function(scope, elem, attr){
-                                //         elem.find('#cardNumber').focus();
-                                //     },
-                                //     controller: function($scope, $modalInstance){
-                                //         $scope.giftCard = {};
-                                //         $scope.activateGiftCard = function(gc){
-                                //             $rootScope.$broadcast('szeShowLoading');
-                                //             GiftCardsService.issueCard(GiftCardsService.createIssueGiftCard(gc.cardNumber, gc.amount, $scope.order.id))
-                                //                 .success(function(result){
-                                //                     console.log('giftcard issued: ',result);
-                                //                     $rootScope.$broadcast('szeHideLoading');
-                                //                     $modalInstance.close(result);
-                                //                 })
-                                //                 .error(logErrorStopLoading)
-                                //         };
-                                //     }
-                                // })
+                                var gcModal = $modal.open({
+                                    animation: true,
+                                    size:'md',
+                                    templateUrl: 'static/components/skypos-payment/gift-card-issuance.html',
+                                    link: function(scope, elem, attr){
+                                        elem.find('#cardNumber').focus();
+                                    },
+                                    controller: function($scope, $modalInstance){
+                                        $scope.giftCard = {};
+                                        $scope.activateGiftCard = function(gc){
+                                            $rootScope.$broadcast('szeShowLoading');
+                                            GiftCardsService.issueCard(GiftCardsService.createIssueGiftCard(gc.cardNumber, gc.amount, $scope.order.id))
+                                                .success(function(result){
+                                                    alert(result.resultText)
+                                                    if(!result.isFailure){
+                                                        $modalInstance.close(result);
+                                                    }
+                                                    console.log('giftcard issued: ',result);
+                                                    $rootScope.$broadcast('szeHideLoading');
+                                                })
+                                                .error(logErrorStopLoading)
+                                        };
+                                    }
+                                })
 
-                                // gcModal.result.then( function (giftCardResult) {
-                                //     $rootScope.$broadcast('szeShowLoading');
-                                //     $scope.goToStartScreen(order);
-                                // }, function(reason){
+                                gcModal.result.then( function (giftCardResult) {
+                                    $rootScope.$broadcast('szeShowLoading');
+                                    $scope.goToStartScreen(order);
+                                }, function(reason){
 
-                                // })
+                                })
                             }
                         }
                     })
@@ -609,11 +613,19 @@ angular.module('skyZoneApp')
             };
 
             $scope.goToOffersScreen = function(){
+                 if($scope.guest){
                 NavService.goToRoute('offers', {
                     'parkUrlSegment':Park.parkUrlSegment,
                     'orderId':$scope.order.id,
                     'guestId':$scope.guest.id
                 });
+            }else{
+                NavService.goToRoute('offers', {
+                    'parkUrlSegment':Park.parkUrlSegment,
+                    'orderId':$scope.order.id
+                });
+            }
+
             };
 
         ////////// END NAV //////////
