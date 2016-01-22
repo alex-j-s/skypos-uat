@@ -19,7 +19,7 @@ angular.module('skyZoneApp')
         'align-items: center;'+
         'top: 0;'+
         'left: 0;'+
-        'z-index: 188;';
+        'z-index: 1008;';
 
     var bigLoaderImgStyleString = 'display: flex;'+
         'margin: 0 auto;'+
