@@ -115,6 +115,7 @@ angular.module('skyZoneApp')
                     }, logErrorStopLoading)
                 } else {
                     UserService.createMinorForGuest($scope.guest.id, jumper).then(function(guest) {
+                        console.log('minor guest: ', guest);
                         $scope.addJumper(getMinor(guest, jumper));
                     }, logErrorStopLoading)
                 }
