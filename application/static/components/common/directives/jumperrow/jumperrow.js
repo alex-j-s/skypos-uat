@@ -169,7 +169,6 @@ angular.module('skyZoneApp')
                     $scope.$parent.$parent.waiverInProgress = true;
                     $scope.waiverInProgress = true;
                     $scope.jumperWaiverInProgress = true;
-
                     var waiverError = function(err) {
                         console.log('ERR PUSHING WAIVER: ', err);
                         $scope.$parent.$parent.waiverInProgress = false;
@@ -185,15 +184,17 @@ angular.module('skyZoneApp')
                         console.log('jumper to sign: ', jumperToSign);
                         VerifoneService.startWaiver(jumperToSign, lDoc, function(data) {
                             console.log('Verifone has won the battle!', data.signature);
-                            setTimeout(VerifoneService.clearAndShowIdle, 3000);
-                            if (!data.success) {
-                                $scope.$parent.$parent.waiverInProgress = false;
-                                $scope.waiverInProgress = false;
-                                $scope.jumperWaiverInProgress = false;
-                                if(!$scope.$$phase) {
-                                    $scope.$apply();
+                            setTimeout(function() {
+                                VerifoneService.clearAndShowIdle()
+                                if (!data.success) {
+                                    $scope.$parent.$parent.waiverInProgress = false;
+                                    $scope.waiverInProgress = false;
+                                    $scope.jumperWaiverInProgress = false;
+                                    if(!$scope.$$phase) {
+                                        $scope.$apply();
+                                    }
                                 }
-                            };
+                            },2000)
                             if ( !data.success ) { return; }
                             var agreement = {
                                 'primarySignature': "data:image/bmp;base64," + data.signature
@@ -232,6 +233,7 @@ angular.module('skyZoneApp')
                                 }, waiverError);
                             }, waiverError)
                         }, waiverError)
+
                     });
                 };
 
