@@ -9,6 +9,22 @@
     top: 0rem;
 }
 
+.util-panel {
+    color: #ffffff;
+    border-radius: 0.5rem;
+    position: absolute;
+    top: 1rem;
+    right:1rem;
+    border: 1px solid #ffffff;
+    padding: 0.5rem 1rem;
+
+}
+
+.util-button{
+    color: #ffffff;
+
+}
+
 </style>
 
 <sze-big-loader is-loading="isLoading"></sze-big-loader>
@@ -20,13 +36,20 @@
         <i ng-if="isActive(route)" class="fa fa-caret-up active-arrow"></i>
       </li>
     </ul>
-    <div style="float:left;">
-    <a ng-href="" ng-click="hardwareModal()" class="back-button">
-        <span class="icon-left">
-                <i class="fa fa-cogs"></i>
-            </span>
-        <span class="text">Hardware</span>
-    </a>
+    <div class="util-panel">
+        <a ng-href="" ng-click="hardwareModal()" class="util-button">
+            <span class="icon-left">
+                    <i class="fa fa-cogs"></i>
+                </span>
+            <span class="text">Hardware</span>
+        </a>
+        <span style="border:1px solid #fff;margin:0 1rem;display:inline-block;padding:0.3rem 0;" ng-show="isLoggedIn()"></span>
+        <a ng-href="" ng-click="logout()" class="util-button" ng-show="isLoggedIn()">
+            <span class="icon-left">
+                    <i class="fa fa-sign-out"></i>
+                </span>
+            <span class="text">Log out</span>
+        </a>
     </div>
 </div>
 <alert ng-if="alert" type="alert.type" close="close(alert)">{{alert.msg}}</alert>

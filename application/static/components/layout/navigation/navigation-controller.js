@@ -155,8 +155,8 @@ angular.module('skyZoneApp')
 
                 };
 	}])
-    .directive('szeNavigation', ['$location', '$rootScope', 'NavService', 'AlertService', '$modal', 
-        function($location, $rootScope, NavService, AlertService, $modal){
+    .directive('szeNavigation', ['$location', '$rootScope', 'NavService', 'AlertService', '$modal', 'AccessManager',
+        function($location, $rootScope, NavService, AlertService, $modal, AccessManager){
     	return {
     		// name: '',
             // priority: 1,
@@ -189,6 +189,13 @@ angular.module('skyZoneApp')
                     console.log(result);
                 }
 
+                $scope.logout = function(){
+                    AccessManager.reset();
+                };
+
+                $scope.isLoggedIn = function(){
+                    return AccessManager.isAuthenticated();
+                };
 
                 $scope.isActive = function(rte){
                 	return $location.path().indexOf(rte.key) > -1;
