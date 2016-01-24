@@ -178,7 +178,8 @@ angular.module('skyZoneApp')
 
                         voided = false;
                         angular.forEach(auths, function(authPayment, voidIndex) {
-                            if (authPayment.id === voidPayment.transactionId) {
+                            if (authPayment.id === voidPayment.transactionId
+                                || authPayment.transactionId === voidPayment.transactionId) {
                                 voided = voidIndex;
                                 authPayment.isCancellable = false;
                             }
@@ -189,7 +190,8 @@ angular.module('skyZoneApp')
                            
                         voided = false; 
                         angular.forEach(sales, function(salePayment, saleIndex) {
-                            if (salePayment.id === voidPayment.transactionId) {
+                            if (salePayment.id === voidPayment.transactionId
+                                || salePayment.transactionId === voidPayment.transactionId) {
                                 voided = saleIndex
                                 salePayment.isCancellable = false;
                             }
