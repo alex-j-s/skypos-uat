@@ -50,7 +50,7 @@ angular.module('skyZoneApp')
     self.getHmacFromRequest = function(requestConfig) {
       var role = StorageService.handleGet('role');
       console.log(role);
-      role = (role && requestConfig.url.indexOf('tokens') < 0)? role:'pos_sys';
+      role = (role && (requestConfig.url.indexOf('tokens') < 0 || requestConfig.url.indexOf('tokens/current-user') > 0))? role:'pos_sys';
       role = EndpointType.isPublic(requestConfig.url)? 'public': role;
       //var baseEndpointURL = 'http://Localhost:5000';
       console.log('secret key: '+secretKey);
