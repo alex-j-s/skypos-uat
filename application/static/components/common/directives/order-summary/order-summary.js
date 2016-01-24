@@ -91,15 +91,17 @@ angular.module('skyZoneApp')
 
                     $rootScope.$broadcast('szeConfirm', {
                     title: 'Cancel Transaction?',
-                    message: 'Cancelling this transaction will release the current reservation and naviagte to the Start screen. Continue?',
+                    message: 'Cancelling this transaction will release any pending reservations and navigate back to the Start screen. Continue?',
                     confirm: {
                         label: 'Continue',
                         action: function($clickEvent) {
                             
                             $rootScope.$broadcast('szeShowLoading');
-                            if($scope.order.orderItems){
+                            if($scope.order.orderItems && $scope.order.orderItems.length > 0){
+                                var foundRes = false;
                                 angular.forEach($scope.order.orderItems, function(item) {
                                     if ( item.reservation ) {
+                                        foundRes = true;
                                         OrderService.deleteOrderLineItem($scope.order.id, item.id).then(function(result) {
                                             OrderService.deleteLocalOrder();
                                             $rootScope.$broadcast('szeHideLoading');
@@ -108,6 +110,11 @@ angular.module('skyZoneApp')
                                         }, logErrorStopLoading);
                                     }
                                 });
+                                if(!foundRes){
+                                    OrderService.deleteLocalOrder();
+                                    $rootScope.$broadcast('szeHideLoading');
+                                    $location.path('/skypos/start/' + $routeParams.parkUrlSegment);
+                                }
                             }
                             else{
                                 OrderService.deleteLocalOrder();
