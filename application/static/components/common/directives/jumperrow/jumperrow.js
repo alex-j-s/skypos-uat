@@ -169,80 +169,119 @@ angular.module('skyZoneApp')
                     $scope.$parent.$parent.waiverInProgress = true;
                     $scope.waiverInProgress = true;
                     $scope.jumperWaiverInProgress = true;
-                    VerifoneService.startWaiver(jumperToSign, lDoc, function(data) {
-                        console.log('Verifone has won the battle!', data.signature);
-                        setTimeout(function() {
-                           VerifoneService.clearAndShowIdle()
-                            if (!data.success) {
-                                $scope.$parent.$parent.waiverInProgress = false;
-                                $scope.waiverInProgress = false;
-                                $scope.jumperWaiverInProgress = false;
-                                if(!$scope.$$phase) {
-                                $scope.$apply();
+                    var waiverError = function(err) {
+                        console.log('ERR PUSHING WAIVER: ', err);
+                        $scope.$parent.$parent.waiverInProgress = false;
+                        $scope.waiverInProgress = false;
+                        $scope.jumperWaiverInProgress = false;
+                        if(!$scope.$$phase) {
+                            $scope.$apply();
+                        }
+                    }
+
+                    ProfileService.getProfile(jumperToSign.id).then(function(result) {
+                        jumperToSign = result.data;
+                        console.log('jumper to sign: ', jumperToSign);
+                        VerifoneService.startWaiver(jumperToSign, lDoc, function(data) {
+                            console.log('Verifone has won the battle!', data.signature);
+                            setTimeout(function() {
+                                VerifoneService.clearAndShowIdle()
+                                if (!data.success) {
+                                    $scope.$parent.$parent.waiverInProgress = false;
+                                    $scope.waiverInProgress = false;
+                                    $scope.jumperWaiverInProgress = false;
+                                    if(!$scope.$$phase) {
+                                        $scope.$apply();
+                                    }
                                 }
-                            }
-                        }, 2000);
-                        if ( !data.success ) { return; }
-                        var agreement = {
-                            'primarySignature': "TODO: SIGNATURE"
-                        };
-                        $scope.hasSigImage = true;
-                        //$scope.jumper.email = "agilbert+webtest@appirio.com";
-                        //$scope.jumper.gender = "Male";
-                        WaiverService.createWaiver(lDoc.id, $scope.park.id, [jumperToSign],jumperToSign.minors, agreement).then(function(result) {
-                            WaiverStatus.setStatus(jumperToSign.id, $scope.getWaiverStatus())
-                            console.log('waiverSigned: ', result);
-                            //$scope.$parent.$parent.sigRecieved(data.signature,result.data.waivers[0],$scope.jumper.id);
-                            $scope.jumper = result.data;
-                            $scope.$parent.$parent.waiverInProgress = false;
-                            $scope.waiverInProgress = false;
-                            $scope.jumperWaiverInProgress = false;
-                            $scope.signatureData = "data:image/bmp;base64," + data.signature;
-                            if(!$scope.$$phase) {
-                                $scope.$apply();
-                            }
-                        }, function(err) {
-                            console.log('ERR PUSHING WAIVER: ', err);
-                            $scope.$parent.$parent.waiverInProgress = false;
-                            $scope.waiverInProgress = false;
-                            $scope.jumperWaiverInProgress = false;
-                            if(!$scope.$$phase) {
-                                $scope.$apply();
-                            }
-                        })
+                            },2000)
+                            if ( !data.success ) { return; }
+                            var agreement = {
+                                'primarySignature': "data:image/bmp;base64," + data.signature
+                            };
+                            $scope.hasSigImage = true;
+                            //$scope.jumper.email = "agilbert+webtest@appirio.com";
+                            //$scope.jumper.gender = "Male";
+                            WaiverService.createWaiver(lDoc.id, $scope.park.id, [jumperToSign],jumperToSign.minors, agreement).then(function(result) {
+                                WaiverStatus.setStatus(jumperToSign.id, $scope.getWaiverStatus())
+                                console.log('waiverSigned: ', result);
+                                //$scope.$parent.$parent.sigRecieved(data.signature,result.data.waivers[0],$scope.jumper.id);
+                                // if ( $scope.jumper.id == result.data.id) {
+                                //     $scope.jumper = result.data;
+                                // } else {
+                                //     angular.forEach(result.data.minor,function(minor) {
+                                //         if (minor.id == $scope.jumper.id) {
+                                //             $scope.jumper = minor;
+                                //         }
+                                //     })
+                                // }
+                                OrderService.getOrder($rootScope.order.id).then(function(order) {
+                                    console.log('participants', order.participants);
+                                    angular.forEach(order.participants, function(participant, index){
+                                        if(participant.id === $scope.jumper.id){
+                                         $scope.jumper = participant;
+                                        // WaiverStatus.setStatus($scope.jumper.id, $scope.getWaiverStatus())
+                                        }
+                                    })
+                                    $scope.$parent.$parent.waiverInProgress = false;
+                                    $scope.waiverInProgress = false;
+                                    $scope.jumperWaiverInProgress = false;
+                                    $scope.signatureData = "data:image/bmp;base64," + data.signature;
+                                    if(!$scope.$$phase) {
+                                        $scope.$apply();
+                                    }
+                                }, waiverError);
+                            }, waiverError)
+                        }, waiverError)
+
                     });
                 };
 
                 $scope.showApprovalModal = false;
                 $scope.signatureData = "";
                 $scope.hasSigImage = false;
+                $scope.activeWaiverCustomer = null;
                 $scope.toggleApprovalModal = function() {
                     $scope.showApprovalModal = !$scope.showApprovalModal;
+                    if ( ProfileService.isMinor($scope.jumper)) {
+                        $scope.activeWaiverCustomer = $scope.$parent.$parent.guest;
+                    } else {
+                        $scope.activeWaiverCustomer = $scope.jumper;
+                    }
                     console.log('approval modal toggled: ', $scope.showApprovalModal);
                 }
 
                 $scope.approveWaiver = function() {
                     // UserService.getCurrentUser().then(function(user){
-                        WaiverService.approveWaivers(50, [$scope.waiver.id]).then(function(result) {
-                            console.log('approval response: ', result);
-                            //$scope.jumper = result.data;
-                            WaiverStatus.setStatus($scope.jumper.id, 'Approved')
-                            OrderService.getOrderParticipantsProfiles($rootScope.order).then(function(participants) {
-                                console.log('participants', participants);
-                                angular.forEach(participants.data, function(participant, index){
-                                    if(participant.id === $scope.jumper.id){
-                                        $scope.jumper = participant;
-                                        // WaiverStatus.setStatus($scope.jumper.id, $scope.getWaiverStatus())
-                                    }
-                                });
+                        var waiverids = [$scope.waiver.id];
+                        if ( $scope.waiver.parentWaiver != null ) {
+                            waiverids.push($scope.waiver.parentWaiver);
+                        }
+                        //UserService.getCurrentUser().then(function(result) {
+                            // console.log("profile: ", result);
+                            WaiverService.approveWaivers(50, waiverids).then(function(result) {
+                                console.log('approval response: ', result);
+                                //$scope.jumper = result.data;
+                                WaiverStatus.setStatus($scope.jumper.id, 'Approved')
+                                OrderService.getOrderParticipantsProfiles($rootScope.order).then(function(participants) {
+                                    console.log('participants', participants);
+                                    angular.forEach(participants.data, function(participant, index){
+                                        if(participant.id === $scope.jumper.id){
+                                            $scope.jumper = participant;
+                                            // WaiverStatus.setStatus($scope.jumper.id, $scope.getWaiverStatus())
+                                        }
+                                    });
 
-                                $rootScope.$broadcast('participantsUpdated', {
-                                    'data': participants
-                                });
-                            }, logErrorStopLoading);
+                                    $rootScope.$broadcast('participantsUpdated', {
+                                        'data': participants
+                                    });
+                                }, logErrorStopLoading);
+                            // }, function(err) {
+                            //     console.log('approval err: ', err);
+
+                            //})
                         }, function(err) {
                             console.log('approval err: ', err);
-
                         })
                     // }, logErrorStopLoading)
                 };

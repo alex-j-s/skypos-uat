@@ -200,6 +200,7 @@ angular.module('skyZoneApp')
                 if (StorageService.getAuthToken()) { // logged in
 
                     if (!currentUser) { // if no local user data exists, get it
+                        // $http.get('/api/customers/profile/' + StorageService.getAuthToken())
                         $http.get('/api/tokens/current-user')
                             .success(function (data) {
                                 currentUser = data;
