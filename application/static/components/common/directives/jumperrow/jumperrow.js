@@ -255,11 +255,12 @@ angular.module('skyZoneApp')
                     // UserService.getCurrentUser().then(function(user){
                         var waiverids = [$scope.waiver.id];
                         if ( $scope.waiver.parentWaiver != null ) {
-                            waiverids.push($scope.waiver.parentWaiver);
+                            waiverids = [$scope.waiver.parentWaiver.id];
                         }
-                        //UserService.getCurrentUser().then(function(result) {
-                            // console.log("profile: ", result);
-                            WaiverService.approveWaivers(50, waiverids).then(function(result) {
+                        console.log('waiverIds: ', waiverids);
+                        UserService.getCurrentUser().then(function(result) {
+                            console.log("profile: ", result);
+                            WaiverService.approveWaivers(result.id, waiverids).then(function(result) {
                                 console.log('approval response: ', result);
                                 //$scope.jumper = result.data;
                                 WaiverStatus.setStatus($scope.jumper.id, 'Approved')
@@ -276,13 +277,8 @@ angular.module('skyZoneApp')
                                         'data': participants
                                     });
                                 }, logErrorStopLoading);
-                            // }, function(err) {
-                            //     console.log('approval err: ', err);
-
-                            //})
-                        }, function(err) {
-                            console.log('approval err: ', err);
-                        })
+                            },logErrorStopLoading)
+                        },logErrorStopLoading)
                     // }, logErrorStopLoading)
                 };
 
