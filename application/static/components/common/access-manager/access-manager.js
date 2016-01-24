@@ -60,7 +60,7 @@ angular.module('skyZoneApp')
                         var publicAuthToken = '2dc55cdd-6f10-4303-bf9f-17c1565698c2';
                         var authToken = StorageService.getAuthToken();
                         console.log(authToken);
-                        config.headers['X-ApiKey'] = (authToken && config.url.indexOf('tokens') < 0) ? authToken : posAuthToken;
+                        config.headers['X-ApiKey'] = (authToken && (config.url.indexOf('tokens') < 0 || config.url.indexOf('tokens/current-user') > 0)) ? authToken : posAuthToken;
                         config.headers['X-ApiKey'] = EndpointType.isPublic(config.url) ? publicAuthToken : config.headers['X-ApiKey'];
                         config.headers['X-Date'] = new Date();
 
