@@ -67,7 +67,7 @@ angular.module('skyZoneApp')
                         var hmac64 = HmacService.getHmacFromRequest(config);
                         var role = StorageService.handleGet('role');
                         console.log(role)
-                        role = (role && config.url.indexOf('tokens') < 0) ? role : 'pos_sys';
+                        role = (role && (config.url.indexOf('tokens') < 0 || config.url.indexOf('tokens/current-user') > 0)) ? role : 'pos_sys';
                         role = EndpointType.isPublic(config.url) ? 'public' : role;
                         if (config.headers['X-ApiKey'] === posAuthToken) {
                             role = 'pos_sys';
