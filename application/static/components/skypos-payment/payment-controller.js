@@ -514,6 +514,10 @@ angular.module('skyZoneApp')
 
             $scope.attemptCompleteOrder = function(){
                 //handle errors if not ready to complete
+
+                console.log('order on attempt to compelte: ', $scope.order);
+                console.log('rootScope order: ', $rootScope.order);
+
                 $rootScope.$broadcast('szeDismissError')
                 if(!WaiverStatus.allSigned()){
                     $rootScope.$broadcast('szeConfirm', {
@@ -537,6 +541,15 @@ angular.module('skyZoneApp')
                             }
                         }
                     })
+                }
+                else if ( $scope.order.status != 'Finalized' && $scope.hasRefund($scope.order) ) {
+                    //$rootScope.$broadcast('szeError', 'This is a refund order');
+                    OrderService.processOrder($scope.order,'Refunded')
+                        .then(function(result) {
+                            console.log('orderReturned: ', result);
+                        }, logErrorStopLoading)
+                        .then($scope.printReciept, logErrorStopLoading)
+                        .then($scope.goToStartScreen, logErrorStopLoading);
                 }
                 else if($scope.order.totalAmountDue > 0){
                     $rootScope.$broadcast('szeError', 'Payment required!')
@@ -665,4 +678,14 @@ angular.module('skyZoneApp')
 
 
         ////////// END NO SALE //////////
+
+        $scope.hasRefund = function(order) {
+            var hasRefund = false
+            angular.forEach(order.payments,function(payment) {
+                if ( payment.paymentType == 'Refund' ) {
+                    hasRefund = true;
+                }
+            });
+            return hasRefund;
+        }
 	}]);
