@@ -149,6 +149,7 @@ angular.module('skyZoneApp')
                     }
                 };
 
+
                 $scope.showSignature = function() {
                     $scope.$parent.$parent.showWaiverModal();
                 }
@@ -218,6 +219,11 @@ angular.module('skyZoneApp')
                                 OrderService.getOrder($rootScope.order.id).then(function(order) {
                                     console.log('participants', order.participants);
                                     angular.forEach(order.participants, function(participant, index){
+                                        angular.forEach(participant.waivers, function(waiver) {
+                                            if ( waiver.park.id == $scope.park.id ) {
+                                                WaiverStatus.setStatusFromWaiver(participant.id,waiver);
+                                            }
+                                        });
                                         if(participant.id === $scope.jumper.id){
                                          $scope.jumper = participant;
                                         // WaiverStatus.setStatus($scope.jumper.id, $scope.getWaiverStatus())

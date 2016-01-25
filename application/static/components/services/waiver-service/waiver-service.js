@@ -41,6 +41,27 @@ angular.module('skyZoneApp')
         pending:0
       };
     },
+    setStatusFromWaiver: function(id, waiver) {
+      var expirationDate = new Date();
+      var status = null;
+      var expirationDateStringArray = waiver.expirationDate.split('-');
+      expirationDate.setFullYear(expirationDateStringArray[0]);
+      expirationDate.setMonth(expirationDateStringArray[1]);
+      expirationDate.setDate(expirationDateStringArray[2]);
+      var now = new Date();
+      if (now > expirationDate) {
+          status = 'Expired';
+      } else if (waiver.approved) {
+          status = 'Pending';
+      } else if (waiver.approved) {
+          status = 'Approved';
+      } else {
+          status = null;
+      }
+
+      waiverStatus['_'+id+'_'] = status;
+      calcStatusCounts();
+    },
     setStatus: function(id, status){
 
 
