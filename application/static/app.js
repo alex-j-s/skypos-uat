@@ -23,7 +23,7 @@ angular
         'mgo-angular-wizard',
         'formly'
     ])
-    .constant('ENV', 'dev')
+    .constant('ENV', 'qa')
     .constant('ERROR_MESSAGE', {
         'LOGIN_FAILED':'',
         'SCREEN_UNAVAIL_CUST_ACT_REQUIRED':''
