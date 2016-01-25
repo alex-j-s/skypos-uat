@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('skyZoneApp')
-    .directive('skyposOrderSummary', ['$rootScope', '$location', '$routeParams', 'OrderService', function($rootScope, $location, $routeParams, OrderService) {
+    .directive('skyposOrderSummary', ['$rootScope', '$location', '$routeParams', 'OrderService','UserService', function($rootScope, $location, $routeParams, OrderService, UserService) {
         // Runs during compile
         return {
             // name: '',
