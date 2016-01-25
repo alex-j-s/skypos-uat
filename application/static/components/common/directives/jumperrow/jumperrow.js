@@ -223,13 +223,19 @@ angular.module('skyZoneApp')
                                         // WaiverStatus.setStatus($scope.jumper.id, $scope.getWaiverStatus())
                                         }
                                     })
-                                    $scope.$parent.$parent.waiverInProgress = false;
-                                    $scope.waiverInProgress = false;
-                                    $scope.jumperWaiverInProgress = false;
-                                    $scope.signatureData = "data:image/bmp;base64," + data.signature;
-                                    if(!$scope.$$phase) {
-                                        $scope.$apply();
-                                    }
+                                    
+                                    ProfileService.getCustomerInformation($scope.$parent.$parent.guest.id).then(function(result) {
+                                        console.log('get profile after waiver result: ', result);
+                                        $scope.$parent.$parent.guest = result.data;
+                                        $scope.$parent.$parent.waiverInProgress = false;
+                                        $scope.waiverInProgress = false;
+                                        $scope.jumperWaiverInProgress = false;
+                                        $scope.signatureData = "data:image/bmp;base64," + data.signature;
+                                        $scope.getWaiverStatus();
+                                        if(!$scope.$$phase) {
+                                            $scope.$apply();
+                                        } 
+                                    }, waiverError);
                                 }, waiverError);
                             }, waiverError)
                         }, waiverError)
@@ -253,9 +259,10 @@ angular.module('skyZoneApp')
 
                 $scope.approveWaiver = function() {
                     // UserService.getCurrentUser().then(function(user){
+                        console.log('scope.waiver: ',$scope.waiver);
                         var waiverids = [$scope.waiver.id];
-                        if ( $scope.waiver.parentWaiver != null ) {
-                            waiverids = [$scope.waiver.parentWaiver.id];
+                        if ( $scope.waiver.parentWaivier != null ) {
+                            waiverids = [$scope.waiver.parentWaivier.id];
                         }
                         console.log('waiverIds: ', waiverids);
                         UserService.getCurrentUser().then(function(result) {
