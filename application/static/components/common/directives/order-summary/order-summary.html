@@ -1,7 +1,7 @@
 <div class="dog col-md-offset-0 col-md-12 col-lg-offset-2 col-lg-10">
     <div class="text-center mt30">
         <button ng-show="orderInProgress() && !orderCancelled()" type="button" class="sk-btn btn-red" ng-click="cancelOrder()">CANCEL TRANSACTION</button>
-        <button ng-show="orderPurchased()" type="button" class="sk-btn btn-red" ng-click="refundOrder()">REFUND ORDER</button>
+        <button ng-show="orderPurchased()" type="button" class="sk-btn btn-red" ng-click="managerApprovel()">REFUND ORDER</button>
     </div>
     <div class="mt30">
         <div class="cart">
@@ -73,6 +73,44 @@
         </div>
     </div>
 </div>
+
+
+<modal  title="{{modelTitle}}" visible="showModal" id="payment">
+    <div ng-switch on="modelType">
+        <div ng-switch-when="manager-auth" >
+
+            <div class="row">
+                <h3 class="text-center mb20">Manager Approval</h3>
+                <div class="col-sm-6">
+
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="side-text control-label col-sm-6" for="managerId" style="padding-right: 0px">Manager ID</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="managerId" ng-focus="checkFieldFocused('managerId')" placeholder="" ng-model="auth.managerId">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="side-text control-label col-sm-6" for="managerPin" style="padding-right: 0px">Manager PIN</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-focus="checkFieldFocused('managerPin')" id="managerPin"  placeholder="" ng-model="auth.managerPin">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-sm-6 mb20">
+                    <numkeypad ng-model="auth[selectedAuthField]"> </numkeypad>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <center>
+                    <button type="button" class="btn btn-blue btn-wide" ng-click="verifyManagerPin()" data-dismiss="modal">Approve</button>
+                </center>
+            </div>
+        </div>
+    </div>
+</modal>
+
 <!-- <div class="panel panel-primary" style="border-radius:0px; padding: 0px;margin: 0px;">
     <div class="panel-heading" style="background-color: white;border: 0px;">
         <center><button type="button" class="sk-btn btn-red" style="margin-bottom: 0px;">CANCEL TRANSACTION</button></center>

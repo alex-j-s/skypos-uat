@@ -67,6 +67,10 @@ angular.module('skyZoneApp')
                         
                     }
 
+
+
+
+
                     $rootScope.$broadcast('szeShowLoading');
                     
                     for (var i in $scope.existingPayments) {
@@ -86,6 +90,73 @@ angular.module('skyZoneApp')
                     }
 
                 }
+
+
+
+                //////////////Manager auth/////
+                $scope.managerApprovel = function() {
+                    $scope.modelType = 'manager-auth';
+
+
+                    $scope.showModal = true;
+
+                };
+                $scope.auth = {
+                    'managerId':'',
+                    'managerPin':''
+                };
+
+                $scope.selectedAuthField = 'managerId';
+                $scope.checkFieldFocused = function(field) {
+                    $scope.selectedAuthField = field
+                };
+
+                $scope.authManager = function() {
+                    $scope.auth = {
+                        'managerId':'',
+                        'managerPin':''
+                    };
+                    $scope.selectedAuthField = 'managerId';
+
+
+                };
+
+
+                $scope.verifyManagerPin =function(){
+                    $rootScope.$broadcast('szeShowLoading');
+
+                    var credentials = {
+                        'username': $scope.auth.managerId,
+                        'password': $scope.auth.managerPin
+                    };
+
+
+                    UserService.managerAuth($scope.auth.managerId,$scope.auth.managerPin)
+                        .success(function (data) {
+                            $rootScope.$broadcast('szeHideLoading');
+
+
+                            if(data.role==='pos_mgr')
+                            {
+                                //TODO:open the till
+
+                                $scope.refundOrder();
+
+
+                            }else{
+                                $rootScope.$broadcast('szeError','Authentication fail,You are not authorized to approve no-sale.');
+                            }
+
+                        })
+                        .error(function (error){
+                            $rootScope.$broadcast('szeHideLoading');
+                            $rootScope.$broadcast('szeError',error.message);
+                        });
+
+
+                };
+
+                ////////////////////////////////////
 
                 $scope.cancelOrder = function() {
 
