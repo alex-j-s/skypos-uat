@@ -65,6 +65,39 @@ angular.module('skyZoneApp')
       return deferred.promise;
     };
 
+      self.getAvailabilityByProductId = function(resourceId, guests, startDate, endDate) {
+        var deferred = PromiseFactory.getInstance();
+
+        ParkService.getParkId()
+            .success(function(parkId) {
+
+              var baseUrl = '/api/parks/'+parkId+'/availability?resourceId='+resourceId+'&guests='+guests; //these are required
+              var startDateStr = '&startDate='+startDate;
+              var endDateStr = '&endDate='+endDate;
+              var url = baseUrl;
+
+              if(startDate && endDate) {
+                url += startDateStr + endDateStr;
+              }
+
+              $http.get(url)
+                  .success(function(availability) {
+                    angular.forEach(availability.dates, function(dateObj){
+                      self.treatSlots(dateObj.timeSlots);
+                    })
+                    deferred.resolve(availability);
+                  })
+                  .error(function(error) {
+                    deferred.reject(error);
+                  });
+            })
+            .error(function(error) {
+              deferred.reject(error);
+            });
+
+        return deferred.promise;
+      };
+
     self.treatSlots = function (timeSlots){
       angular.forEach(timeSlots, function(slot){
         slot.label = self.generateTimeSlotLabel(slot);

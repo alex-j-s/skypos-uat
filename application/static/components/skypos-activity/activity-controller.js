@@ -77,6 +77,11 @@ angular.module('skyZoneApp')
 
             $scope.onActivitySelection = function(type, localActivity) {
                 $rootScope.$broadcast('szeShowLoading')
+                
+                $scope.duration = null;
+                $scope.durations = [];
+                $scope.timeSlots = [];
+
                 angular.forEach($scope.activities, function(a) {
                     a.isChecked = false;
                 });
@@ -126,9 +131,11 @@ angular.module('skyZoneApp')
 
                 $rootScope.$broadcast('szeShowLoading');
 
+                $scope.timeSlots = [];
+
 
                 var date = DateService.getApiDateFormat($scope.date);
-                ReservationService.getProductAvailability(resourceIds, calculateQuantities(), date, date, null, null, true)
+                ReservationService.getAvailabilityByProductId(resourceIds, calculateQuantities(), date, date, null, null, true)
                     .success(function(data) {
                         $rootScope.$broadcast('szeHideLoading');
                         console.log(data);
@@ -205,4 +212,15 @@ angular.module('skyZoneApp')
             }
 
         }
-    ]);
+    ])
+.filter('szeHideEmptySlots', function($q){
+    return function(input){
+        var out = []
+        angular.forEach(input, function(ts){
+            if(ts.availableCapacity > 0){
+                out.push(ts);
+            }
+        })
+        return out;
+    }
+});
