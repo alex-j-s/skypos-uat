@@ -545,7 +545,7 @@ angular.module('skyZoneApp')
                 else if ( $scope.order.status != 'Finalized' && $scope.hasRefund($scope.order) ) {
                     //$rootScope.$broadcast('szeError', 'This is a refund order');
                     var status = ($scope.order.totalPayments > 0) ? 'Deposit Paid' : 'Refunded' ;
-                    OrderService.processOrder($scope.order,'Refunded')
+                    OrderService.processOrder($scope.order,status)
                         .then(function(result) {
                             console.log('orderReturned: ', result);
                         }, logErrorStopLoading)
