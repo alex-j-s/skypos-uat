@@ -571,7 +571,7 @@ angular.module('skyZoneApp')
             };
             $scope.goToStartScreen = function(order){
 
-                if(order.paymentStatus === 'Fully Paid'){
+                if(order.paymentStatus === 'Fully Paid' || $scope.hasRefund(order)){
 
                     var msg = (order.changeDue)?'Change Due: '+$filter('currency')(order.changeDue):'No Change Due.';
 
