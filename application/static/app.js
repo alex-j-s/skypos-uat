@@ -123,6 +123,7 @@ angular
             .when('/skypos/offers/:parkUrlSegment', {
                 resolve:{
                     Catalog:CatalogResolve,
+                    Park:CachedParkResolve,
                     Order:NewOrderResolve,
                     Guest:function(){return false;}
                 },
@@ -135,6 +136,7 @@ angular
             .when('/skypos/offers/:parkUrlSegment/:orderId', {
                 resolve:{
                     Catalog:CatalogResolve,
+                    Park:CachedParkResolve,
                     Order:OrderResolve,
                     Guest:function(){return false;}
                 },
@@ -147,6 +149,7 @@ angular
             .when('/skypos/offers/:parkUrlSegment/:guestId/:orderId', {
                 resolve:{
                     Catalog:CatalogResolve,
+                    Park:CachedParkResolve,
                     Order:OrderResolve,
                     Guest:CachedGuestResolve
                 },
