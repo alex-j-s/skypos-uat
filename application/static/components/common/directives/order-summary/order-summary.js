@@ -45,7 +45,7 @@ angular.module('skyZoneApp')
                     return $scope.order.status == 'Cancelled';
                 }
 
-                $scope.refundOrder = function() {
+                $scope.refundOrder = function(order) {
 
                     console.log('refund order')
                     // return logErrorStopLoading('Coming soon!');
@@ -72,7 +72,7 @@ angular.module('skyZoneApp')
 
 
                     $rootScope.$broadcast('szeShowLoading');
-                    
+                    $scope.populateExistingPayments(order.payments);
                     for (var i in $scope.existingPayments) {
                         var payment = $scope.existingPayments[i];
                         console.log('refunding payment: ', payment);
@@ -83,8 +83,14 @@ angular.module('skyZoneApp')
                         OrderService.refundPayment($scope.order.id, payment, paymentType)
                             .then(OrderService.updateOrderStatus, logErrorStopLoading)
                             .then(function(order) {
-                                console.log('order updated order refund')
-                                logSuccessStopLoading('Order successfully refunded. Complete transaction to issue payment.');
+                                if(order.paymentStatus != 'Unpaid'){
+                                    $scope.refundOrder(order);
+                                }
+                                else{
+                                    console.log('order updated order refund')
+                                    logSuccessStopLoading('Order successfully refunded. Complete transaction to issue payment.');
+                                    
+                                }
                                 //todo pop drawer, print receipt w refund
                             }, logErrorStopLoading)
                     }
@@ -140,7 +146,7 @@ angular.module('skyZoneApp')
                             {
                                 //TODO:open the till
 
-                                $scope.refundOrder();
+                                $scope.refundOrder($scope.order);
 
 
                             }else{
