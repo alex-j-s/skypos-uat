@@ -73,9 +73,18 @@ angular.module('skyZoneApp')
       command += ecf.totalSection(keys,values,2);
             
        var refundedPayments = [];
+       var voidPaymentIds = [];
+
+       angular.forEach(order.payments,function(payment) {
+        if ( payment.transactionType == 'Void' ) {
+          voidPaymentIds.push(payment.transactionId);
+        }
+       })
                 
         for (var i in order.payments) {
             var payment = order.payments[i];
+
+            if ( voidPaymentIds.indexOf(payment.transactionId) >= 0 ) { continue; }
             
             if (payment.recordType.name == 'Cash' || payment.recordType.name == 'Check') {
                 popDrawer = true;
@@ -88,7 +97,7 @@ angular.module('skyZoneApp')
                 } else {
             
                     if ( payment.recordType.name == "Credit Card" ) {
-                        var keys = ['Payment Type','creditCardNumber','Card Type','Amount']
+                        var keys = ['Payment Type','Card Number','Card Type','Amount']
                         var values = [payment.recordType.name,payment.creditCardNumber,payment.creditCardType,$filter('currency')(payment.amount)];
                         command += ecf.orderSection(keys,values);
                     } else  {
@@ -106,7 +115,7 @@ angular.module('skyZoneApp')
         for ( var i in refundedPayments ) {
             var payment = refundedPayments[i];
             if ( payment.recordType.name == "Credit Card" ) {
-                        var keys = ['Payment Type','creditCardNumber','Card Type','Amount']
+                        var keys = ['Payment Type','Card Number','Card Type','Amount']
                         var values = [payment.recordType.name,payment.creditCardNumber,payment.creditCardType,$filter('currency')(payment.amount)];
                         command += ecf.orderSection(keys,values);
                     } else  {
@@ -184,9 +193,18 @@ angular.module('skyZoneApp')
         command += ecf.totalSection(keys,values,2);
           
         var refundedPayments = [];
+        var voidPaymentIds = [];
+
+       angular.forEach(order.payments,function(payment) {
+        if ( payment.transactionType == 'Void' ) {
+          voidPaymentIds.push(payment.transactionId);
+        }
+       })
                 
         for (var i in order.payments) {
             var payment = order.payments[i];
+
+            if ( voidPaymentIds.indexOf(payment.transactionId) >= 0 ) { continue; }
             
             if ( payment.transactionType != 'Capture' ) {
             

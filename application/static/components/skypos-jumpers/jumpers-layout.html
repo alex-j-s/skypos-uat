@@ -58,13 +58,13 @@
             <div class="row table-th">
                 <div class="col-xs-1">&nbsp;&nbsp;</div>
                 <div class="col-xs-3">Jumper</div>
-                <div class="col-xs-3">Waiver Status</div>
+                <div class="col-xs-2">Waiver Status</div>
                 <div class="col-xs-4">
                     <div class="row">
                         <div class="col-xs-6" ng-repeat="addon in getAddOns()">Need {{addon.prod.name}}?</div>
                     </div>
                 </div>
-                <div class="col-xs-1">Remove</div>
+                <div class="col-xs-2">Remove</div>
             </div>
             <hr/>
             <jumperrow ng-repeat="jumper in order.participants track by $index" jumper="jumper" park="park" order="order"></jumperrow>
@@ -181,7 +181,7 @@
 
                             </div>
 
-                            <button type="submit" value="submit" class="sk-btn btn-blue" style="background-color:#0071db;" ng-click="newJumper(jumper)">Submit</button>
+                            <button type="submit" value="submit" class="sk-btn btn-blue" style="background-color:#0071db;" ng-click="jumperform.$invalid || newJumper(jumper)">Submit</button>
                         </div>
                         <div class="col-md-6" style="padding:5% 10% 5% 5%">
                             <span class="hd-exist">ADD EXISTING JUMPER</span>

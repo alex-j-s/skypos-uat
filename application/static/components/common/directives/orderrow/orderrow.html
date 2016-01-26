@@ -1,7 +1,7 @@
 
 
 <td class="col-xs-4"><b>{{orderItem.product.name}}</b>
-    <br><span style="color:#808080;">{{ order.jumpStartTime }}, {{ orderItem.product.jumpDurationMinutes }} MINS</span>
+    <br><span style="color:#808080;" ng-show="hasReservation(orderItem)">{{ resStartTime(orderItem) }}, {{ orderItem.product.jumpDurationMinutes }} MINS</span>
 </td>
 <td class="col-xs-2" style="line-height: 50px;">
    <span>{{orderItem.unitPrice | currency}}</span>

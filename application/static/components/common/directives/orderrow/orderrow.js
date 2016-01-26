@@ -12,7 +12,7 @@
  */
 
 angular.module('skyZoneApp')
-    .directive('skyzoneOrderRow', ['$rootScope','OrderService','EpsonService', function($rootScope, OrderService, EpsonService) {
+    .directive('skyzoneOrderRow', ['$rootScope','OrderService','EpsonService', '$filter', function($rootScope, OrderService, EpsonService, $filter) {
 
         return {
             restrict: 'EA',
@@ -32,6 +32,19 @@ angular.module('skyZoneApp')
                 }
                 
                 console.log('orderrow', $scope.$parent.$parent)
+
+                $scope.hasReservation = function(oi){
+                    return (oi.reservation != null);
+                };
+
+                $scope.resStartTime = function(oi){
+                    if($scope.hasReservation(oi)){
+                        return $filter('szeConvertTime')(oi.reservation.reservationItems[0].startTime);
+                    }
+                    else{
+                        return '';
+                    }
+                }
 
                 $scope.removeOrderItem = function(item) {
                     if($scope.inProgress()){
@@ -253,4 +266,22 @@ angular.module('skyZoneApp')
                 }
             }
         };
+    }]).filter('szeConvertTime', [function() {
+      return function(time) {
+        var militaryTime = parseInt(time.substring(0,2));
+        var hours = ((militaryTime + 11) % 12) + 1;
+        var amPm = militaryTime > 11 ? 'PM' : 'AM';
+
+          if ((time.split(':')[0]).length < 2) {
+            time = "0" + time
+          }
+
+         if ((hours.toString()).length < 2) {
+              // hours = "0"+hours
+          }
+
+        var minutes = time.substring(2);
+
+        return hours + minutes + " "+ amPm;
+      };
     }]);

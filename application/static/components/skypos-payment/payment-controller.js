@@ -475,7 +475,7 @@ angular.module('skyZoneApp')
                                 if(data.role==='pos_mgr')
                                 {
                                     //TODO:open the till
-
+                                    $scope.noSale();
 
                                 }else{
                                     $rootScope.$broadcast('szeError','Authentication fail,You are not authorized to approve no-sale.');
@@ -514,6 +514,10 @@ angular.module('skyZoneApp')
 
             $scope.attemptCompleteOrder = function(){
                 //handle errors if not ready to complete
+
+                console.log('order on attempt to compelte: ', $scope.order);
+                console.log('rootScope order: ', $rootScope.order);
+
                 $rootScope.$broadcast('szeDismissError')
                 if(!WaiverStatus.allSigned()){
                     $rootScope.$broadcast('szeConfirm', {
@@ -538,6 +542,16 @@ angular.module('skyZoneApp')
                         }
                     })
                 }
+                else if ( $scope.order.status != 'Finalized' && $scope.hasRefund($scope.order) ) {
+                    //$rootScope.$broadcast('szeError', 'This is a refund order');
+                    var status = ($scope.order.totalPayments > 0) ? 'Deposit Paid' : 'Refunded' ;
+                    OrderService.processOrder($scope.order,status)
+                        // .then(function(result) {
+                        //     console.log('orderReturned: ', result);
+                        // }, logErrorStopLoading)
+                        .then($scope.printReciept, logErrorStopLoading)
+                        .then($scope.goToStartScreen, logErrorStopLoading);
+                }
                 else if($scope.order.totalAmountDue > 0){
                     $rootScope.$broadcast('szeError', 'Payment required!')
                 }
@@ -557,7 +571,7 @@ angular.module('skyZoneApp')
             };
             $scope.goToStartScreen = function(order){
 
-                if(order.paymentStatus === 'Fully Paid'){
+                if(order.paymentStatus === 'Fully Paid' || $scope.hasRefund(order)){
 
                     var msg = (order.changeDue)?'Change Due: '+$filter('currency')(order.changeDue):'No Change Due.';
 
@@ -665,4 +679,14 @@ angular.module('skyZoneApp')
 
 
         ////////// END NO SALE //////////
+
+        $scope.hasRefund = function(order) {
+            var hasRefund = false
+            angular.forEach(order.payments,function(payment) {
+                if ( payment.paymentType == 'Refund' ) {
+                    hasRefund = true;
+                }
+            });
+            return hasRefund;
+        }
 	}]);

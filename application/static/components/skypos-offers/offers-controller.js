@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('skyZoneApp')
-    .controller('SPOffersController', ['$scope', '$q', '$rootScope', '$location', 'Catalog', 'Guest', 'Order', 'OrderService', 'ProductService', 'CatalogService', 'NavService', '$routeParams',
-        function($scope, $q, $rootScope, $location, Catalog, Guest, Order, OrderService, ProductService, CatalogService, NavService, $routeParams) {
+    .controller('SPOffersController', ['$scope', '$q', '$rootScope', '$location', 'Catalog', 'Guest', 'Order', 'Park', 'OrderService', 'ProductService', 'CatalogService', 'NavService', '$routeParams',
+        function($scope, $q, $rootScope, $location, Catalog, Guest, Order, Park, OrderService, ProductService, CatalogService, NavService, $routeParams) {
             
 
             function logErrorStopLoading(err) {
@@ -14,7 +14,7 @@ angular.module('skyZoneApp')
             console.log('catalog: ', $scope.catalog);
             $scope.order = Order;
             $scope.guest = Guest;
-            
+            $scope.park = Park;
             $scope.viewCategory = {};
 
             $scope.parentCategory = {};

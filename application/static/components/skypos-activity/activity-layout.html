@@ -95,7 +95,7 @@
                     <h4 class="h4">Select Time</h4>
                 </div>
                 <div class="table-scroll row">
-                    <div  ng-repeat="timeSlot in timeSlots|orderBy:'tsIndex'">
+                    <div  ng-repeat="timeSlot in timeSlots|szeHideEmptySlots|orderBy:'tsIndex'">
                        <input type="radio" name="timeSlot" id={{'front-time-'+$index}} class="radio" ng-click="onTimeSlotSelection(timeSlot)" ng-checked="timeSlot.isChecked" />
                        <label for={{'front-time-'+$index}}><span ng-bind="timeSlot.label"> </span>
 
