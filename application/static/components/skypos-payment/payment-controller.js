@@ -475,7 +475,7 @@ angular.module('skyZoneApp')
                                 if(data.role==='pos_mgr')
                                 {
                                     //TODO:open the till
-
+                                    $scope.noSale();
 
                                 }else{
                                     $rootScope.$broadcast('szeError','Authentication fail,You are not authorized to approve no-sale.');
