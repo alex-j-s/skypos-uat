@@ -63,7 +63,7 @@ angular.module('skyZoneApp')
       }
       
            
-      var keys = ["Sub Total","Tax","Order Total","Total Recieved","Change"];
+      var keys = ["Sub Total","Tax","Order Total","Total Received","Change"];
       var tax = order['taxAmount']
       var total = order["totalOrderAmount"];
       var change = order["changeDue"];
@@ -183,7 +183,7 @@ angular.module('skyZoneApp')
         }
         
             
-        var keys = ["Sub Total","Tax","Order Total","Total Recieved"];
+        var keys = ["Sub Total","Tax","Order Total","Total Received"];
         var tax = order['taxAmount']
         var total = order["totalOrderAmount"];
         var change = order["changeDue"];
