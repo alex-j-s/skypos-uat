@@ -51,6 +51,12 @@ angular.module('skyZoneApp')
                     console.log('refund order')
                         // return logErrorStopLoading('Coming soon!');
 
+                    if ( $scope.refundInProgress ) { 
+                        console.log('REFUND ALREADY IN PROGRESS');
+                        return; 
+                    }
+                    $scope.refundInProgress = true;
+
 
                     function getPaymentEndpoint(recTypeName) {
                         if (recTypeName === 'Cash') {
@@ -82,6 +88,7 @@ angular.module('skyZoneApp')
                             .then(OrderService.updateOrderStatus, logErrorStopLoading)
                             .then(function(order) {
                                 if (order.paymentStatus != 'Unpaid') {
+                                    console.log('ORDER UNPAID -- REFUNDING');
                                     $scope.refundOrder(order);
                                 } else {
                                     OrderService.processOrder(order, 'Refunded')
@@ -143,7 +150,13 @@ angular.module('skyZoneApp')
                                         .then(function(order) {
                                             EpsonService.printReturnReciept($scope.order,$scope.park,$scope.$parent.$parent.guest,'Sky Zone Copy','Refund',true);
                                             EpsonService.printReturnReciept($scope.order,$scope.park,$scope.$parent.$parent.guest,'Customer Copy','Refund',false);
-                                        }, logErrorStopLoading);
+                                        }, logErrorStopLoading)
+                                        .then(function(order) {
+                                            $scope.refundInProgress = false;
+                                        }, function(err) {
+                                            logErrorStopLoading(err);
+                                            $scope.refundInProgress = false;
+                                        });
                                 }
                                 //todo pop drawer, print receipt w refund
                             }, logErrorStopLoading)
