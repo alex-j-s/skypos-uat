@@ -492,6 +492,20 @@ angular.module('skyZoneApp')
                 return def.promise;
             }
 
+            self.addManagerDiscount = function(orderId, discount){
+                discount.orderId = orderId;
+                var def = $q.defer();
+
+                updateOrderHandler('POST', '/api/orders/' + orderId + '/addmanagerdiscount', discount)
+                    .then(function(order) {
+                        def.resolve(order);
+                    }, function(err) {
+                        def.reject(err);
+                    });
+
+                return def.promise;
+            };
+
             self.addCheckPayment = function(orderId, payment) {
                 payment.orderId = orderId;
                 var def = $q.defer();
@@ -774,6 +788,16 @@ angular.module('skyZoneApp')
                 return {
                     'employeeId': gratuity.employeeId,
                     'total': gratuity.total
+                };
+            };
+
+            self.createManagerDiscount = function(disco){
+                return {
+                    'managerNumber':disco.managerNumber,
+                    'managerPin':disco.managerPin,
+                    'managerDiscountValue':disco.managerDiscountValue,
+                    'managerDiscountReason':disco.managerDiscountReason,
+                    'valueInPercent':disco.valueInPercent
                 };
             };
 

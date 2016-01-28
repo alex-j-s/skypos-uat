@@ -263,7 +263,7 @@
                         <div class="form-group">
                             <label class="side-text control-label col-sm-6" for="zip" style="padding-right: 0px">Postal Code</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" maxlength="4" ng-focus="creditFieldFocused('zip')" ng-model="card.zip" id="zip" placeholder="" >
+                                <input type="text" class="form-control" ng-focus="creditFieldFocused('zip')" ng-model="card.zip" id="zip" placeholder="" >
                             </div>
                         </div>
                         <div class="form-group">
@@ -349,9 +349,9 @@
             <div class="row">
                 <h3 class="text-center mb20">Apply Discount</h3>
                 <div class="col-sm-12">
-                	<input type="text" class="form-control" id="discountValue" placeholder="Discount in $" ng-value="discountValue">
-                	 <input type="text" class="form-control" id="discountValue" placeholder="Discount in %" ng-value="discountValue">
-                    <button class="sk-btn btn-orange footer-button" ng-click="managerDiscountApproval()">Apply Discount</button>
+                	<input type="text" class="form-control" id="discountValuePct" placeholder="Discount in $" ng-model="discountValuePct">
+                	 <input type="text" class="form-control" id="discountValueAmt" placeholder="Discount in %" ng-model="discountValueAmt">
+                    <button class="sk-btn btn-orange footer-button" ng-click="managerDiscountApproval(discountValuePct, discountValueAmt)">Apply Discount</button>
                 </div>
             </div>
         </div>
@@ -464,7 +464,7 @@
                     <div class="form-group">
                         <label class="side-text control-label col-sm-6" for="managerPin" style="padding-right: 0px">Manager PIN</label>
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" ng-focus="checkFieldFocused('managerPin')" id="managerPin"  placeholder="" ng-model="auth.managerPin">
+                            <input type="password" class="form-control" ng-focus="checkFieldFocused('managerPin')" id="managerPin"  placeholder="" ng-model="auth.managerPin">
                         </div>
                     </div>
                 </form>
@@ -495,7 +495,7 @@
                     <div class="form-group">
                         <label class="side-text control-label col-sm-6" for="managerPin" style="padding-right: 0px">Manager PIN</label>
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" ng-focus="checkFieldFocused('managerPin')" id="managerPin"  placeholder="" ng-model="auth.managerPin">
+                            <input type="password" class="form-control" ng-focus="checkFieldFocused('managerPin')" id="managerPin"  placeholder="" ng-model="auth.managerPin">
                         </div>
                     </div>
                 </form>

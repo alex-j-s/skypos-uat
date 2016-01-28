@@ -152,14 +152,34 @@ angular.module('skyZoneApp')
         };
         
         
-        $scope.managerDiscountApproval = function() {
+        $scope.managerDiscountApproval = function(pct, amt) {
             $scope.modelType = 'manager-auth-discount';
             $scope.modelTitle='manager-auth-discount';
 			$scope.showModal = true;
+
+            $scope.discountValuePct = pct;
+            $scope.discountValueAmt = amt;
         };
         $scope.managerDiscount = function(){
         	
-        	console.log('hello'+ $scope.auth)
+        	console.log('hello',$scope.auth)
+
+            var disco = {
+                'managerNumber':$scope.auth.managerId,
+                'managerPin':$scope.auth.managerPin,
+                'managerDiscountValue':($scope.discountValuePct && $scope.discountValuePct.length > 0)?$scope.discountValuePct:$scope.discountValueAmt,
+                'managerDiscountReason':'',
+                'valueInPercent':($scope.discountValuePct && $scope.discountValuePct.length > 0)
+            }
+
+
+            $scope.verifyManagerPin().then(function(role){
+                if(role === 'pos_mgr'){
+                    OrderService.addManagerDiscount($scope.order.id, OrderService.createManagerDiscount(disco)).then(function(result){
+                        $scope.order = result;
+                    }, logErrorStopLoading)
+                }   
+            }, logErrorStopLoading)
         }
 
         $scope.managerApprovel = function() {
@@ -466,6 +486,9 @@ angular.module('skyZoneApp')
 
 
             $scope.verifyManagerPin =function(){
+
+                var def = $q.defer();
+
                 $rootScope.$broadcast('szeShowLoading');
 
                     var credentials = {
@@ -482,7 +505,7 @@ angular.module('skyZoneApp')
                                 if(data.role==='pos_mgr')
                                 {
                                     //TODO:open the till
-                                    $scope.noSale();
+                                    def.resolve(data.role);
 
                                 }else{
                                     $rootScope.$broadcast('szeError','Authentication fail,You are not authorized to approve no-sale.');
@@ -494,6 +517,7 @@ angular.module('skyZoneApp')
                         $rootScope.$broadcast('szeError',error.message);
                     });
 
+                    return def.promise;
 
             };
 
