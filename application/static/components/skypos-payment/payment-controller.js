@@ -68,7 +68,7 @@ angular.module('skyZoneApp')
             
 
 
-            if ( $scope.orderPurchased() ) {
+            if ( $scope.orderPurchased() || $scope.returnOrder ) {
                 EpsonService.printReciept(order,$scope.park,$scope.guest,"Sky Zone Copy","SALE",true);
                 EpsonService.printReciept(order,$scope.park,$scope.guest,"Customer Copy","SALE",false);
                 if ( $scope.returnOrder ) {
@@ -515,11 +515,14 @@ angular.module('skyZoneApp')
             $scope.attemptCompleteOrder = function(){
                 //handle errors if not ready to complete
 
+                $rootScope.$broadcast('szeShowLoading');
+
                 console.log('order on attempt to compelte: ', $scope.order);
                 console.log('rootScope order: ', $rootScope.order);
 
                 $rootScope.$broadcast('szeDismissError')
                 if(!WaiverStatus.allSigned()){
+                    $rootScope.$broadcast('szeHideLoading');
                     $rootScope.$broadcast('szeConfirm', {
                         title: 'Waivers Not Complete',
                         message: 'All waivers must be signed and approved before compeleting the order. Go to Jumpers screen now?',
@@ -550,7 +553,8 @@ angular.module('skyZoneApp')
                         //     console.log('orderReturned: ', result);
                         // }, logErrorStopLoading)
                         .then($scope.printReciept, logErrorStopLoading)
-                        .then($scope.goToStartScreen, logErrorStopLoading);
+                        .then($scope.goToStartScreen, logErrorStopLoading)
+                        .then(function() { $rootScope.$broadcast('szeHideLoading'); }, logErrorStopLoading);
                 }
                 else if($scope.order.totalAmountDue > 0){
                     $rootScope.$broadcast('szeError', 'Payment required!')
@@ -563,6 +567,7 @@ angular.module('skyZoneApp')
                             .then($scope.printReciept, logErrorStopLoading)
                             .then($scope.printTicket, logErrorStopLoading)
                             .then($scope.goToStartScreen, logErrorStopLoading)
+                            .then(function() { $rootScope.$broadcast('szeHideLoading'); }, logErrorStopLoading);
                     }
                     else{
                         $scope.goToStartScreen($scope.order);
@@ -571,9 +576,16 @@ angular.module('skyZoneApp')
             };
             $scope.goToStartScreen = function(order){
 
+
                 if(order.paymentStatus === 'Fully Paid' || $scope.hasRefund(order)){
 
-                    var msg = (order.changeDue)?'Change Due: '+$filter('currency')(order.changeDue):'No Change Due.';
+                    if ($scope.hasRefund(order)) {
+                        var msg = ($scope.changeDueForReturn(order) > 0)?'Change Due: '+$filter('currency')($scope.changeDueForReturn(order)):'No Change Due.';  
+                    } else {
+                        var msg = (order.changeDue)?'Change Due: '+$filter('currency')(order.changeDue):'No Change Due.';
+                    }
+
+                    
 
                     $rootScope.$broadcast('szeConfirm', {
                         title: msg,
@@ -688,5 +700,15 @@ angular.module('skyZoneApp')
                 }
             });
             return hasRefund;
+        }
+
+        $scope.changeDueForReturn = function(order) {
+            var total = 0;
+            angular.forEach(order.payments, function(payment) {
+                if ( payment.paymentType == 'Refund' && payment.recordType.name == "Cash" ) {
+                    total += payment.amount
+                }
+            });
+            return total;
         }
 	}]);

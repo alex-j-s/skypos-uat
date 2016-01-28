@@ -48,6 +48,8 @@ angular.module('skyZoneApp')
 
                 $scope.refundOrder = function(order) {
 
+                    $scope.refundInProgress = undefined;
+
                     console.log('refund order')
                         // return logErrorStopLoading('Coming soon!');
 
@@ -96,7 +98,7 @@ angular.module('skyZoneApp')
                                             console.log('order updated order refund')
                                             logSuccessStopLoading('Order successfully refunded. Complete transaction to issue payment.');
                                             $scope.order = order;
-                                            var msg = (order.totalAmountDue) ? 'Refund Due: ' + $filter('currency')(order.totalAmountDue) : 'No Change Due.';
+                                            var msg = (order.totalAmountDue) ? 'Change Due: ' + $filter('currency')($scope.getOrderCashPaymentTotalForRefund(order)) : 'No Change Due.';
 
                                             $rootScope.$broadcast('szeConfirm', {
                                                 title: msg,
@@ -360,6 +362,17 @@ angular.module('skyZoneApp')
                 }
 
                 $scope.populateExistingPayments($scope.order.payments);
+
+
+                $scope.getOrderCashPaymentTotalForRefund = function(order) {
+                    var total = 0;
+                    angular.forEach(order.payments, function(payment) {
+                        if ( payment.paymentType == 'Refund' && payment.recordType.name == 'Cash' ) {
+                            total += payment.amount;
+                        }
+                    })
+                    return total;
+                }
             }
         };
     }]);
