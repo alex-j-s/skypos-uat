@@ -317,13 +317,13 @@ angular.module('skyZoneApp')
         ////////// CARD CAPTURE /////////
 
         $scope.kickOffPaymentProcess = function() {
-            $rootScope.$broadcast('szeDismissError')
+            $rootScope.$broadcast('szeDismissError');
           console.log('capturing payment information from verifone');
           $scope.capturingPayment = true;
           $scope.card.amount = $scope.order.totalAmountDue;
           var amountString = $filter('currency')($scope.card.amount);
+          $rootScope.$broadcast('szeShowLoading');
           VerifoneService.startPayment(amountString,function(data) {
-             
              console.log('payment capture compelte: ', data); 
              $scope.capturingPayment = false;
              $scope.processCardPresentPayment(data);
@@ -344,6 +344,7 @@ angular.module('skyZoneApp')
                 OrderService.addCreditCardPayment($scope.order.id,payload)
                     .then(function(order) {
                         VerifoneService.completePayment('Payment Accepted!', function() { return null; });
+                        $scope.attemptCompleteOrder();
                     },function(err) {
                         logErrorStopLoading(err);
                         VerifoneService.completePayment('Failed To Process', function() { return null; });
@@ -362,7 +363,8 @@ angular.module('skyZoneApp')
                 OrderService.addGiftCardPayment($scope.order.id, payload)   //.then(OrderService.updateOrderStatus, logErrorStopLoading)
                     .then(function(order) {
                         VerifoneService.completePayment('Payment Accepted!',function() { return null; });
-                        //setTimeout($scope.printReciept,3000);     
+                        //setTimeout($scope.printReciept,3000);
+                        $scope.attemptCompleteOrder();
                     }, function(err) {
                         logErrorStopLoading(err);
                         VerifoneService.completePayment('Failed To Process',function() { return null; });
@@ -385,6 +387,7 @@ angular.module('skyZoneApp')
                 OrderService.addCreditCardPayment($scope.order.id,payload)
                     .then(function(order) {
                         VerifoneService.completePayment('Payment Accepted!', function() { return null; });
+                        $scope.attemptCompleteOrder();
                     },function(err) {
                         logErrorStopLoading(err);
                         VerifoneService.completePayment('Failed To Process', function() { return null; });
