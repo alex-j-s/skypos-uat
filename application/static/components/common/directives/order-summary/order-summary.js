@@ -303,7 +303,7 @@ angular.module('skyZoneApp')
                     var voided = false;
 
                     angular.forEach(payments, function(payment, index) {
-                        if (payment.transactionType === 'Authorize') {
+                        if (payment.transactionType === 'Authorize' || payment.transactionType === 'Authorize and Capture') {
                             payment.isCancellable = true;
                             auths.push(payment);
                         }
