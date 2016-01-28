@@ -257,6 +257,7 @@ angular.module('skyZoneApp')
             'expM':null,
             'expY':null,
             'cvv':null,
+            'zip':null,
             'trackData':null,
             'ksn':null,
             'pinBlock':null,
@@ -271,11 +272,13 @@ angular.module('skyZoneApp')
                     !$scope.card.expM ||
                     !$scope.card.expY ||
                     !$scope.card.cvv ||
+                    !$scope.card.zip ||
                     $scope.card.amount <= 0, $scope.card);
             return !$scope.card.ccn ||
                     !$scope.card.expM ||
                     !$scope.card.expY ||
                     !$scope.card.cvv ||
+                    !scope.card.zip ||
                     $scope.card.amount <= 0;
         }
         $scope.creditFieldFocused = function(field) {
@@ -304,6 +307,7 @@ angular.module('skyZoneApp')
                 'expM':null,
                 'expY':null,
                 'cvv':null,
+                'zip':null,
                 'amount':$scope.order.totalAmountDue
             }
             $scope.selectedCreditField = 'ccn';
@@ -312,7 +316,7 @@ angular.module('skyZoneApp')
         };
         
         
-        ////////// CREDIT CARD MODAL //////////
+        ////////// END CREDIT CARD MODAL //////////
 
         ////////// CARD CAPTURE /////////
 

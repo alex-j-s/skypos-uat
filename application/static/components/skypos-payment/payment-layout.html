@@ -261,6 +261,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="side-text control-label col-sm-6" for="zip" style="padding-right: 0px">Postal Code</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" maxlength="4" ng-focus="creditFieldFocused('zip')" ng-model="card.zip" id="zip" placeholder="" >
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="side-text control-label col-sm-6" for="cvv" style="padding-right: 0px">Amount</label>
                             <div class="col-sm-6">
                                 <input type="text" class="form-control" ng-focus="creditFieldFocused('amount')" ng-model="card.amount" id="amount" placeholder="">
