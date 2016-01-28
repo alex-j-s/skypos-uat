@@ -6,7 +6,7 @@
 <td class="col-xs-2" style="line-height: 50px;">
    <span>{{orderItem.unitPrice | currency}}</span>
 </td>
-<td ng-show="orderInProgress()" class="col-xs-2">
+<td ng-show="canChangeQuantity(orderItem)" class="col-xs-2">
     <div style="padding:5px 0px 0px 0px; width:100%;">
         <div class="dropdown ">
                 <div class="select-style" >
@@ -32,7 +32,7 @@
         <!-- todo: quantity +/- -->
     </div>
 </td>
-<td ng-show="!orderInProgress()" class="col-xs-2" style="line-height: 50px;">
+<td ng-show="!canChangeQuantity(orderItem)" class="col-xs-2" style="line-height: 50px;">
     <span>{{ orderItem.quantity }} </span>
 </td>
 <td class="col-xs-2" style="line-height: 50px;">

@@ -196,6 +196,12 @@ angular.module('skyZoneApp')
                         });
                     }
                 }
+
+                $scope.canChangeQuantity = function(item) {
+                    if ( !$scope.orderInProgress() ) { return false }
+                    if ( item.reservation != null ) { return false }
+                    return true
+                }
                 
                 $scope.populateExistingPayments = function(payments) {
                     $scope.existingPayments = [];

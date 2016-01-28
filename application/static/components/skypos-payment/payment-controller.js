@@ -68,7 +68,7 @@ angular.module('skyZoneApp')
             
 
 
-            if ( $scope.orderPurchased() ) {
+            if ( $scope.orderPurchased() || $scope.returnOrder ) {
                 EpsonService.printReciept(order,$scope.park,$scope.guest,"Sky Zone Copy","SALE",true);
                 EpsonService.printReciept(order,$scope.park,$scope.guest,"Customer Copy","SALE",false);
                 if ( $scope.returnOrder ) {
@@ -152,14 +152,34 @@ angular.module('skyZoneApp')
         };
         
         
-        $scope.managerDiscountApproval = function() {
+        $scope.managerDiscountApproval = function(pct, amt) {
             $scope.modelType = 'manager-auth-discount';
             $scope.modelTitle='manager-auth-discount';
 			$scope.showModal = true;
+
+            $scope.discountValuePct = pct;
+            $scope.discountValueAmt = amt;
         };
         $scope.managerDiscount = function(){
         	
-        	console.log('hello'+ $scope.auth)
+        	console.log('hello',$scope.auth)
+
+            var disco = {
+                'managerNumber':$scope.auth.managerId,
+                'managerPin':$scope.auth.managerPin,
+                'managerDiscountValue':($scope.discountValuePct && $scope.discountValuePct.length > 0)?$scope.discountValuePct:$scope.discountValueAmt,
+                'managerDiscountReason':'',
+                'valueInPercent':($scope.discountValuePct && $scope.discountValuePct.length > 0)
+            }
+
+
+            $scope.verifyManagerPin().then(function(role){
+                if(role === 'pos_mgr'){
+                    OrderService.addManagerDiscount($scope.order.id, OrderService.createManagerDiscount(disco)).then(function(result){
+                        $scope.order = result;
+                    }, logErrorStopLoading)
+                }   
+            }, logErrorStopLoading)
         }
 
         $scope.managerApprovel = function() {
@@ -257,6 +277,7 @@ angular.module('skyZoneApp')
             'expM':null,
             'expY':null,
             'cvv':null,
+            'zip':null,
             'trackData':null,
             'ksn':null,
             'pinBlock':null,
@@ -271,11 +292,13 @@ angular.module('skyZoneApp')
                     !$scope.card.expM ||
                     !$scope.card.expY ||
                     !$scope.card.cvv ||
+                    !$scope.card.zip ||
                     $scope.card.amount <= 0, $scope.card);
             return !$scope.card.ccn ||
                     !$scope.card.expM ||
                     !$scope.card.expY ||
                     !$scope.card.cvv ||
+                    !scope.card.zip ||
                     $scope.card.amount <= 0;
         }
         $scope.creditFieldFocused = function(field) {
@@ -304,6 +327,7 @@ angular.module('skyZoneApp')
                 'expM':null,
                 'expY':null,
                 'cvv':null,
+                'zip':null,
                 'amount':$scope.order.totalAmountDue
             }
             $scope.selectedCreditField = 'ccn';
@@ -312,18 +336,18 @@ angular.module('skyZoneApp')
         };
         
         
-        ////////// CREDIT CARD MODAL //////////
+        ////////// END CREDIT CARD MODAL //////////
 
         ////////// CARD CAPTURE /////////
 
         $scope.kickOffPaymentProcess = function() {
-            $rootScope.$broadcast('szeDismissError')
+            $rootScope.$broadcast('szeDismissError');
           console.log('capturing payment information from verifone');
           $scope.capturingPayment = true;
           $scope.card.amount = $scope.order.totalAmountDue;
           var amountString = $filter('currency')($scope.card.amount);
+          $rootScope.$broadcast('szeShowLoading');
           VerifoneService.startPayment(amountString,function(data) {
-             
              console.log('payment capture compelte: ', data); 
              $scope.capturingPayment = false;
              $scope.processCardPresentPayment(data);
@@ -344,6 +368,7 @@ angular.module('skyZoneApp')
                 OrderService.addCreditCardPayment($scope.order.id,payload)
                     .then(function(order) {
                         VerifoneService.completePayment('Payment Accepted!', function() { return null; });
+                        $scope.attemptCompleteOrder();
                     },function(err) {
                         logErrorStopLoading(err);
                         VerifoneService.completePayment('Failed To Process', function() { return null; });
@@ -362,7 +387,8 @@ angular.module('skyZoneApp')
                 OrderService.addGiftCardPayment($scope.order.id, payload)   //.then(OrderService.updateOrderStatus, logErrorStopLoading)
                     .then(function(order) {
                         VerifoneService.completePayment('Payment Accepted!',function() { return null; });
-                        //setTimeout($scope.printReciept,3000);     
+                        //setTimeout($scope.printReciept,3000);
+                        $scope.attemptCompleteOrder();
                     }, function(err) {
                         logErrorStopLoading(err);
                         VerifoneService.completePayment('Failed To Process',function() { return null; });
@@ -385,6 +411,7 @@ angular.module('skyZoneApp')
                 OrderService.addCreditCardPayment($scope.order.id,payload)
                     .then(function(order) {
                         VerifoneService.completePayment('Payment Accepted!', function() { return null; });
+                        $scope.attemptCompleteOrder();
                     },function(err) {
                         logErrorStopLoading(err);
                         VerifoneService.completePayment('Failed To Process', function() { return null; });
@@ -459,6 +486,9 @@ angular.module('skyZoneApp')
 
 
             $scope.verifyManagerPin =function(){
+
+                var def = $q.defer();
+
                 $rootScope.$broadcast('szeShowLoading');
 
                     var credentials = {
@@ -475,7 +505,7 @@ angular.module('skyZoneApp')
                                 if(data.role==='pos_mgr')
                                 {
                                     //TODO:open the till
-                                    $scope.noSale();
+                                    def.resolve(data.role);
 
                                 }else{
                                     $rootScope.$broadcast('szeError','Authentication fail,You are not authorized to approve no-sale.');
@@ -487,6 +517,7 @@ angular.module('skyZoneApp')
                         $rootScope.$broadcast('szeError',error.message);
                     });
 
+                    return def.promise;
 
             };
 
@@ -515,11 +546,14 @@ angular.module('skyZoneApp')
             $scope.attemptCompleteOrder = function(){
                 //handle errors if not ready to complete
 
+                $rootScope.$broadcast('szeShowLoading');
+
                 console.log('order on attempt to compelte: ', $scope.order);
                 console.log('rootScope order: ', $rootScope.order);
 
                 $rootScope.$broadcast('szeDismissError')
                 if(!WaiverStatus.allSigned()){
+                    $rootScope.$broadcast('szeHideLoading');
                     $rootScope.$broadcast('szeConfirm', {
                         title: 'Waivers Not Complete',
                         message: 'All waivers must be signed and approved before compeleting the order. Go to Jumpers screen now?',
@@ -550,7 +584,8 @@ angular.module('skyZoneApp')
                         //     console.log('orderReturned: ', result);
                         // }, logErrorStopLoading)
                         .then($scope.printReciept, logErrorStopLoading)
-                        .then($scope.goToStartScreen, logErrorStopLoading);
+                        .then($scope.goToStartScreen, logErrorStopLoading)
+                        .then(function() { $rootScope.$broadcast('szeHideLoading'); }, logErrorStopLoading);
                 }
                 else if($scope.order.totalAmountDue > 0){
                     $rootScope.$broadcast('szeError', 'Payment required!')
@@ -563,6 +598,7 @@ angular.module('skyZoneApp')
                             .then($scope.printReciept, logErrorStopLoading)
                             .then($scope.printTicket, logErrorStopLoading)
                             .then($scope.goToStartScreen, logErrorStopLoading)
+                            .then(function() { $rootScope.$broadcast('szeHideLoading'); }, logErrorStopLoading);
                     }
                     else{
                         $scope.goToStartScreen($scope.order);
@@ -571,9 +607,16 @@ angular.module('skyZoneApp')
             };
             $scope.goToStartScreen = function(order){
 
+
                 if(order.paymentStatus === 'Fully Paid' || $scope.hasRefund(order)){
 
-                    var msg = (order.changeDue)?'Change Due: '+$filter('currency')(order.changeDue):'No Change Due.';
+                    if ($scope.hasRefund(order)) {
+                        var msg = ($scope.changeDueForReturn(order) > 0)?'Change Due: '+$filter('currency')($scope.changeDueForReturn(order)):'No Change Due.';  
+                    } else {
+                        var msg = (order.changeDue)?'Change Due: '+$filter('currency')(order.changeDue):'No Change Due.';
+                    }
+
+                    
 
                     $rootScope.$broadcast('szeConfirm', {
                         title: msg,
@@ -688,5 +731,15 @@ angular.module('skyZoneApp')
                 }
             });
             return hasRefund;
+        }
+
+        $scope.changeDueForReturn = function(order) {
+            var total = 0;
+            angular.forEach(order.payments, function(payment) {
+                if ( payment.paymentType == 'Refund' && payment.recordType.name == "Cash" ) {
+                    total += payment.amount
+                }
+            });
+            return total;
         }
 	}]);

@@ -181,7 +181,10 @@ angular.module('skyZoneApp')
                     })
                     
                     def.resolve(OrderService.addOrderParticipant(Order.id, OrderService.createOrderParticipant(jumper))
-                            .then($scope.refreshJumpers, logErrorStopLoading));
+                            .then(function(order) {
+                                $scope.refreshJumpers(order);
+                                $rootScope.$broadcast('szeHideLoading')
+                            }, logErrorStopLoading));
 
                     // def.resolve(OrderService.updateOrder(Order.id, Order).then(function(result){
                     //     OrderService.addOrderParticipant(Order.id, OrderService.createOrderParticipant(jumper))
@@ -204,7 +207,10 @@ angular.module('skyZoneApp')
                     // }, logErrorStopLoading));
 
                     def.resolve(OrderService.addOrderParticipant(Order.id, OrderService.createOrderParticipant(jumper.data))
-                        .then($scope.refreshJumpers, logErrorStopLoading));
+                        .then(function(order) {
+                            $scope.refreshJumpers(order);
+                            $rootScope.$broadcast('szeHideLoading');
+                        }, logErrorStopLoading));
 
                 } else { //no jumper
                     logErrorStopLoading('Unable to find guest');
@@ -221,7 +227,7 @@ angular.module('skyZoneApp')
                 console.log('***LOOK: ', order);
                 $scope.order = order;
                 $scope.showModal = false;
-                $rootScope.$broadcast('szeHideLoading')
+                //$rootScope.$broadcast('szeHideLoading')
 
 
             };

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('skyZoneApp')
-    .directive('skyposOrderSummary', ['$rootScope', '$location', '$routeParams', 'OrderService','UserService', '$filter', function($rootScope, $location, $routeParams, OrderService, UserService, $filter) {
+    .directive('skyposOrderSummary', ['$rootScope', '$location', '$routeParams', 'OrderService', 'UserService', '$filter','EpsonService', function($rootScope, $location, $routeParams, OrderService, UserService, $filter,EpsonService) {
         // Runs during compile
         return {
             // name: '',
@@ -9,7 +9,7 @@ angular.module('skyZoneApp')
             // terminal: true,
             scope: {
                 'order': '=',
-                'park':'='
+                'park': '='
             }, // {} = isolate, true = child, false/undefined = no change
             controller: function($scope, $element, $attrs, $transclude) {},
             // require: 'ngModel', // Array = multiple requires, ? = optional, ^ = check parent elements
@@ -26,6 +26,7 @@ angular.module('skyZoneApp')
                     $rootScope.$broadcast('szeError', 'Failed to process order: ' + JSON.stringify(err));
                     $scope.showModal = false;
                 }
+
                 function logSuccessStopLoading(msg) {
                     $rootScope.$broadcast('szeHideLoading');
                     $rootScope.$broadcast('szeSuccess', msg);
@@ -47,24 +48,29 @@ angular.module('skyZoneApp')
 
                 $scope.refundOrder = function(order) {
 
+                    $scope.refundInProgress = undefined;
+
                     console.log('refund order')
-                    // return logErrorStopLoading('Coming soon!');
-                    
-                    
-                    function getPaymentEndpoint(recTypeName){
-                        if(recTypeName === 'Cash'){
+                        // return logErrorStopLoading('Coming soon!');
+
+                    if ( $scope.refundInProgress ) { 
+                        console.log('REFUND ALREADY IN PROGRESS');
+                        return; 
+                    }
+                    $scope.refundInProgress = true;
+
+
+                    function getPaymentEndpoint(recTypeName) {
+                        if (recTypeName === 'Cash') {
                             return 'cash'
-                        }
-                        else if(recTypeName === 'Gift Card'){
+                        } else if (recTypeName === 'Gift Card') {
                             return 'gift-card'
-                        }
-                        else if(recTypeName === 'Credit Card'){
+                        } else if (recTypeName === 'Credit Card') {
                             return 'credit-card'
-                        }
-                        else if(recTypeName === 'Check'){
+                        } else if (recTypeName === 'Check') {
                             return 'check'
                         }
-                        
+
                     }
 
 
@@ -79,71 +85,80 @@ angular.module('skyZoneApp')
 
                         var paymentType = getPaymentEndpoint(payment.recordType.name);
 
-                        
+
                         OrderService.refundPayment($scope.order.id, payment, paymentType)
                             .then(OrderService.updateOrderStatus, logErrorStopLoading)
                             .then(function(order) {
-                                if(order.paymentStatus != 'Unpaid'){
+                                if (order.paymentStatus != 'Unpaid' && $scope.refundInProgress == undefined) {
+                                    console.log('ORDER UNPAID -- REFUNDING');
                                     $scope.refundOrder(order);
-                                }
-                                else{
+                                } else {
                                     OrderService.processOrder(order, 'Refunded')
-                                        .then(function(order){
+                                        .then(function(order) {
                                             console.log('order updated order refund')
                                             logSuccessStopLoading('Order successfully refunded. Complete transaction to issue payment.');
                                             $scope.order = order;
-                                            var msg = (order.totalAmountDue)?'Refund Due: '+$filter('currency')(order.totalAmountDue):'No Change Due.';
+                                            var msg = (order.totalAmountDue) ? 'Change Due: ' + $filter('currency')($scope.getOrderCashPaymentTotalForRefund(order)) : 'No Change Due.';
 
-                    $rootScope.$broadcast('szeConfirm', {
-                        title: msg,
-                        message: '',
-                        confirm: {
-                            label: 'Return to Start',
-                            action: function($clickEvent) {
-                                //go to start
-                                $location.path('/skypos/start/'+$scope.park.parkUrlSegment);
-                            }
-                        },
-                        // cancel: {
-                        //     label: 'Activate Gift Card',
-                        //     action: function($clickEvent) {
-                        //         var gcModal = $modal.open({
-                        //             animation: true,
-                        //             size:'md',
-                        //             templateUrl: 'static/components/skypos-payment/gift-card-issuance.html',
-                        //             link: function(scope, elem, attr){
-                        //                 elem.find('#cardNumber').focus();
-                        //             },
-                        //             controller: function($scope, $modalInstance){
-                        //                 $scope.giftCard = {};
-                        //                 $scope.activateGiftCard = function(gc){
-                        //                     $rootScope.$broadcast('szeShowLoading');
-                        //                     GiftCardsService.issueCard(GiftCardsService.createIssueGiftCard(gc.cardNumber, gc.amount, $scope.order.id))
-                        //                         .success(function(result){
-                        //                             alert(result.resultText)
-                        //                             if(!result.isFailure){
-                        //                                 $modalInstance.close(result);
-                        //                             }
-                        //                             console.log('giftcard issued: ',result);
-                        //                             $rootScope.$broadcast('szeHideLoading');
-                        //                         })
-                        //                         .error(logErrorStopLoading)
-                        //                 };
-                        //             }
-                        //         })
+                                            $rootScope.$broadcast('szeConfirm', {
+                                                title: msg,
+                                                message: '',
+                                                confirm: {
+                                                    label: 'Return to Start',
+                                                    action: function($clickEvent) {
+                                                        //go to start
+                                                        $location.path('/skypos/start/' + $scope.park.parkUrlSegment);
+                                                    }
+                                                },
+                                                // cancel: {
+                                                //     label: 'Activate Gift Card',
+                                                //     action: function($clickEvent) {
+                                                //         var gcModal = $modal.open({
+                                                //             animation: true,
+                                                //             size:'md',
+                                                //             templateUrl: 'static/components/skypos-payment/gift-card-issuance.html',
+                                                //             link: function(scope, elem, attr){
+                                                //                 elem.find('#cardNumber').focus();
+                                                //             },
+                                                //             controller: function($scope, $modalInstance){
+                                                //                 $scope.giftCard = {};
+                                                //                 $scope.activateGiftCard = function(gc){
+                                                //                     $rootScope.$broadcast('szeShowLoading');
+                                                //                     GiftCardsService.issueCard(GiftCardsService.createIssueGiftCard(gc.cardNumber, gc.amount, $scope.order.id))
+                                                //                         .success(function(result){
+                                                //                             alert(result.resultText)
+                                                //                             if(!result.isFailure){
+                                                //                                 $modalInstance.close(result);
+                                                //                             }
+                                                //                             console.log('giftcard issued: ',result);
+                                                //                             $rootScope.$broadcast('szeHideLoading');
+                                                //                         })
+                                                //                         .error(logErrorStopLoading)
+                                                //                 };
+                                                //             }
+                                                //         })
 
-                        //         gcModal.result.then( function (giftCardResult) {
-                        //             $rootScope.$broadcast('szeShowLoading');
-                        //             $scope.goToStartScreen(order);
-                        //         }, function(reason){
+                                                //         gcModal.result.then( function (giftCardResult) {
+                                                //             $rootScope.$broadcast('szeShowLoading');
+                                                //             $scope.goToStartScreen(order);
+                                                //         }, function(reason){
 
-                        //         })
-                        //     }
-                        // }
-                    })
+                                                //         })
+                                                //     }
+                                                // }
+                                            })
                                             console.log($scope.order);
-                                        }, logErrorStopLoading);
-                                    
+                                        }, logErrorStopLoading)
+                                        .then(function(order) {
+                                            EpsonService.printReturnReciept($scope.order,$scope.park,$scope.$parent.$parent.guest,'Sky Zone Copy','Refund',true);
+                                            EpsonService.printReturnReciept($scope.order,$scope.park,$scope.$parent.$parent.guest,'Customer Copy','Refund',false);
+                                        }, logErrorStopLoading)
+                                        .then(function(order) {
+                                            $scope.refundInProgress = false;
+                                        }, function(err) {
+                                            logErrorStopLoading(err);
+                                            $scope.refundInProgress = false;
+                                        });
                                 }
                                 //todo pop drawer, print receipt w refund
                             }, logErrorStopLoading)
@@ -162,8 +177,8 @@ angular.module('skyZoneApp')
 
                 };
                 $scope.auth = {
-                    'managerId':'',
-                    'managerPin':''
+                    'managerId': '',
+                    'managerPin': ''
                 };
 
                 $scope.selectedAuthField = 'managerId';
@@ -173,8 +188,8 @@ angular.module('skyZoneApp')
 
                 $scope.authManager = function() {
                     $scope.auth = {
-                        'managerId':'',
-                        'managerPin':''
+                        'managerId': '',
+                        'managerPin': ''
                     };
                     $scope.selectedAuthField = 'managerId';
 
@@ -182,7 +197,7 @@ angular.module('skyZoneApp')
                 };
 
 
-                $scope.verifyManagerPin =function(){
+                $scope.verifyManagerPin = function() {
                     $rootScope.$broadcast('szeShowLoading');
 
                     var credentials = {
@@ -191,26 +206,25 @@ angular.module('skyZoneApp')
                     };
 
 
-                    UserService.managerAuth($scope.auth.managerId,$scope.auth.managerPin)
-                        .success(function (data) {
+                    UserService.managerAuth($scope.auth.managerId, $scope.auth.managerPin)
+                        .success(function(data) {
                             $rootScope.$broadcast('szeHideLoading');
 
 
-                            if(data.role==='pos_mgr')
-                            {
+                            if (data.role === 'pos_mgr') {
                                 //TODO:open the till
 
                                 $scope.refundOrder($scope.order);
 
 
-                            }else{
-                                $rootScope.$broadcast('szeError','Authentication fail,You are not authorized to approve no-sale.');
+                            } else {
+                                $rootScope.$broadcast('szeError', 'Authentication fail,You are not authorized to approve no-sale.');
                             }
 
                         })
-                        .error(function (error){
+                        .error(function(error) {
                             $rootScope.$broadcast('szeHideLoading');
-                            $rootScope.$broadcast('szeError',error.message);
+                            $rootScope.$broadcast('szeError', error.message);
                         });
 
 
@@ -221,48 +235,47 @@ angular.module('skyZoneApp')
                 $scope.cancelOrder = function() {
 
                     $rootScope.$broadcast('szeConfirm', {
-                    title: 'Cancel Transaction?',
-                    message: 'Cancelling this transaction will release any pending reservations and navigate back to the Start screen. Continue?',
-                    confirm: {
-                        label: 'Continue',
-                        action: function($clickEvent) {
-                            
-                            $rootScope.$broadcast('szeShowLoading');
-                            if($scope.order.orderItems && $scope.order.orderItems.length > 0){
-                                var foundRes = false;
-                                angular.forEach($scope.order.orderItems, function(item) {
-                                    if ( item.reservation ) {
-                                        foundRes = true;
-                                        OrderService.deleteOrderLineItem($scope.order.id, item.id).then(function(result) {
-                                            OrderService.deleteLocalOrder();
-                                            $rootScope.$broadcast('szeHideLoading');
-                                            $location.path('/skypos/start/' + $routeParams.parkUrlSegment);
-                                            return;
-                                        }, logErrorStopLoading);
+                        title: 'Cancel Transaction?',
+                        message: 'Cancelling this transaction will release any pending reservations and navigate back to the Start screen. Continue?',
+                        confirm: {
+                            label: 'Continue',
+                            action: function($clickEvent) {
+
+                                $rootScope.$broadcast('szeShowLoading');
+                                if ($scope.order.orderItems && $scope.order.orderItems.length > 0) {
+                                    var foundRes = false;
+                                    angular.forEach($scope.order.orderItems, function(item) {
+                                        if (item.reservation) {
+                                            foundRes = true;
+                                            OrderService.deleteOrderLineItem($scope.order.id, item.id).then(function(result) {
+                                                OrderService.deleteLocalOrder();
+                                                $rootScope.$broadcast('szeHideLoading');
+                                                $location.path('/skypos/start/' + $routeParams.parkUrlSegment);
+                                                return;
+                                            }, logErrorStopLoading);
+                                        }
+                                    });
+                                    if (!foundRes) {
+                                        OrderService.deleteLocalOrder();
+                                        $rootScope.$broadcast('szeHideLoading');
+                                        $location.path('/skypos/start/' + $routeParams.parkUrlSegment);
                                     }
-                                });
-                                if(!foundRes){
+                                } else {
                                     OrderService.deleteLocalOrder();
                                     $rootScope.$broadcast('szeHideLoading');
                                     $location.path('/skypos/start/' + $routeParams.parkUrlSegment);
+
                                 }
                             }
-                            else{
-                                OrderService.deleteLocalOrder();
-                                $rootScope.$broadcast('szeHideLoading');
-                                $location.path('/skypos/start/' + $routeParams.parkUrlSegment);
-                                
+                        },
+                        cancel: {
+                            label: 'Close',
+                            action: function($clickEvent) {
+                                return;
+
                             }
                         }
-                    },
-                    cancel: {
-                        label: 'Close',
-                        action: function($clickEvent) {
-                            return;
-
-                        }
-                    }
-                })
+                    })
 
                 }
 
@@ -290,7 +303,7 @@ angular.module('skyZoneApp')
                     var voided = false;
 
                     angular.forEach(payments, function(payment, index) {
-                        if (payment.transactionType === 'Authorize') {
+                        if (payment.transactionType === 'Authorize' || payment.transactionType === 'Authorize and Capture') {
                             payment.isCancellable = true;
                             auths.push(payment);
                         }
@@ -309,8 +322,7 @@ angular.module('skyZoneApp')
 
                         voided = false;
                         angular.forEach(auths, function(authPayment, voidIndex) {
-                            if (authPayment.id === voidPayment.transactionId
-                                || authPayment.transactionId === voidPayment.transactionId) {
+                            if (authPayment.id === voidPayment.transactionId || authPayment.transactionId === voidPayment.transactionId) {
                                 voided = voidIndex;
                                 authPayment.isCancellable = false;
                             }
@@ -318,11 +330,10 @@ angular.module('skyZoneApp')
                         if (voided !== false) {
                             auths.splice(voided, 1);
                         }
-                           
-                        voided = false; 
+
+                        voided = false;
                         angular.forEach(sales, function(salePayment, saleIndex) {
-                            if (salePayment.id === voidPayment.transactionId
-                                || salePayment.transactionId === voidPayment.transactionId) {
+                            if (salePayment.id === voidPayment.transactionId || salePayment.transactionId === voidPayment.transactionId) {
                                 voided = saleIndex
                                 salePayment.isCancellable = false;
                             }
@@ -351,6 +362,17 @@ angular.module('skyZoneApp')
                 }
 
                 $scope.populateExistingPayments($scope.order.payments);
+
+
+                $scope.getOrderCashPaymentTotalForRefund = function(order) {
+                    var total = 0;
+                    angular.forEach(order.payments, function(payment) {
+                        if ( payment.paymentType == 'Refund' && payment.recordType.name == 'Cash' ) {
+                            total += payment.amount;
+                        }
+                    })
+                    return total;
+                }
             }
         };
     }]);
