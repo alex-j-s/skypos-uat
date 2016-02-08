@@ -31,19 +31,11 @@
                 </dl> -->
             </div>
         </div>
-        <div class="payments" ng-if="order.discountAmount != null && order.discountAmount > 0">
+        <div class="payments" ng-if="order.discountAmount != null">
             <div>
                 <dl class="dl-horizontal">
                   <dt>DISCOUNT</dt>
                   <dd>{{ order.discountAmount | currency }}</dd>
-                </dl>
-            </div>
-        </div>
-        <div class="payments" ng-if="order.managerApprovedTotalDiscount != null && order.managerApprovedTotalDiscount > 0">
-            <div>
-                <dl class="dl-horizontal">
-                  <dt>MGR DISCOUNT</dt>
-                  <dd>{{ order.managerApprovedTotalDiscount | currency }}</dd>
                 </dl>
             </div>
         </div>

@@ -10,6 +10,8 @@ angular.module('skyZoneApp')
    var self = this;
    
    self.connectionId = 'boca';
+   // self.pId = 0x1042;
+   // self.vId = 0x12EE;
    self.pId = 0x201;
    self.vId = 0xA43;
    
@@ -61,6 +63,14 @@ angular.module('skyZoneApp')
 		<RC660,150><HW1,1>Other special fonts are available \
 		<RC300,160><F6><RL><HW1,1> \
 		<p>";
+
+		// var command = "{F,25,A,R,E,200,200,\"FMT-25\" | \
+		// C,140,40,0,1,2,1,W,C,0,0,\"SAMPLE FORMAT\",0 | \
+		// B,1,12,F,85,40,1,2,40,5,L,0 | \
+		// T,2,18,V,50,50,1,1,1,1,B,L,0,0,1 | } \
+		// {B,25,N,1 | \
+		// 1,\"02802811111\" | \
+		// 2,\"TEXT FIELD\" | }"
 	
     	HardwareService.socket.emit('usb-write', { connectionId: self.connectionId, command:command });
     }

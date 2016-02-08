@@ -23,7 +23,7 @@ angular
         'mgo-angular-wizard',
         'formly'
     ])
-    .constant('ENV', 'qa')
+    .constant('ENV', 'dev')
     .constant('ERROR_MESSAGE', {
         'LOGIN_FAILED':'',
         'SCREEN_UNAVAIL_CUST_ACT_REQUIRED':''
@@ -184,6 +184,7 @@ angular
     }])
     .config(['$httpProvider', function($httpProvider) {
         $httpProvider.interceptors.push('authInterceptor');
+        $httpProvider.interceptors.push('triPOSAuthInterceptor');
     }])
     .run(['$rootScope', '$timeout', '$location', 'formlyConfig', 'UserService', 'AccessManager', 'USER_ROLES', 'PrintService','VerifoneService','EpsonService','BocaService',  
         function($rootScope, $timeout, $location, formlyConfig, UserService, AccessManager, USER_ROLES, PrintService, VerifoneService,EpsonService,BocaService) {

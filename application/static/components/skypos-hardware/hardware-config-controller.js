@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('skyZoneApp')
-    .controller('SPHardwareConfigController',['$scope','HardwareService','VerifoneService','EpsonService','BocaService','RFIDReaderService','$modalInstance',
-    	function($scope,HardwareService,VerifoneService,EpsonService,BocaService,RFIDReaderService,$modalInstance){
+    .controller('SPHardwareConfigController',['$scope','HardwareService','VerifoneService','EpsonService','BocaService','RFIDReaderService', 'TriPOSService', '$modalInstance',
+    	function($scope,HardwareService,VerifoneService,EpsonService,BocaService,RFIDReaderService,TriPOSService,$modalInstance){
 			
 			$scope.devices = [
 				{
@@ -60,6 +60,20 @@ angular.module('skyZoneApp')
 						action: function() {
 							console.log('RFID Test Read');
 							RFIDReaderService.readTag();
+						}
+					}]
+				},
+				{
+					name: 'TRIPOS',
+					status: null,
+					actions: [{
+						title: 'test connection',
+						action: function() {
+							TriPOSService.getAPI().then(function(result) {
+
+							}, function(err) {
+
+							});
 						}
 					}]
 				}
