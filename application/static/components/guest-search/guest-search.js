@@ -53,6 +53,10 @@ angular.module('skyZoneApp')
               temp.phoneNumber = temp.numOrEmail;
               delete temp.numOrEmail;
             }
+            if(temp.phone){
+              temp.phoneNumber = temp.phone;
+              delete temp.phone;
+            }
             $scope.isLoading = true;
             ProfileService.customerSearch(temp).then(function(result){
                 $scope.isLoading = false;
@@ -102,6 +106,7 @@ angular.module('skyZoneApp')
           return (searchCriteria.firstName.length > 0 ||
             searchCriteria.lastName.length > 0 ||
             searchCriteria.email.length > 0 ||
+            searchCriteria.phone.length > 0 ||
             searchCriteria.postalCode.length > 0 ||
             searchCriteria.orderNumber.length > 0 ||
             isPhone(searchCriteria.numOrEmail) ||

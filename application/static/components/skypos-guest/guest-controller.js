@@ -16,7 +16,8 @@ angular.module('skyZoneApp')
             firstName:'',
             lastName:'',
             birthday:'',
-            email:''
+            email:'',
+            phone:''
         };
 
 
@@ -52,6 +53,7 @@ angular.module('skyZoneApp')
             return(guest.firstName && guest.firstName.length > 0 
                 && guest.lastName && guest.lastName.length > 0 
                 && guest.email && guest.email.length > 0 
+                && guest.phone && guest.phone.length > 0 
                 && guest.birthday && guest.birthday.length > 0
                 && guest.gender && guest.gender.length > 0)
         };
@@ -76,9 +78,13 @@ angular.module('skyZoneApp')
         };
 
         $scope.getAge = function(birthday) {
-            var ageDifMs = Date.now() - new Date(birthday).getTime();
-            var ageDate = new Date(ageDifMs); // miliseconds from epoch
-            return Math.abs(ageDate.getUTCFullYear() - 1970);
+                if(birthday && birthday.length > 0){
+                    var ageDifMs = Date.now() - new Date(birthday).getTime();
+                    var ageDate = new Date(ageDifMs); // miliseconds from epoch
+                    return Math.abs(ageDate.getUTCFullYear() - 1970);
+                } else{
+                    return 0;
+                }
         };
 
     	$scope.createOrder = function(guest){

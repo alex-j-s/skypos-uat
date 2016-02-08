@@ -4,40 +4,42 @@
         position: relative;
     }
     /* style icon */
-
+    
     .inner-addon .glyphicon {
         position: absolute;
         padding: 10px;
         pointer-events: none;
     }
     /* align icon */
-
+    
     .left-addon .glyphicon {
         left: 0px;
     }
-
+    
     .right-addon .glyphicon {
         right: 0px;
     }
     /* add padding  */
-
+    
     .left-addon input {
         padding-left: 30px;
     }
-
+    
     .right-addon input {
         padding-right: 30px;
     }
     /* Jumper modal */
-     .hd-new {
+    
+    .hd-new {
         color: #FB7337;
         font-size: 1.5em;
     }
-     .hd-exist {
+    
+    .hd-exist {
         color: #333;
         font-size: 1.5em;
     }
-</style>
+    </style>
     <div class="row">
         <div class="container-fluid mt20">
             <div class="col-md-12">
@@ -71,153 +73,108 @@
         </div>
     </div>
     <div class="row">
-        <div class="container-fluid" >
+        <div class="container-fluid">
             <div class="col-md-6">
                 <h4><span class="text-success">{{order.participants.length}}</span>/{{order.numberOfGuests}} JUMPERS ADDED</h4>
             </div>
             <div class="col-md-6 text-right">
                 <span ng-repeat="addon in getAddOns()">+ {{numNeeded(addon.jumpers)}} {{addon.prod.name}}<span ng-show="$index < (getAddOns().length -1)">, </span></span>
-                </div>
             </div>
         </div>
     </div>
-
-
-
 </div>
-
+</div>
 <!-- display: table-cell;vertical-align: middle -->
-
 <modal title="{{ getModalType() }}" visible="showModal">
     <div ng-switch on="modalType">
-
         <div ng-switch-when="Add Jumper">
-            <form name="jumperform" novalidate >
-                    <div class="row">
-                        <div class="col-md-6" style="padding:5% 5% 5% 10%">
-                            <span class="hd-new">ADD NEW JUMPER</span>
-                            <div class="form-group inner-addon left-addon"  >
-                            <label layout-align="center center"
-                           ng-class="{'error': jumperform.$submitted && jumperform.firstName.$invalid }">
+            <div class="row">
+                <form name="newjumperform" novalidate>
+                    <div class="col-md-6" style="padding:1rem 5% 1rem 5%">
+                        <span class="hd-new">ADD NEW JUMPER</span>
+                        <div class="form-group inner-addon left-addon col-xs-6" style="margin-left:-15px;padding-right:0;">
+                            <label layout-align="center center" ng-class="{'error': newjumperform.$submitted && newjumperform.firstName.$invalid }">
                                 First Name*
-
-                                <input type="text"
-                                       ng-model="jumper.firstName"
-                                       name="firstName"
-
-                                       ng-class="{'error': jumperform.$submitted && jumperform.firstName.$invalid }"
-                                       required>
-                                <small class="error"
-                                       ng-if="jumperform.$submitted && jumperform.firstName.$error.required">This field is required.</small>
-                            </label>
-                            </div>
-                            <div class="form-group inner-addon left-addon">
-                                <label
-                                   ng-class="{'error': jumperform.$submitted && jumperform.lastName.$invalid }">
-                                    Last Name*
-
-                                <input type="text"
-                                       ng-model="jumper.lastName"
-                                       name="lastName"
-
-                                       ng-class="{'error': jumperform.$submitted && jumperform.lastName.$invalid }"
-                                       required>
-                                <small class="error"
-                                       ng-if="jumperform.$submitted && jumperform.lastName.$error.required">This field is required.</small>
+                                <input type="text" ng-model="jumper.firstName" name="firstName" ng-class="{'error': newjumperform.$submitted && newjumperform.firstName.$invalid }" required>
+                                <small class="error" ng-if="newjumperform.$submitted && newjumperform.firstName.$error.required">Required.</small>
                             </label>
                         </div>
-
-
-                            <!--<div class="form-group inner-addon left-addon">-->
-                                <!--<i class="glyphicon glyphicon-user" style="color:#999"></i>-->
-                                <!--<input type="text" id="firstname" class="form-control" placeholder="First Name" ng-model="jumper.firstName" >-->
-                            <!--</div>-->
-                            <!--<div class="form-group inner-addon left-addon">-->
-                                <!--<i class="glyphicon glyphicon-user" style="color:#999"></i>-->
-                                <!--<input type="text" id="lastname" class="form-control" placeholder="Last Name" ng-model="jumper.lastName">-->
-                            <!--</div>-->
-                            <div class="form-group inner-addon left-addon">
-                                <label
-                                       >
-                                    Email
-                                    </label>
-
-
-                                <input type="email" class="form-control" id="Email2"  ng-model="jumper.email">
-                            </div>
-
-
-                            <div class="form-group inner-addon left-addon">
-
-                                <label
-                                       ng-class="{'error': jumperform.$submitted && jumperform.gender.$invalid }">
-                                    Gender*
-
-
-
-                                    <select name="gender"
-                                            ng-model="jumper.gender"
-                                            ng-class="{'error': jumperform.$submitted && jumperform.gender.$invalid }"
-                                            required>
-                                        <option value="">-- Select One --</option>
-                                        <option value="female">Female</option>
-                                        <option value="male">Male</option>
-                                        <option value="male">Other</option>
-                                    </select>
-                                    <small class="error"
-                                           ng-if="jumperform.$submitted && jumperform.gender.$error.required">This field is required.</small>
-                                </label>
-
-                                <!--<i class="glyphicon glyphicon-envelope" style="color:#999"></i>-->
-                                <!--<select class="form-control" id="gender" ng-model="jumper.gender">-->
-                                    <!--<option>Male</option>-->
-                                    <!--<option>Female</option>-->
-                                    <!--<option>Other</option>-->
-                                <!--</select>-->
-                            </div>
-
-                            <div class="form-group inner-addon left-addon">
-                            <sze-birthday-dropdown form="form" is-submit="form" birthday="jumper.birthday" label="Birthday" ></sze-birthday-dropdown>
-
-                            </div>
-
-                            <button type="submit" value="submit" class="sk-btn btn-blue" style="background-color:#0071db;" ng-click="jumperform.$invalid || newJumper(jumper)">Submit</button>
+                        <div class="form-group inner-addon left-addon col-xs-6" style="margin-right:-15px;padding-left:0; float:right;">
+                            <label ng-class="{'error': newjumperform.$submitted && newjumperform.lastName.$invalid }">
+                                Last Name*
+                                <input type="text" ng-model="jumper.lastName" name="lastName" ng-class="{'error': newjumperform.$submitted && newjumperform.lastName.$invalid }" required>
+                                <small class="error" ng-if="newjumperform.$submitted && newjumperform.lastName.$error.required">Required.</small>
+                            </label>
                         </div>
-                        <div class="col-md-6" style="padding:5% 10% 5% 5%">
-                            <span class="hd-exist">ADD EXISTING JUMPER</span>
-                            <div class="form-group inner-addon left-addon">
-
-                                <label>
-                                    Email
-                                </label>
-                                <input type="email" class="form-control" id="Email1"  ng-model="existingEmail">
-                            </div>
-                            <button ng-click="doGuestSearch(existingEmail)" type="submit" class="sk-btn btn-blue" style="background-color:#0071db">Submit</button>
-
-                            <div class="row">
-                                <div class="col-md-12 jumper-modal">
-                                    <div class="band mt30">
-                                        <div class="col-md-6 order-label">
-                                        SkyBand guest search
-                                        </div>
-                                        <div class="col-md-6">
-                                            <a href="" data-toggle="modal" data-target="#skybandsearch" class="sk-btn btn-orange btn-xl"><i class="fa fa-barcode"></i> Search</a>
-                                        </div>
-                                    </div>
+                        <div style="clear:both;"></div>
+                        <div class="form-group inner-addon left-addon">
+                            <label>
+                                Email
+                            <input type="email" class="form-control" id="Email2" ng-model="jumper.email">
+                            </label>
+                        </div>
+                        <div class="form-group inner-addon left-addon">
+                            <label>
+                                Phone
+                            <input type="text" class="form-control" id="Phone2" ng-model="jumper.phone">
+                            </label>
+                        </div>
+                        <div class="col-xs-5 form-group inner-addon left-addon" style="margin-right: -15px; margin-left: -15px; padding-right: 0;">
+                            <label ng-class="{'error': newjumperform.$submitted && newjumperform.gender.$invalid }">
+                                Gender*
+                                <select name="gender" ng-model="jumper.gender" ng-class="{'error': newjumperform.$submitted && newjumperform.gender.$invalid }" required>
+                                    <option value="">-- Select One --</option>
+                                    <option value="female">Female</option>
+                                    <option value="male">Male</option>
+                                    <option value="male">Other</option>
+                                </select>
+                                <small class="error" ng-if="newjumperform.$submitted && newjumperform.gender.$error.required">Required.</small>
+                            </label>
+                        </div>
+                        <div class="col-xs-7 form-group inner-addon left-addon" style="margin-right: -15px; margin-left: -15px; float: right; padding-left: 0;">
+                        <!-- <div class="form-group inner-addon left-addon"> -->
+                            <sze-birthday-dropdown form="form" is-submit="form" birthday="jumper.birthday" label="Birthday"></sze-birthday-dropdown>
+                        </div>
+                        <div style="clear:both;"></div>
+                        <button type="submit" value="submit" class="sk-btn btn-blue" style="background-color:#0071db;" ng-click="newjumperform.$invalid || newJumper(jumper)">Submit</button>
+                    </div>
+                </form>
+                <form name="extjumperform" novalidate>
+                <div class="col-md-6" style="padding:1rem 10% 1rem 5%">
+                    <span class="hd-exist">ADD EXISTING JUMPER</span>
+                    <div class="form-group inner-addon left-addon">
+                        <label>
+                            Email
+                        </label>
+                        <input type="email" class="form-control" id="Email1" ng-model="existingEmail">
+                    </div>
+                    <div class="form-group inner-addon left-addon">
+                        <label>
+                            Phone
+                        </label>
+                        <input type="text" class="form-control" id="Phone1" ng-model="existingPhone">
+                    </div>
+                    <button ng-click="doGuestSearch(existingEmail, existingPhone)" type="submit" class="sk-btn btn-blue" style="background-color:#0071db">Submit</button>
+                    <div class="row">
+                        <div class="col-md-12 jumper-modal">
+                            <div class="band mt30">
+                                <div class="col-md-6 order-label">
+                                    SkyBand guest search
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="" data-toggle="modal" data-target="#skybandsearch" class="sk-btn btn-orange btn-xl"><i class="fa fa-barcode"></i> Search</a>
                                 </div>
                             </div>
-
                         </div>
                     </div>
-                    <!-- glyphicon glyphicon-user glyphicon glyphicon-envelope -->
-            </form>
+                </div>
+                </form>
+            </div>
+            <!-- glyphicon glyphicon-user glyphicon glyphicon-envelope -->
         </div>
-
         <div ng-switch-when="Jumper Profile">
             <profile-modal profile="selectedJumper" />
         </div>
-
-
     </div>
 </modal>
 <sze-footer-navigation order="order" next="goToOffersScreen" prev="goToGuestScreen" next-label="Offers" prev-label="Guest" current="'jumpers'"></sze-footer-navigation>
