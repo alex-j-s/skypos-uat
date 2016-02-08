@@ -91,4 +91,37 @@ angular.module('skyZoneApp')
       return hmac64;
     };
 
+    self.getTriPOSHmac = function(str,key) {
+      var utf8encodedStr = unescape(encodeURIComponent(str));
+      var hmac;
+      if ( key ) {
+        var utf8encodedKey = unescape(encodeURIComponent(key));
+        hmac = CryptoJS.HmacSHA256(utf8encodedStr,utf8encodedKey);
+      } else {
+        hmac = CryptoJS.HmacSHA256(utf8encodedStr,''); // no key
+      }
+      var hmacHEX = CryptoJS.enc.Hex.stringify(hmac);
+      return hmacHEX;
+    }
+
+    self.getTriPOSHmacWithKey = function(str) {
+      var utf8encodedStr = unescape(encodeURIComponent(str));
+      var date = new Date();
+      var timestamp = date.toISOString();
+      var hmac = Crypto
+    }
+
+    self.generateUUID = function(){
+      var d = new Date().getTime();
+      if(window.performance && typeof window.performance.now === "function"){
+          d += performance.now(); //use high-precision timer if available
+      }
+      var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = (d + Math.random()*16)%16 | 0;
+          d = Math.floor(d/16);
+          return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+      });
+      return uuid;
+    }
+
   }]);

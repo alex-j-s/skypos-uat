@@ -31,7 +31,7 @@ angular.module('skyZoneApp')
 
             return {
                 request: function(config) {
-                    if (config.url.indexOf('/api/') !== -1) {
+                    if (config.url.indexOf('/api/') !== -1 && config.url.indexOf('/v1') === -1) { // need to add epic ( for triPOS endpoints )
                         config.url = API_ENDPOINTS[ENV] + config.url;
                         //config.url = 'http://Localhost:5000'+config.url;
                         config.url = config.url.replace('/api', '');
@@ -77,7 +77,7 @@ angular.module('skyZoneApp')
                         // } 
                         config.headers.Authorization = role + ':' + hmac64;
 
-                        console.log(config.headers);
+                        console.log('reg access-manager: ', config);
                     }
                     return config;
                 },

@@ -712,6 +712,7 @@ angular.module('skyZoneApp')
                     'creditCardExpMonth': paymentInfo.expM,
                     'creditCardExpYear': paymentInfo.expY,
                     'creditCardVerificationNumber': paymentInfo.cvv,
+                    'ccOwnerAdrsPostalcode': paymentInfo.zip,
                     'trackData': paymentInfo.trackData,
                     'ksn': paymentInfo.ksn,
                     'pinBlock': paymentInfo.pinBlock,

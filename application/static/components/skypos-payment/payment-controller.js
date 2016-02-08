@@ -288,17 +288,11 @@ angular.module('skyZoneApp')
         $scope.capturingPayment = false;
 
         $scope.creditCardDataComplete = function(e) {
-            console.log('credit card data complete: ', !$scope.card.ccn ||
-                    !$scope.card.expM ||
-                    !$scope.card.expY ||
-                    !$scope.card.cvv ||
-                    !$scope.card.zip ||
-                    $scope.card.amount <= 0, $scope.card);
             return !$scope.card.ccn ||
                     !$scope.card.expM ||
                     !$scope.card.expY ||
                     !$scope.card.cvv ||
-                    !scope.card.zip ||
+                    !$scope.card.zip ||
                     $scope.card.amount <= 0;
         }
         $scope.creditFieldFocused = function(field) {
@@ -589,6 +583,7 @@ angular.module('skyZoneApp')
                 }
                 else if($scope.order.totalAmountDue > 0){
                     $rootScope.$broadcast('szeError', 'Payment required!')
+                    $rootScope.$broadcast('szeHideLoading')
                 }
                 else{
                     //handle order processing
