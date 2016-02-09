@@ -69,9 +69,9 @@
 			request.laneId = self.laneId;
 			request = JSON.stringify(request);
 			var config = {
-				'url' = voidUrl,
-				'method' = 'POST',
-				'data' = request
+				'url': voidUrl,
+				'method': 'POST',
+				'data': request
 			};
 
 			$http(config)
@@ -85,5 +85,18 @@
 				});
 			return def.promise();
 
+		}
+
+		self.refund = function(amount) {
+			var def = PromoseFactory.getInstance();
+			var refundUrl = '/tripos/refund'
+			var request = {};
+			request.laneId = self.laneId;
+			request.amount = amount;
+			var config = {
+				'url': refundUrl,
+				'method': 'POST',
+				'data': request
+			};
 		}
  	}]);
