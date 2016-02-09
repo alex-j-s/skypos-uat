@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('skyZoneApp')
-    .controller('SPPaymentController',['$scope', '$modal', '$rootScope', '$q', '$location','$filter','Park', 'Guest', 'Order', 'GiftCardsService', 'OrderService','EpsonService','BocaService','VerifoneService', 'NavService','UserService','WaiverStatus','RFIDReaderService',
-    	function($scope, $modal, $rootScope, $q, $location, $filter, Park, Guest, Order, GiftCardsService, OrderService, EpsonService,BocaService,VerifoneService, NavService,UserService, WaiverStatus,RFIDReaderService){
+    .controller('SPPaymentController',['$scope', '$modal', '$rootScope', '$q', '$location','$filter','Park', 'Guest', 'Order', 'GiftCardsService', 'OrderService','EpsonService','BocaService','VerifoneService', 'NavService','UserService','WaiverStatus','RFIDReaderService','TriPOSService',
+    	function($scope, $modal, $rootScope, $q, $location, $filter, Park, Guest, Order, GiftCardsService, OrderService, EpsonService,BocaService,VerifoneService, NavService,UserService, WaiverStatus,RFIDReaderService, TriPOSService){
 
     	console.log("PARK:", Park);
     	console.log("ORDER: ", Order);
@@ -335,16 +335,16 @@ angular.module('skyZoneApp')
         ////////// CARD CAPTURE /////////
 
         $scope.kickOffPaymentProcess = function() {
-            $rootScope.$broadcast('szeDismissError');
+          $rootScope.$broadcast('szeDismissError');
           console.log('capturing payment information from verifone');
           $scope.capturingPayment = true;
           $scope.card.amount = $scope.order.totalAmountDue;
           var amountString = $filter('currency')($scope.card.amount);
           $rootScope.$broadcast('szeShowLoading');
-          VerifoneService.startPayment(amountString,function(data) {
+          TriPOSService.swipeCard(amountString,function(data) {
              console.log('payment capture compelte: ', data); 
              $scope.capturingPayment = false;
-             $scope.processCardPresentPayment(data);
+             //TODO Call the epic api which send the transaction id.
           }); 
         };
         
