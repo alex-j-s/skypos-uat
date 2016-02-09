@@ -28,7 +28,7 @@
                         <input type="text" class="form-control" id="orderNumber" placeholder="Order Number" ng-model="criteria.orderNumber">
                     </div>
                 </div>
-                <button type="button" class="sk-btn btn-blue btn-xl" ng-click="doGuestSearch(criteria)" ng-disable="!canSearch(criteria">Search</button>
+                <button type="button" class="sk-btn btn-blue btn-xl" ng-click="doGuestSearch(criteria)" ng-disable="!canSearch(criteria)">Search</button>
             </form>
             <div class="row">
                 <div class="col-md-12">
@@ -61,6 +61,11 @@
                 <div class="row form-group">
                     <div class="col-sm-12">
                         <input type="email" class="form-control" placeholder="Email" ng-model="newGuest.email">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control" placeholder="Phone" ng-model="newGuest.phone">
                     </div>
                 </div>
                 <div class="row form-group">

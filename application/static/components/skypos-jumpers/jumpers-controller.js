@@ -109,7 +109,8 @@ angular.module('skyZoneApp')
 
             $scope.newJumper = function(jumper) {
                 console.log('jumper: ', jumper)
-                if ($scope.getAge(jumper.birthday) >= 18) {
+                if ($scope.getAge(jumper.birthday) >= 18 && jumper.phone && jumper.email 
+                    && jumper.phone.length > 0 && jumper.email.length > 0) {
                     UserService.createAccount(jumper).then(function(customer) {
                         $scope.addJumper(customer);
                     }, logErrorStopLoading)
@@ -124,14 +125,27 @@ angular.module('skyZoneApp')
 
 
             $scope.getAge = function(birthday) {
-                var ageDifMs = Date.now() - new Date(birthday).getTime();
-                var ageDate = new Date(ageDifMs); // miliseconds from epoch
-                return Math.abs(ageDate.getUTCFullYear() - 1970);
+                if(birthday && birthday.length > 0){
+                    var ageDifMs = Date.now() - new Date(birthday).getTime();
+                    var ageDate = new Date(ageDifMs); // miliseconds from epoch
+                    return Math.abs(ageDate.getUTCFullYear() - 1970);
+                }
+                else{
+                    return 0;
+                }
             };
 
 
 
-            $scope.doGuestSearch = function(crit) {
+            $scope.doGuestSearch = function(critEmail, critPhone) {
+                var crit = {};
+                if(critEmail){
+                    crit.email = critEmail
+                }
+                if(critPhone){
+                    crit.phone = critPhone
+                }
+
                 $scope.showModal = false;
                 var gsModal = $modal.open({
                     animation: true,
@@ -139,9 +153,7 @@ angular.module('skyZoneApp')
                     size: 'lg',
                     resolve: {
                         'Criteria': function() {
-                            return {
-                                email: crit
-                            };
+                            return crit;
                         }
                     },
                     controller: 'GuestSearchCtrl'
@@ -177,7 +189,7 @@ angular.module('skyZoneApp')
                     // Order.numberOfGuests = (Order.numberOfGuests)?Order.numberOfGuests+1:Order.numberOfJumpers;
                     
                     angular.forEach(AddOnStatus.getStatus(), function(addon) {
-                        AddOnStatus.setStatus(addon.prod.id, jumper.id, true)
+                        AddOnStatus.setStatus(addon.prod.id, jumper.id, false)
                     })
                     
                     def.resolve(OrderService.addOrderParticipant(Order.id, OrderService.createOrderParticipant(jumper))
