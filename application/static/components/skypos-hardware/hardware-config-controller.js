@@ -69,7 +69,7 @@ angular.module('skyZoneApp')
 					actions: [{
 						title: 'test connection',
 						action: function() {
-							TriPOSService.getAPI().then(function(result) {
+							TriPOSService.swipeCard(15.00).then(function(result) {
 
 							}, function(err) {
 

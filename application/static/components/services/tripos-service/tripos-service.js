@@ -13,7 +13,7 @@
  		var self = this;
 
  		self.url = '/tripos/';
- 		self.laneId = 9999;
+ 		self.laneId = 1;
 
  		self.getAPI = function() {
  			var def = PromiseFactory.getInstance();
@@ -60,5 +60,30 @@
 				});
 			return def.promise;
 				
+		}
+
+		self.voidTransaction = function(transactionId) {
+			var def = PromiseFactory.getInstance();
+			var voidUrl = '/tripos/void/' + transactionId;
+			var request = {};
+			request.laneId = self.laneId;
+			request = JSON.stringify(request);
+			var config = {
+				'url' = voidUrl,
+				'method' = 'POST',
+				'data' = request
+			};
+
+			$http(config)
+				.success(function(result) {
+					console.log('Response from TriPOS Void: ', result);
+					def.resolve(result);
+				})
+				.error(function(err) {
+					console.log('Error Response from TriPOS Void: ', err);
+					def.reject(err);
+				});
+			return def.promise();
+
 		}
  	}]);
