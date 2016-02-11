@@ -318,6 +318,7 @@ angular.module('skyZoneApp')
                     ProfileService.getProfile(participant.id).then(function(profile) {
                         if (profile.data) profile = profile.data;
                         profile.participantId = participant.participantId;
+                        profile.reservationItemId = participant.reservationItemId;
                         profile.guestOfHonor = participant.guestOfHonor;
                         participantMap['_' + participant.participantId + '_'] = profile;
                         defMap['_' + participant.participantId + '_'].resolve(participantMap['_' + participant.participantId + '_']);
@@ -780,6 +781,7 @@ angular.module('skyZoneApp')
 
             self.createOrderParticipant = function(guest) {
                 return {
+                    'reservationItemId':guest.reservationItemId,
                     'customerId': guest.id,
                     'guestOfHonor': angular.isUndefined(guest.guestOfHonor) ? false : guest.guestOfHonor
                 };

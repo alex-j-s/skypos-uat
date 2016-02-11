@@ -159,7 +159,7 @@ angular.module('skyZoneApp')
                     controller: 'GuestSearchCtrl'
                 });
 
-                gsModal.result.then($scope.addJumper, logErrorStopLoading);
+                gsModal.result.then($scope.findReservationItem, logErrorStopLoading);
             };
 
             function getMinor(guest, minorInfo) {
@@ -172,6 +172,54 @@ angular.module('skyZoneApp')
                     }
                 })
                 return out;
+            }
+
+            $scope.findReservationItem = function(jumper){
+                var riModal = $modal.open({
+                    animation: true,
+                    templateUrl: 'static/components/skypos-jumpers/res-layout.html',
+                    size: 'lg',
+                    resolve: {
+                        'Jumper': function() {
+                            return jumper;
+                        },
+                        'ReservationItems': function(){
+                            return getAvailableReservationItems();
+                        }
+                    },
+                    controller: 'SPResCtrl'
+                });
+
+                riModal.result.then($scope.addJumper, logErrorStopLoading);
+            };
+
+            function getAvailableReservationItems(){
+                var res;
+                var ids = [];
+                var availResItems = [];
+                var availReservations = [];
+                angular.forEach($scope.order.participants, function(jumper){
+                    if(jumper.reservationItemId != null){
+                        ids.push(jumper.reservationItemId);
+                    }
+                });
+                angular.forEach($scope.order.orderItems, function(oi){
+                    if(oi.reservation != null){
+                        res = angular.copy(oi.reservation);
+                        availResItems = [];
+                        angular.forEach(oi.reservation.reservationItems, function(ri){
+                            if(ids.indexOf(ri.id) === -1){
+                                availResItems.push(angular.copy(ri));
+                            }
+                        })
+                        if(availResItems.length > 0){
+                            res.reservationItems = availResItems;
+                            oi.reservation = angular.copy(res);
+                        }
+                        availReservations.push(angular.copy(oi));
+                    }
+                })
+                return availReservations;
             }
 
             $scope.addJumper = function(jumper) {
