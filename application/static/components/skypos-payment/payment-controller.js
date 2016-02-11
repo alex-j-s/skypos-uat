@@ -169,13 +169,14 @@ angular.module('skyZoneApp')
                 'managerPin':$scope.auth.managerPin,
                 'managerDiscountValue':($scope.discountValuePct && $scope.discountValuePct.length > 0)?$scope.discountValuePct:$scope.discountValueAmt,
                 'managerDiscountReason':'',
-                'valueInPercent':($scope.discountValuePct && $scope.discountValuePct.length > 0)
+                'valueInPercent':($scope.discountValuePct && $scope.discountValuePct.length > 0)?true:false
             }
 
 
             $scope.verifyManagerPin().then(function(role){
                 if(role === 'pos_mgr'){
                     OrderService.addManagerDiscount($scope.order.id, OrderService.createManagerDiscount(disco)).then(function(result){
+                        console.log(result)
                         $scope.order = result;
                     }, logErrorStopLoading)
                 }   
