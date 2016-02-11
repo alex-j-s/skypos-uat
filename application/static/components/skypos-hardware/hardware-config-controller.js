@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('skyZoneApp')
-    .controller('SPHardwareConfigController',['$scope','HardwareService','VerifoneService','EpsonService','BocaService','RFIDReaderService', 'TriPOSService', '$modalInstance',
-    	function($scope,HardwareService,VerifoneService,EpsonService,BocaService,RFIDReaderService,TriPOSService,$modalInstance){
+    .controller('SPHardwareConfigController',['$scope','HardwareService','VerifoneService','EpsonService','BocaService','AveryDennisonService','RFIDReaderService', 'TriPOSService', '$modalInstance',
+    	function($scope,HardwareService,VerifoneService,EpsonService,BocaService,AveryDennisonService,RFIDReaderService,TriPOSService,$modalInstance){
 			
 			$scope.devices = [
 				{
@@ -53,6 +53,17 @@ angular.module('skyZoneApp')
 					}]
 				},
 				{
+					name: 'Avery Dennison Sticker Printer',
+					status: null,
+					actions: [{
+						title: 'Test Print',
+						action: function() {
+							console.log('avery dennison test print');
+							AveryDennisonService.testPrint();
+						}
+					}]
+				},
+				{
 					name: 'RFID Reader',
 					status: null,
 					actions: [{
@@ -69,7 +80,7 @@ angular.module('skyZoneApp')
 					actions: [{
 						title: 'test connection',
 						action: function() {
-							TriPOSService.getAPI().then(function(result) {
+							TriPOSService.swipeCard(15.00).then(function(result) {
 
 							}, function(err) {
 

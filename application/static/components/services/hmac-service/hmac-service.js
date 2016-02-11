@@ -98,7 +98,7 @@ angular.module('skyZoneApp')
         var utf8encodedKey = unescape(encodeURIComponent(key));
         hmac = CryptoJS.HmacSHA256(utf8encodedStr,utf8encodedKey);
       } else {
-        hmac = CryptoJS.HmacSHA256(utf8encodedStr,''); // no key
+    	  hmac = CryptoJS.SHA256(utf8encodedStr); // no key
       }
       var hmacHEX = CryptoJS.enc.Hex.stringify(hmac);
       return hmacHEX;

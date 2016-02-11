@@ -7,23 +7,23 @@ angular.module('skyZoneApp')
 	})
 	.constant('TRIPOS_DEV_TOKENS', {
 		//Blaine's/////////
-		/*'DEV-KEY-1':'1ea5d25f-e334-44f7-aea3-f4e180a9bff2',
-		'DEV-KEY-2':'16b6148c-e19e-4f4a-9f31-27f93e535c9c',
-		'DEV-SECRET-1':'31d58d53-9968-4ee9-9ca5-6ce420256129',
-		'DEV-SECRET-2':'ac131ecb-b7d8-4a36-b8be-8614f0bd0d8b',*/
+		//'DEV-KEY-1':'1ea5d25f-e334-44f7-aea3-f4e180a9bff2',
+		//'DEV-KEY-2':'16b6148c-e19e-4f4a-9f31-27f93e535c9c',
+		//'DEV-SECRET-1':'31d58d53-9968-4ee9-9ca5-6ce420256129',
+		//'DEV-SECRET-2':'ac131ecb-b7d8-4a36-b8be-8614f0bd0d8b',
 		
 		/////VIKASH'S/////////
-		'DEV-KEY-1':'a700df16-a0f9-4ea4-8422-ac7260ca02c1',
-		'DEV-KEY-2':'2d877d80-f07d-4618-826a-5e3eb5f2a68b',
-		'DEV-SECRET-1':'0ac9099e-eebd-4ad4-84db-d06f6326a2ba',
-		'DEV-SECRET-2':'ac027d6f-2756-4fbd-9b06-76d5992ac27a'
+		 'DEV-KEY-1':'a700df16-a0f9-4ea4-8422-ac7260ca02c1',
+		 'DEV-KEY-2':'2d877d80-f07d-4618-826a-5e3eb5f2a68b',
+		 'DEV-SECRET-1':'0ac9099e-eebd-4ad4-84db-d06f6326a2ba',
+		 'DEV-SECRET-2':'ac027d6f-2756-4fbd-9b06-76d5992ac27a'
 			
 	})
 	.constant('TRIPOS_HEADERS', {
 		'tp-application-name':'SKYPOS',
 		'tp-application-version':'1.0.0',
 		'tp-application-id':'6383',
-		'tp-return-logs':false,
+		'tp-return-logs':true,
 		'Accept':'application/json'
 	})
 	.factory('triPOSAuthInterceptor', ['$q', 'HmacService', 'ENV', 'TRIPOS_HEADERS', 'TRIPOS_DEV_TOKENS', 'TRIPOS_ENDPOINTS', 
@@ -45,10 +45,12 @@ angular.module('skyZoneApp')
 						config.headers['Content-Type']           = 'application/json';
 						config.headers['Accept']                 = 'application/json';
 
+						var nonce = HmacService.generateUUID();
+						
 						// tp-authorization ( following triPOS documentation steps )
-
+						
 						// 1.) select a HMAC algorithim
-						var hmacAlgorithm = 'TP-HMAC-SHA256'; // sha256
+						var hmacAlgorithm = 'tp-hmac-sha256'; // sha256
 
 						// 2.) Collect the request method & url
 						var method = config.method;
@@ -56,8 +58,8 @@ angular.module('skyZoneApp')
 
 						// 3.) calculate request body hash
 						var requestBodyHash;
-						if ( config.body ) {
-							requestBodyHash = HmacService.getTriPOSHmac(config.body);
+						if ( config.data ) {
+							requestBodyHash = HmacService.getTriPOSHmac(config.data);
 						}
 
 						// 4.) generate the canonical signed headers
@@ -78,7 +80,7 @@ angular.module('skyZoneApp')
 						// 5.) generate the caonical headers
 						var canonicalHeadersStr = '';
 						angular.forEach(canonicalHeadersArray, function(header) {
-							canonicalHeadersStr = canonicalHeadersArray + header + ':' + config.headers[header] + '\n'
+							canonicalHeadersStr = canonicalHeadersStr + header + ':' + config.headers[header] + '\n'
 						});
 
 						// 6.) Generate the canonical URI
@@ -90,8 +92,12 @@ angular.module('skyZoneApp')
 						// 8.) Generate the canonical request
 						var canonicalRequest = method + '\n';
 						canonicalRequest += canonicalURI + '\n';
-						canonicalRequest += canonicalQueryStr + '\n';
-						canonicalRequest += canonicalHeadersStr + '\n';
+						if(canonicalQueryStr){
+							canonicalRequest += canonicalQueryStr + '\n';
+						}else{
+							canonicalRequest +="\n";
+						}
+						canonicalRequest += canonicalHeadersStr ; // new line all ready we have while calculating canonicalHeadersStr
 						canonicalRequest += signedHeaders + '\n';
 						if ( requestBodyHash ) { canonicalRequest += requestBodyHash; }
 						
@@ -101,7 +107,7 @@ angular.module('skyZoneApp')
 
 						// 10.) Generate the key signature hash
 						var timestamp = new Date().toISOString();
-						var signatureHash = HmacService.getTriPOSHmac(requestHash+TRIPOS_DEV_TOKENS['DEV-SECRET-1'],timestamp);
+						var signatureHash = HmacService.getTriPOSHmac(nonce+TRIPOS_DEV_TOKENS['DEV-SECRET-1'],timestamp);
 
 						// 11.) Generate the un-hashed signature
 						var unhashedSignature = hmacAlgorithm + '\n';
@@ -117,13 +123,13 @@ angular.module('skyZoneApp')
 						tpAuthHeader += 'Algorithm=' + hmacAlgorithm + ', ';
 						tpAuthHeader += 'Credential=' + TRIPOS_DEV_TOKENS['DEV-KEY-1'] + ', ';
 						tpAuthHeader += 'SignedHeaders=' + signedHeaders + ', ';
-						tpAuthHeader += 'Nonce=' + requestHash + ', ';
+						tpAuthHeader += 'Nonce=' + nonce + ', ';
 						tpAuthHeader += 'RequestDate=' + timestamp + ', ';
 						tpAuthHeader += 'Signature=' + signature;
-						//config.headers['tp-authorization'] = tpAuthHeader;
+						config.headers['tp-authorization'] = tpAuthHeader;
 						console.log('tp-authorization: ', config.headers['tp-authorization']);
 						//config.headers['tp-authorization'] = 'Version=1.0, Credential=1ea5d25f-e334-44f7-aea3-f4e180a9bff2'; //Blaine's Machine
-						config.headers['tp-authorization'] = 'Version=1.0, Credential=a700df16-a0f9-4ea4-8422-ac7260ca02c1';  //Vikash's Machine
+						//config.headers['tp-authorization'] = 'Version=1.0, Credential=a700df16-a0f9-4ea4-8422-ac7260ca02c1';  //Vikash's Machine
 
 						config.headers['tp-request-id'] = HmacService.generateUUID();
 
