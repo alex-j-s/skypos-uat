@@ -13,7 +13,8 @@
  		var self = this;
 
  		self.url = '/tripos/';
- 		self.laneId = 1;
+ 		//self.laneId = 1;
+ 		self.laneId = 9999;
 
  		self.getAPI = function() {
  			var def = PromiseFactory.getInstance();
