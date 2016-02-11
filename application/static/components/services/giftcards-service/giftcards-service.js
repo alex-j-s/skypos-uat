@@ -35,4 +35,11 @@ angular.module('skyZoneApp')
       };
     };
 
+    self.getBalance = function(cardNumber) {
+      var url = '/api/giftcards/' + cardNumber;
+
+
+      return $http.get(url);
+    };
+
   }]);
