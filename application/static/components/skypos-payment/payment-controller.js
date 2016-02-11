@@ -66,17 +66,46 @@ angular.module('skyZoneApp')
 
             // display message for change:
             
+            promArray = [];
 
+            angular.forEach($scope.order.payments, function(payment) {
+                if ( payment.recordType.name == 'Gift Card' ) {
+                    promArray.push(GiftCardsService.getBalance(payment.cardNumber).then(function(result) {
+                        payment.balance = result.balance;
+                    }, function(err) {
+                        console.log('error getting gift card balance');
+                    }));
+                    
+                }
+            });
 
-            if ( $scope.orderPurchased() || $scope.returnOrder ) {
+            var printReciepts = function() {
+                if ( $scope.orderPurchased() || $scope.returnOrder ) {
                 EpsonService.printReciept(order,$scope.park,$scope.guest,"Sky Zone Copy","SALE",true);
                 EpsonService.printReciept(order,$scope.park,$scope.guest,"Customer Copy","SALE",false);
-                if ( $scope.returnOrder ) {
-                    EpsonService.printReturnReciept($scope.returnOrder,$scope.park,$scope.guest,"Sky Zone Copy","RETURN",true);
-                    EpsonService.printReturnReciept($scope.returnOrder,$scope.park,$scope.guest,"Customer Copy","RETURN",false);
-                }
-            }   
-            return $q.when(order);
+                    if ( $scope.returnOrder ) {
+                        EpsonService.printReturnReciept($scope.returnOrder,$scope.park,$scope.guest,"Sky Zone Copy","RETURN",true);
+                        EpsonService.printReturnReciept($scope.returnOrder,$scope.park,$scope.guest,"Customer Copy","RETURN",false);
+                    }
+                }   
+                return $q.when(order);
+            }
+
+            $q.all(promArray).then(function(results) {
+                  printReciepts(); 
+            }, function(err) {
+                printReciepts();
+            })
+
+            // if ( $scope.orderPurchased() || $scope.returnOrder ) {
+            //     EpsonService.printReciept(order,$scope.park,$scope.guest,"Sky Zone Copy","SALE",true);
+            //     EpsonService.printReciept(order,$scope.park,$scope.guest,"Customer Copy","SALE",false);
+            //     if ( $scope.returnOrder ) {
+            //         EpsonService.printReturnReciept($scope.returnOrder,$scope.park,$scope.guest,"Sky Zone Copy","RETURN",true);
+            //         EpsonService.printReturnReciept($scope.returnOrder,$scope.park,$scope.guest,"Customer Copy","RETURN",false);
+            //     }
+            // }   
+            // return $q.when(order);
 
         };
         
@@ -268,6 +297,14 @@ angular.module('skyZoneApp')
         $scope.giftCardFieldFocused = function(field) {
             console.log('focused: ', field);
             $scope.selectedGiftCardField = field;
+        }
+
+        $scope.getGiftCardBalance = function(cardNumber) {
+            GiftCardsService.getBalance(cardNumber).then(function(result) {
+                console.log('giftcard balance result: ', result);
+            }, function(err) {
+                console.log('giftcard balance error: ', err);
+            })
         }
 
         ////////// END GIFT CARD //////////

@@ -7,8 +7,11 @@
     <div class="col-xs-2">
         <div ng-switch="getWaiverStatus()">
             <div ng-switch-when="No Waiver">
-                <button ng-disabled="waiverInProgress" class="sk-btn btn-red" ng-click="kickOffWaiverProcess()">No Waiver
+                <!-- <button ng-disabled="waiverInProgress" class="sk-btn btn-red" ng-click="kickOffWaiverProcess()">No Waiver
                     <i class="waiver-inactive glyphicon glyphicon-new-window"></i>
+                </button> -->
+                <button ng-disabled="true" class="sk-btn btn-red" ng-click="kickOffWaiverProcess()">No Waiver
+                    <i class="waiver-inactive glyphicon glyphicon-new-window"></i><!-- Disabled for 1.1 -->
                 </button>
             </div>
             <div ng-switch-when="Pending">
@@ -17,8 +20,11 @@
                 </button>
             </div>
             <div ng-switch-when="Expired">
-                <button ng-disabled="waiverInProgress" class="sk-btn btn-red" ng-click="kickOffWaiverProcess()">Expired
+                <!-- <button ng-disabled="waiverInProgress" class="sk-btn btn-red" ng-click="kickOffWaiverProcess()">Expired
                     <i class="waiver-inactive glyphicon glyphicon-new-window"></i>
+                </button> -->
+                <button ng-disabled="true" class="sk-btn btn-red" ng-click="kickOffWaiverProcess()">Expired
+                    <i class="waiver-inactive glyphicon glyphicon-new-window"></i><!-- disabled for 1.1 -->
                 </button>
             </div>
             <div ng-switch-when="Approved">
