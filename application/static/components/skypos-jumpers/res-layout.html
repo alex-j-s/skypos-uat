@@ -3,15 +3,11 @@
 		<div class="col-sm-12">Please select a jump reservation for this jumper.</div>
 	</div>
     <div class="row">
-        <!-- <div class="col-sm-4">
-        <div ng-repeat="item in sizeGroups" ng-click="selectSizeGroup(item.value)" style="cursor:pointer;padding:1rem;border:1px solid #ccc; margin:0.2rem">
-        <h5>{{item.label}}</h5>
-        </div>
-        </div> -->
         <div class="col-sm-12">
-        <div ng-repeat="item in reservationItems" ng-click="selectReservation(item.reservation.reservationItems)" style="cursor:pointer;padding:1rem;border:1px solid #ccc; margin:0.2rem">
-        	<h4>{{item.product.name + '  -  '+item.reservation.reservationItems.length}}</h4>
-        	{{item.reservation.reservationItems[0].startTime|ampm}}{{', '+item.product.jumpDurationMinutes+' Min'}}
+	        <div ng-repeat="item in reservationItems" ng-click="selectReservation(item.reservation.reservationItems)" style="cursor:pointer;padding:1rem;border:1px solid #ccc; margin:0.2rem">
+	        	<h4>{{item.product.name + '  -  '+item.reservation.reservationItems.length}}</h4>
+	        	{{item.reservation.reservationItems[0].startTime|ampm}}{{', '+item.product.jumpDurationMinutes+' Min'}}
+	        </div>
         </div>
     </div>
 </div>
