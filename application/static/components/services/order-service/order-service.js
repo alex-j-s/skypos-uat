@@ -532,6 +532,10 @@ angular.module('skyZoneApp')
                     'orderId': orderId
                 }
 
+                if ( paymentType == 'gift-card' ) {
+                    payload.giftCardNumber = payment.giftCardNumber;
+                }
+
                 updateOrderHandler('POST', '/api/orders/' + orderId + '/payments/' + paymentType, payload)
                     .then(function(order) {
                         def.resolve(order);

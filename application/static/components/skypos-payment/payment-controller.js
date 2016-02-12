@@ -66,18 +66,18 @@ angular.module('skyZoneApp')
 
             // display message for change:
 
-            console.log('order in print reciept: ', order); 
+            var def = $q.defer();
+
             
             var promArray = [];
 
-            angular.forEach($scope.order.payments, function(payment) {
-                console.log('payment in print reciept: ', payment);
+
+            angular.forEach(order.payments, function(payment) {
                 if ( payment.recordType.name == 'Gift Card' ) {
-                    console.log('found giftcard');
-                    promArray.push(GiftCardsService.getBalance(payment.cardNumber).then(function(result) {
-                        payment.balance = result.balance;
+                    promArray.push(GiftCardsService.getBalance(payment.giftCardNumber).then(function(result) {
+                        payment.balance = result.data.balance;
                     }, function(err) {
-                        console.log('error getting gift card balance');
+                        console.log('error getting gift card balance: ', err);
                     }));
                     
                 }
@@ -92,24 +92,18 @@ angular.module('skyZoneApp')
                         EpsonService.printReturnReciept($scope.returnOrder,$scope.park,$scope.guest,"Customer Copy","RETURN",false);
                     }
                 }   
-                return $q.when(order);
+                //return $q.when(order);
             }
 
             $q.all(promArray).then(function(results) {
-                  printReciepts(); 
+                  printReciepts();
+                  def.resolve(order);
             }, function(err) {
                 printReciepts();
+                def.reject(err)
             })
 
-            // if ( $scope.orderPurchased() || $scope.returnOrder ) {
-            //     EpsonService.printReciept(order,$scope.park,$scope.guest,"Sky Zone Copy","SALE",true);
-            //     EpsonService.printReciept(order,$scope.park,$scope.guest,"Customer Copy","SALE",false);
-            //     if ( $scope.returnOrder ) {
-            //         EpsonService.printReturnReciept($scope.returnOrder,$scope.park,$scope.guest,"Sky Zone Copy","RETURN",true);
-            //         EpsonService.printReturnReciept($scope.returnOrder,$scope.park,$scope.guest,"Customer Copy","RETURN",false);
-            //     }
-            // }   
-            // return $q.when(order);
+            return def.promise;
 
         };
 
@@ -135,28 +129,23 @@ angular.module('skyZoneApp')
         }
         
         $scope.printTicket = function(order) {
-            console.log('*****PRINTING TICKET: ', order);
 
-            console.log('order in print ticket: ', order);
+            var def = $q.defer();
+
+            console.log('*****PRINTING TICKET: ', order);
 
             if ( order == undefined ) { return; }
 
             var participants = angular.copy(order.participants);
 
-            console.log('participants: ', participants);
-
             angular.forEach(participants, function(p) {
                 var resId = p.reservationItemId;
                 var reservation = p.reservation;
-                console.log('resId: ', resId);
                 UserService.getUserById(p.id)
                     .then(function(result) {
                         var participant = result.data;
-                        console.log('participant after fetch: ', participant);
                         angular.forEach(order.orderItems, function(item) {
-                            console.log('orderItem: ', item);
                             angular.forEach(item.reservation.reservationItems, function(rItem) {
-                                console.log('reservation item: ', rItem);
                                 if ( rItem.id === resId ) {
                                     participant.reservation = item.reservation;
                                     participant.product = item.product;
@@ -177,17 +166,20 @@ angular.module('skyZoneApp')
                             var customerFirstInitial = participant.firstName.charAt(0).toUpperCase();
                             var customerLastName = participant.lastName;
                             var ageGroup = $scope.getAgeGroup(participant.getAgeGroup);
-                            var marketingText = "";
+                            var marketingText = $scope.park.receiptFreeText == null ? "" : $scope.park.receiptFreeText;
 
-                            BocaService.printTicket(parkName,startTime,endTime,productName,date);
-                            //self.printTicket = function(parkName,startTime,endTime,productName,date,customerFirstInitial,customerLastName,customerAgeGroup,marketingText)
+                            BocaService.printTicket(parkName,startTime,endTime,productName,date,customerFirstInitial,customerLastName,ageGroup,marketingText);
                             AveryDennisonService.printTicket(parkName,startTime,endTime,productName,date,customerFirstInitial,customerLastName,ageGroup,marketingText);
                         }
 
-                    }, function(err) {
+                        def.resolve(order);
 
+                    }, function(err) {
+                        def.reject(err);
                     });
             });
+
+            return def.promise;
         }
            
         
@@ -231,7 +223,6 @@ angular.module('skyZoneApp')
         };
         $scope.managerDiscount = function(){
         	
-        	console.log('hello',$scope.auth)
 
             var disco = {
                 'managerNumber':$scope.auth.managerId,
@@ -245,7 +236,6 @@ angular.module('skyZoneApp')
             $scope.verifyManagerPin().then(function(role){
                 if(role === 'pos_mgr'){
                     OrderService.addManagerDiscount($scope.order.id, OrderService.createManagerDiscount(disco)).then(function(result){
-                        console.log(result)
                         $scope.order = result;
                     }, logErrorStopLoading)
                 }   
