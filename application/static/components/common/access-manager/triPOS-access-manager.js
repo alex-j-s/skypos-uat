@@ -2,8 +2,8 @@
 
 angular.module('skyZoneApp')
 	.constant('TRIPOS_ENDPOINTS', {
-		//'dev':'http://localhost:8080'
-		'dev':'http://10.10.21.135:8081'
+		'dev':'http://localhost:8080'
+		//'dev':'http://10.10.21.135:8081'
 	})
 	.constant('TRIPOS_DEV_TOKENS', {
 		//Blaine's/////////
@@ -128,7 +128,7 @@ angular.module('skyZoneApp')
 						tpAuthHeader += 'Signature=' + signature;
 						//config.headers['tp-authorization'] = tpAuthHeader;
 						console.log('tp-authorization: ', config.headers['tp-authorization']);
-						config.headers['tp-authorization'] = 'Version=1.0, Credential=' + TRIPOS_DEV_TOKENS[DEV-KEY-1]; //Blaine's Machine
+						config.headers['tp-authorization'] = 'Version=1.0, Credential=' + TRIPOS_DEV_TOKENS['DEV-KEY-1']; //Blaine's Machine
 						//config.headers['tp-authorization'] = 'Version=1.0, Credential=a700df16-a0f9-4ea4-8422-ac7260ca02c1';  //Vikash's Machine
 
 						config.headers['tp-request-id'] = HmacService.generateUUID();
