@@ -108,47 +108,124 @@ angular.module('skyZoneApp')
             // return $q.when(order);
 
         };
+
+        $scope.getAgeGroup = function(dateString {
+            var today = new Date();
+            var birthDate = new Date(dateString);
+            var age = today.getFullYear() - birthDate.getFullYear();
+            var m = today.getMonth() - birthDate.getMonth();
+            if ( m < 0 || (m === 0 && today.getDate() < birthDate.getDate()) ) {
+                age--;
+            }
+            //return age;
+            if ( age < =4 ) {
+                return 'A';
+            } else if ( age <= 10 ) {
+                return 'B'
+            } else if ( age <= 15 ) {
+                return 'C';
+            } else {
+                return 'D'
+            }
+ 
+        }
         
         $scope.printTicket = function(order) {
             console.log('*****PRINTING TICKET: ', order);
 
-            var def = $q.defer();
-            
-            var reservation = null;
-            var products = [];
-            for ( var i in order.orderItems ) {
-                var item = order.orderItems[i];
-                if ( item.product.parentCategoryName == 'Jump' ) {
-                    products.push(item.product);
-                    reservation = item.reservation;
-                }
-            }
-            
-            var productIds = products.map(function(product) {
-                return product.sfId;
+
+            var participants = angualr.copy(order.participants);
+
+            angualr.forEach(participants, function(participant) {
+                var resId = participant.reservationItemId;
+
+                UserService.getUserById(participant.id)
+                    .then(function(result) {
+                        participant = result;
+                        angular.forEach(order.orderItems, function(item) {
+                            angular.forEach(item.reservationItems, function(rItem) {
+                                if ( rItem.id === resId ) {
+                                    participant.reservation = item;
+                                    participant.product = orderItem;
+                                    participant.reservationItem = rItem;
+                                }
+                            });
+                        })
+
+                        if ( participant.reservation == null || participant.reservation.reservationItem == null || $csope.returnOrder ) {
+                            // do not print
+                        } else {
+                            var parkName = order.parkName;
+                            var startTime = $scope.toTimeString(participant.reservationItem.startTime);
+                            var endTime = $scope.toTimeString(participant.reservationItem.endTime);
+                            var productName = participant.product.name;
+                            var customerFirsInitial = participant.firstName.charAt(0).toUpperCase();
+                            var customerLastName = participant.lastName;
+                            var ageGroup = $scope.getAgeGroup(participant.getAgeGroup);
+                            var marketingText = "";
+
+                            BocaService.printTicket(parkName,startTime,endTime,productName,date);
+                        }
+
+                    }, function(err) {
+
+                    });
             });
+
+
+
+
+            //var def = $q.defer();
+
+
             
-            if ( reservation == null ||  reservation.reservationItems == null || reservation.reservationItems.length == 0 || $scope.returnOrder ) {
-                def.resolve(order);
-            } else {
-                for ( var i in reservation.reservationItems ) {
-                    var item = reservation.reservationItems[i];
-                    var date = $filter('date')( reservation.startDate,'EEE MMM dd, yyyy' );
-                    for ( var g = 0;g<item.numberOfGuests;g++ ) {
-                        var parkName = "Sky Zone " + order.parkName;
-                        var startTime = $scope.toTimeString(item.startTime);
-                        var endTime = $scope.toTimeString(item.endTime);
-                        var productName = products[productIds.indexOf(item.resourceSfId)].name;
-                        //var date = $filter('date')( order.startDate,'EEE MMM dd, yyyy');
+            // var reservation = null;
+            // var products = [];
+            // angular.forEach(order.orderItems, function(item) {
+            //     var item = order.orderItems[i];
+            //     if ( item.product.parentCategoryName == 'Jump' ) {
+            //         products.push(item.product);
+            //         reservation = item.reservation;
+            //     }
+            // });
+            
+              
+            // var productIds = products.map(function(product) {
+            //     return product.sfId;
+            // });
+
+            // var productParticipantMap = {};
+            // angular.forEach(order.reservation.reservationItem, function(reservationItem) {
+            //     angular.forEach(order.participants, function(participant) {
+            //         if ( participant.reservationId === reservationItem.id ) {
+            //             productParticipantMap[reservationItem.id] = participant;
+            //         }
+            //     })
+            // });
+            
+            // if ( reservation == null ||  reservation.reservationItems == null || reservation.reservationItems.length == 0 || $scope.returnOrder ) {
+            //     def.resolve(order);
+            // } else {
+            //     //for ( var i in reservation.reservationItems ) {
+            //     // angular.forEach(reservation.reservationItems, function(item) {
+            //     //     var date = $filter('date')( reservation.startDate,'EEE MMM dd, yyyy' );
+            //     //     for ( var g = 0;g<item.numberOfGuests;g++ ) {
+            //     //         var parkName = "Sky Zone " + order.parkName;
+            //     //         var startTime = $scope.toTimeString(item.startTime);
+            //     //         var endTime = $scope.toTimeString(item.endTime);
+            //     //         var productName = products[productIds.indexOf(item.resourceSfId)].name;
+            //     //         //var date = $filter('date')( order.startDate,'EEE MMM dd, yyyy');
                         
-                        BocaService.printTicket(parkName,startTime,endTime,productName,date);
-                    }
-                }
-                def.resolve(order);
+            //     //         BocaService.printTicket(parkName,startTime,endTime,productName,date);
+            //     //     }
+            //     // });
+            //     angular.forEach(Object.keys(productParticipantMap), function(resId) {
+
+            //     });
+                //def.resolve(order);
             }
 
-            return def.promise;
-            
+            //return def.promise;            
         };
         
         $scope.toTimeString= function(str) {
