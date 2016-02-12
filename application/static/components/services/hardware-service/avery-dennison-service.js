@@ -48,9 +48,9 @@ angular.module('skyZoneApp')
 	self.printTicket = function(parkName,startTime,endTime,productName,date,customerFirstInitial,customerLastName,customerAgeGroup,marketingText) {
 		var command = "{F,1,A,R,E,1000,409,\"FMT-25\" |"
     command += "C,415,305,0,16,3,2,O,L,0,3,\"" + parkName + "\",0 | "
-    command += "C,355,260,0,1,3,2,O,L,0,3,\"" + customerFirstName + ", " + customerFirstInitial + "\",0 | "
-    command += "C,400,205,0,1,5,4,O,L,0,3,\"" + startTime + "\",0 | "
-    command += "C,255,205,0,1,5,4,O,L,0,3,\"" + endTime + "\",0 | "
+    command += "C,355,260,0,1,3,2,O,L,0,3,\"" + customerLastName + ", " + customerFirstInitial + "\",0 | "
+    command += "C,415,220,0,3,2,1,O,L,0,3,\"" + startTime + " - " + endTime + "\",0 | "
+    //command += "C,255,205,0,1,5,4,O,L,0,3,\"" + endTime + "\",0 | "
     command += "C,415,190,0,2,3,2,O,L,0,3,\"" + productName + "\",0 | "
     command += "C,415,170,0,2,3,2,O,L,0,3,\"" + customerAgeGroup + "\",0 | "
     command += "C,415,150,0,2,3,2,O,L,0,3,\"" + date + "\",0 | "
