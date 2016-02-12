@@ -379,11 +379,21 @@ angular.module('skyZoneApp')
           $scope.card.amount = $scope.order.totalAmountDue;
           var amountString = $filter('currency')($scope.card.amount);
           $rootScope.$broadcast('szeShowLoading');
-          TriPOSService.swipeCard(amountString,function(data) {
-             console.log('payment capture compelte: ', data); 
-             $scope.capturingPayment = false;
-             //TODO Call the epic api which send the transaction id.
-          }); 
+          
+          TriPOSService.swipeCard(amountString).then(function(data) {
+      	    console.log('payment capture compelte: ', data); 
+              $scope.capturingPayment = false;
+              var payload = OrderService.swipeCreditORDebitCardPayment(data)
+              OrderService.addCreditCardPayment($scope.order.id,payload)
+              	.then(function(order) {
+                  $scope.attemptCompleteOrder();
+              },function(err) {
+                  logErrorStopLoading(err);
+              });    
+        },function(err) {
+            logErrorStopLoading(err);
+        });  
+          
         };
         
         $scope.processCardPresentPayment = function(data) {
