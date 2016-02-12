@@ -100,7 +100,7 @@ angular.module('skyZoneApp')
                         var keys = ['Payment Type','Card Number','Card Type','Amount']
                         var values = [payment.recordType.name,payment.creditCardNumber,payment.creditCardType,$filter('currency')(payment.amount)];
                         command += ecf.orderSection(keys,values);
-                    } else if ( paymentType.name == "Gift Card" ) {
+                    } else if ( payment.paymentType.name == "Gift Card" ) {
                       var keys = ['Payment Type','Balance', 'Amount'];
                       var values = [payment.recordType.name,$filter('currency')(payment.balance),$filter('currency')]
                     } else  {

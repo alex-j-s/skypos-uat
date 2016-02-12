@@ -65,8 +65,10 @@ angular.module('skyZoneApp')
             // $scope.order = order;
 
             // display message for change:
+
+            console.log('order in print reciept: ', order); 
             
-            promArray = [];
+            var promArray = [];
 
             angular.forEach($scope.order.payments, function(payment) {
                 if ( payment.recordType.name == 'Gift Card' ) {
@@ -109,7 +111,7 @@ angular.module('skyZoneApp')
 
         };
 
-        $scope.getAgeGroup = function(dateString {
+        $scope.getAgeGroup = function(dateString) {
             var today = new Date();
             var birthDate = new Date(dateString);
             var age = today.getFullYear() - birthDate.getFullYear();
@@ -118,7 +120,7 @@ angular.module('skyZoneApp')
                 age--;
             }
             //return age;
-            if ( age < =4 ) {
+            if ( age <= 4 ) {
                 return 'A';
             } else if ( age <= 10 ) {
                 return 'B'
@@ -133,10 +135,13 @@ angular.module('skyZoneApp')
         $scope.printTicket = function(order) {
             console.log('*****PRINTING TICKET: ', order);
 
+            console.log('order in print ticket: ', order);
 
-            var participants = angualr.copy(order.participants);
+            if ( order == undefined ) { return; }
 
-            angualr.forEach(participants, function(participant) {
+            var participants = angular.copy(order.participants);
+
+            angular.forEach(participants, function(participant) {
                 var resId = participant.reservationItemId;
 
                 UserService.getUserById(participant.id)
@@ -171,62 +176,8 @@ angular.module('skyZoneApp')
 
                     });
             });
-
-
-
-
-            //var def = $q.defer();
-
-
-            
-            // var reservation = null;
-            // var products = [];
-            // angular.forEach(order.orderItems, function(item) {
-            //     var item = order.orderItems[i];
-            //     if ( item.product.parentCategoryName == 'Jump' ) {
-            //         products.push(item.product);
-            //         reservation = item.reservation;
-            //     }
-            // });
-            
-              
-            // var productIds = products.map(function(product) {
-            //     return product.sfId;
-            // });
-
-            // var productParticipantMap = {};
-            // angular.forEach(order.reservation.reservationItem, function(reservationItem) {
-            //     angular.forEach(order.participants, function(participant) {
-            //         if ( participant.reservationId === reservationItem.id ) {
-            //             productParticipantMap[reservationItem.id] = participant;
-            //         }
-            //     })
-            // });
-            
-            // if ( reservation == null ||  reservation.reservationItems == null || reservation.reservationItems.length == 0 || $scope.returnOrder ) {
-            //     def.resolve(order);
-            // } else {
-            //     //for ( var i in reservation.reservationItems ) {
-            //     // angular.forEach(reservation.reservationItems, function(item) {
-            //     //     var date = $filter('date')( reservation.startDate,'EEE MMM dd, yyyy' );
-            //     //     for ( var g = 0;g<item.numberOfGuests;g++ ) {
-            //     //         var parkName = "Sky Zone " + order.parkName;
-            //     //         var startTime = $scope.toTimeString(item.startTime);
-            //     //         var endTime = $scope.toTimeString(item.endTime);
-            //     //         var productName = products[productIds.indexOf(item.resourceSfId)].name;
-            //     //         //var date = $filter('date')( order.startDate,'EEE MMM dd, yyyy');
-                        
-            //     //         BocaService.printTicket(parkName,startTime,endTime,productName,date);
-            //     //     }
-            //     // });
-            //     angular.forEach(Object.keys(productParticipantMap), function(resId) {
-
-            //     });
-                //def.resolve(order);
-            }
-
-            //return def.promise;            
-        };
+        }
+           
         
         $scope.toTimeString= function(str) {
             var a = str.split(':')
@@ -727,7 +678,8 @@ angular.module('skyZoneApp')
             };
             $scope.goToStartScreen = function(order){
 
-
+                console.log('order in go to start screen: ', order);
+                
                 if(order.paymentStatus === 'Fully Paid' || $scope.hasRefund(order)){
 
                     if ($scope.hasRefund(order)) {
