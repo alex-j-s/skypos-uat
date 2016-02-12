@@ -52,11 +52,11 @@
 			
 			$http(config)
 				.success(function(result) {
-				console.log('RESULT FROM TRIPOS: ', result);
+				console.log('RESULT FROM TRIPOS: '+result);
 					def.resolve(result);
 				})
 				.error(function(err) {
-					console.log('ERROR FROM TRIPOS: ', err);
+					console.log('ERROR FROM TRIPOS: '+err);
 					def.reject(err);
 				});
 			return def.promise;

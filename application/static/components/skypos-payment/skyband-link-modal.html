@@ -1,0 +1,14 @@
+<div>
+	<div class="row">
+		<div class="col-sm-12">Select a jumper below to link them to their skyband.</div>
+	</div>
+    <div class="row">
+        <div class="col-sm-12">
+	        <div ng-repeat="jumper in jumpers" ng-click="selectJumper(jumper)" style="cursor:pointer;padding:1rem;border:1px solid #ccc; margin:0.2rem"
+	        	ng-style="hasBandStyle(jumper)">
+	        	<h4>{{jumper.firstName + ' ' + jumper.lastName + ' (' + getAge(jumper)+')'}}</h4>
+	        	{{getReservationDetails(jumper)}}
+	        </div>
+        </div>
+    </div>
+</div>

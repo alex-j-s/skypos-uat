@@ -75,7 +75,8 @@ angular.module('skyZoneApp')
         'personmailingcountrycode':profile.personmailingcountrycode,
         'personmailingpostalcode':profile.personmailingpostalcode,
         'emergencyContactName':profile.emergencyContactName,
-        'emergencyContactNumber':profile.emergencyContactNumber
+        'emergencyContactNumber':profile.emergencyContactNumber,
+        'skybandId':profile.skybandId
       };
       return $http.put('/api/customers/'+id, req)
         .success(function(data) {

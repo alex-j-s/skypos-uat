@@ -703,7 +703,25 @@ angular.module('skyZoneApp')
                 return out;
             };
 
-
+            self.swipeCreditORDebitCardPayment = function(swipeResponse){
+            	  return {
+            		  'transactionId': swipeResponse.transactionId,
+                      'amount': swipeResponse.approvedAmount,
+                      'approvalNumber': swipeResponse.approvalNumber,
+                      'binValue': swipeResponse.binValue,
+                      'statusCode': swipeResponse.statusCode,
+                      'isApproved': swipeResponse.isApproved,
+                     // 'transactionDateTime': swipeResponse.transactionDateTime!=null?swipeResponse.transactionDateTime.split(".")[0]:"",
+                     // 'signature': swipeResponse.signature!=null?swipeResponse.signature.data:"",
+                      'entryMode': 'swiped',
+                      'cashBackAmount': swipeResponse.cashbackAmount,
+                      'debitSurchargeAmount': swipeResponse.debitSurchargeAmount,
+                      'pinVerified': swipeResponse.pinVerified,
+                      'currencyCode': (currentOrder) ? currentOrder.currencyCode : 'USD',
+                      'paymentType': 'Deposit',
+                      'amountType': 'Standard Deposit'
+                  };
+            }
 
             self.createCreditCardPayment = function(paymentInfo, amount) {
                 return {
