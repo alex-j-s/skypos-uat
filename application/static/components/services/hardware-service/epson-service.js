@@ -100,9 +100,10 @@ angular.module('skyZoneApp')
                         var keys = ['Payment Type','Card Number','Card Type','Amount']
                         var values = [payment.recordType.name,payment.creditCardNumber,payment.creditCardType,$filter('currency')(payment.amount)];
                         command += ecf.orderSection(keys,values);
-                    } else if ( paymentType.name == "Gift Card" ) {
+                    } else if ( payment.recordType.name == "Gift Card" ) {
                       var keys = ['Payment Type','Balance', 'Amount'];
-                      var values = [payment.recordType.name,$filter('currency')(payment.balance),$filter('currency')]
+                      var values = [payment.recordType.name,$filter('currency')(payment.balance),$filter('currency')(payment.amount)]
+                      command += ecf.orderSection(keys,values);
                     } else  {
                         var keys = ['Payment Type','Amount']
                         var values = [payment.recordType.name,$filter('currency')(payment.amount)];
@@ -111,7 +112,7 @@ angular.module('skyZoneApp')
                 }
             }
         }
-        
+
         if ( refundedPayments.length  > 0 ) {
             
         command += ecf.leftAlignTitleText('Refunded Payments: ');

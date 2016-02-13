@@ -84,12 +84,12 @@
 					console.log('Error Response from TriPOS Void: ', err);
 					def.reject(err);
 				});
-			return def.promise();
+			return def.promise;
 
 		}
 
 		self.refund = function(amount) {
-			var def = PromoseFactory.getInstance();
+			var def = PromiseFactory.getInstance();
 			var refundUrl = '/tripos/refund'
 			var request = {};
 			request.laneId = self.laneId;
@@ -99,5 +99,16 @@
 				'method': 'POST',
 				'data': request
 			};
+			
+			$http(config)
+			.success(function(result) {
+				console.log('Response from TriPOS refund: ', result);
+				def.resolve(result);
+			})
+			.error(function(err) {
+				console.log('Error Response from TriPOS refund: ', err);
+				def.reject(err);
+			});
+		return def.promise;
 		}
  	}]);

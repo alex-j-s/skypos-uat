@@ -1,9 +1,10 @@
-<div class="dog col-md-offset-0 col-md-12 col-lg-offset-2 col-lg-10">
-    <div class="text-center mt30">
+<!-- <div class="dog col-md-offset-0 col-md-12 col-lg-offset-2 col-lg-10"> -->
+<div class="col-sm-12">
+    <div class="text-center mt15">
         <button ng-show="orderInProgress() && !orderCancelled()" type="button" class="sk-btn btn-red" ng-click="cancelOrder()">CANCEL TRANSACTION</button>
         <button ng-show="orderPurchased()" type="button" class="sk-btn btn-red" ng-click="managerApprovel()">REFUND ORDER</button>
     </div>
-    <div class="mt30">
+    <div class="mt15">
         <div class="cart">
             <dl class="dl-horizontal">
                 <dt>STATUS: </dt>
@@ -15,7 +16,7 @@
             <div ng-repeat="lineItem in order.orderItems">
                 <dl class="dl-horizontal">
                   <dt>{{ lineItem.product.name }}</dt>
-                  <dd>{{ lineItem.itemSubTotal | currency }}</dd>
+                  <dd class="text-right">{{ lineItem.itemSubTotal | currency }}</dd>
                 </dl>
             </div>
         </div>
@@ -24,18 +25,26 @@
             <div>
                 <dl class="dl-horizontal">
                   <dt>{{ payment.recordType.name }}</dt>
-                  <dd>{{ payment.amount | currency }} <i ng-show="orderInProgress()" class="fa fa-times" ng-click="removePayment(order.id,payment.id)"></i></dd>
+                  <dd class="text-right">{{ payment.amount | currency }} <i ng-show="orderInProgress()" class="fa fa-times" ng-click="removePayment(order.id,payment.id)"></i></dd>
                 </dl>
                 <!-- <dl ng-if="payment.creditCardNumber != null" class="pull-right">
                     <dd>{{ payment.creditCardNumber }}</dd>
                 </dl> -->
             </div>
         </div>
-        <div class="payments" ng-if="order.discountAmount != null">
+        <div class="payments" ng-if="order.discountAmount != null && order.discountAmount != 0">
             <div>
                 <dl class="dl-horizontal">
                   <dt>DISCOUNT</dt>
-                  <dd>{{ order.discountAmount | currency }}</dd>
+                  <dd class="text-right">{{ order.discountAmount | currency }}</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="payments" ng-if="order.managerApprovedTotalDiscount != null && order.managerApprovedTotalDiscount != 0">
+            <div>
+                <dl class="dl-horizontal">
+                  <dt>MGR DISCOUNT</dt>
+                  <dd class="text-right">{{ order.managerApprovedTotalDiscount | currency }}</dd>
                 </dl>
             </div>
         </div>
@@ -44,31 +53,31 @@
         <div>
             <dl class="dl-horizontal">
               <dt>Sub Total</dt>
-              <dd>{{ order.orderAmount | currency }}</dd>
+              <dd class="text-right">{{ order.orderAmount | currency }}</dd>
             </dl>
         </div>
         <div>
             <dl class="dl-horizontal">
               <dt>Sales Tax</dt>
-              <dd>{{ order.taxAmount | currency }}</dd>
+              <dd class="text-right">{{ order.taxAmount | currency }}</dd>
             </dl>
         </div>
         <div class="total">
             <dl class="dl-horizontal">
               <dt>Total</dt>
-              <dd>{{ order.totalOrderAmount | currency }}</dd>
+              <dd class="text-right">{{ order.totalOrderAmount | currency }}</dd>
             </dl>
         </div>
         <div class="remaining">
             <dl class="dl-horizontal">
               <dt>Remaining</dt>
-              <dd>{{ order.totalAmountDue | currency }}</dd>
+              <dd class="text-right">{{ order.totalAmountDue | currency }}</dd>
             </dl>
         </div>
         <div class="remaining" ng-show="order.changeDue && order.changeDue > 0">
             <dl class="dl-horizontal">
               <dt>Change Due</dt>
-              <dd>{{ order.changeDue | currency }}</dd>
+              <dd class="text-right">{{ order.changeDue | currency }}</dd>
             </dl>
         </div>
     </div>

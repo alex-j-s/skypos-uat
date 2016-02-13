@@ -2,16 +2,17 @@
 
 angular.module('skyZoneApp')
 	.constant('TRIPOS_ENDPOINTS', {
+		
 		//'dev':'http://localhost:8080'
 		//'dev':'http://10.10.21.135:8081'
 		'dev':'http://192.168.1.37:8080'
 	})
 	.constant('TRIPOS_DEV_TOKENS', {
 		//Blaine's/////////
-		//'DEV-KEY-1':'1ea5d25f-e334-44f7-aea3-f4e180a9bff2',
-		//'DEV-KEY-2':'16b6148c-e19e-4f4a-9f31-27f93e535c9c',
-		//'DEV-SECRET-1':'31d58d53-9968-4ee9-9ca5-6ce420256129',
-		//'DEV-SECRET-2':'ac131ecb-b7d8-4a36-b8be-8614f0bd0d8b',
+		'DEV-KEY-1':'326074b5-870d-4d20-b367-cdbfc2f34eda',
+		'DEV-KEY-2':'e70a65ff-64a1-4b61-aff8-efce19c8e5b',
+		'DEV-SECRET-1':'31d58d53-9968-4ee9-9ca5-6ce420256129',
+		'DEV-SECRET-2':'ac131ecb-b7d8-4a36-b8be-8614f0bd0d8b',
 		
 		/////VIKASH'S/////////
 		//'DEV-KEY-1':'a700df16-a0f9-4ea4-8422-ac7260ca02c1',
@@ -133,10 +134,9 @@ angular.module('skyZoneApp')
 						tpAuthHeader += 'Nonce=' + nonce + ', ';
 						tpAuthHeader += 'RequestDate=' + timestamp + ', ';
 						tpAuthHeader += 'Signature=' + signature;
-						config.headers['tp-authorization'] = tpAuthHeader;
+						//config.headers['tp-authorization'] = tpAuthHeader;
 						console.log('tp-authorization: ', config.headers['tp-authorization']);
-						//config.headers['tp-authorization'] = 'Version=1.0, Credential=1ea5d25f-e334-44f7-aea3-f4e180a9bff2'; //Blaine's Machine
-						//config.headers['tp-authorization'] = 'Version=1.0, Credential=b70d5976-bbf2-4460-914d-7352dee7bcc3';  //Vikash's Machine
+						config.headers['tp-authorization'] = 'Version=1.0, Credential=' + TRIPOS_DEV_TOKENS['DEV-KEY-1'];
 
 						config.headers['tp-request-id'] = HmacService.generateUUID();
 

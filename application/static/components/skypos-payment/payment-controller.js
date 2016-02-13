@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('skyZoneApp')
-    .controller('SPPaymentController',['$scope', '$modal', '$rootScope', '$q', '$location','$filter','Park', 'Guest', 'Order', 'GiftCardsService', 'OrderService','EpsonService','BocaService','VerifoneService', 'NavService','UserService','WaiverStatus','RFIDReaderService','TriPOSService',
-    	function($scope, $modal, $rootScope, $q, $location, $filter, Park, Guest, Order, GiftCardsService, OrderService, EpsonService,BocaService,VerifoneService, NavService,UserService, WaiverStatus,RFIDReaderService, TriPOSService){
+    .controller('SPPaymentController',['$scope', '$modal', '$rootScope', '$q', '$location','$filter','Park', 'Guest', 'Order', 'GiftCardsService', 'OrderService','EpsonService','BocaService','AveryDennisonService','VerifoneService', 'NavService','UserService','WaiverStatus','RFIDReaderService','TriPOSService',
+    	function($scope, $modal, $rootScope, $q, $location, $filter, Park, Guest, Order, GiftCardsService, OrderService, EpsonService,BocaService,AveryDennisonService,VerifoneService, NavService,UserService, WaiverStatus,RFIDReaderService, TriPOSService){
 
     	console.log("PARK:", Park);
     	console.log("ORDER: ", Order);
@@ -65,15 +65,19 @@ angular.module('skyZoneApp')
             // $scope.order = order;
 
             // display message for change:
-            
-            promArray = [];
 
-            angular.forEach($scope.order.payments, function(payment) {
+            var def = $q.defer();
+
+            
+            var promArray = [];
+
+
+            angular.forEach(order.payments, function(payment) {
                 if ( payment.recordType.name == 'Gift Card' ) {
-                    promArray.push(GiftCardsService.getBalance(payment.cardNumber).then(function(result) {
-                        payment.balance = result.balance;
+                    promArray.push(GiftCardsService.getBalance(payment.giftCardNumber).then(function(result) {
+                        payment.balance = result.data.balance;
                     }, function(err) {
-                        console.log('error getting gift card balance');
+                        console.log('error getting gift card balance: ', err);
                     }));
                     
                 }
@@ -88,68 +92,96 @@ angular.module('skyZoneApp')
                         EpsonService.printReturnReciept($scope.returnOrder,$scope.park,$scope.guest,"Customer Copy","RETURN",false);
                     }
                 }   
-                return $q.when(order);
+                //return $q.when(order);
             }
 
             $q.all(promArray).then(function(results) {
-                  printReciepts(); 
+                  printReciepts();
+                  def.resolve(order);
             }, function(err) {
                 printReciepts();
+                def.reject(err)
             })
 
-            // if ( $scope.orderPurchased() || $scope.returnOrder ) {
-            //     EpsonService.printReciept(order,$scope.park,$scope.guest,"Sky Zone Copy","SALE",true);
-            //     EpsonService.printReciept(order,$scope.park,$scope.guest,"Customer Copy","SALE",false);
-            //     if ( $scope.returnOrder ) {
-            //         EpsonService.printReturnReciept($scope.returnOrder,$scope.park,$scope.guest,"Sky Zone Copy","RETURN",true);
-            //         EpsonService.printReturnReciept($scope.returnOrder,$scope.park,$scope.guest,"Customer Copy","RETURN",false);
-            //     }
-            // }   
-            // return $q.when(order);
+            return def.promise;
 
         };
+
+        $scope.getAgeGroup = function(dateString) {
+            var today = new Date();
+            var birthDate = new Date(dateString);
+            var age = today.getFullYear() - birthDate.getFullYear();
+            var m = today.getMonth() - birthDate.getMonth();
+            if ( m < 0 || (m === 0 && today.getDate() < birthDate.getDate()) ) {
+                age--;
+            }
+            //return age;
+            if ( age <= 4 ) {
+                return 'A';
+            } else if ( age <= 10 ) {
+                return 'B'
+            } else if ( age <= 15 ) {
+                return 'C';
+            } else {
+                return 'D'
+            }
+ 
+        }
         
         $scope.printTicket = function(order) {
-            console.log('*****PRINTING TICKET: ', order);
 
             var def = $q.defer();
-            
-            var reservation = null;
-            var products = [];
-            for ( var i in order.orderItems ) {
-                var item = order.orderItems[i];
-                if ( item.product.parentCategoryName == 'Jump' ) {
-                    products.push(item.product);
-                    reservation = item.reservation;
-                }
-            }
-            
-            var productIds = products.map(function(product) {
-                return product.sfId;
+
+            console.log('*****PRINTING TICKET: ', order);
+
+            if ( order == undefined ) { return; }
+
+            var participants = angular.copy(order.participants);
+
+            angular.forEach(participants, function(p) {
+                var resId = p.reservationItemId;
+                var reservation = p.reservation;
+                UserService.getUserById(p.id)
+                    .then(function(result) {
+                        var participant = result.data;
+                        angular.forEach(order.orderItems, function(item) {
+                            angular.forEach(item.reservation.reservationItems, function(rItem) {
+                                if ( rItem.id === resId ) {
+                                    participant.reservation = item.reservation;
+                                    participant.product = item.product;
+                                    participant.reservationItem = rItem;
+                                }
+                            });
+                        })
+
+                        if ( participant.reservation == null || participant.reservation.reservationItems == null || $scope.returnOrder ) {
+                            // do not print
+                            console.log('NOT PRINTING TICKETS');
+                        } else {
+                            var parkName = order.parkName;
+                            var startTime = $scope.toTimeString(participant.reservationItem.startTime);
+                            var endTime = $scope.toTimeString(participant.reservationItem.endTime);
+                            var productName = participant.product.name;
+                            var date = $filter('date')(participant.reservation.startDate,'fullDate');
+                            var customerFirstInitial = participant.firstName.charAt(0).toUpperCase();
+                            var customerLastName = participant.lastName;
+                            var ageGroup = $scope.getAgeGroup(participant.getAgeGroup);
+                            var marketingText = $scope.park.receiptFreeText == null ? "" : $scope.park.receiptFreeText;
+
+                            BocaService.printTicket(parkName,startTime,endTime,productName,date,customerFirstInitial,customerLastName,ageGroup,marketingText);
+                            AveryDennisonService.printTicket(parkName,startTime,endTime,productName,date,customerFirstInitial,customerLastName,ageGroup,marketingText);
+                        }
+
+                        def.resolve(order);
+
+                    }, function(err) {
+                        def.reject(err);
+                    });
             });
-            
-            if ( reservation == null ||  reservation.reservationItems == null || reservation.reservationItems.length == 0 || $scope.returnOrder ) {
-                def.resolve(order);
-            } else {
-                for ( var i in reservation.reservationItems ) {
-                    var item = reservation.reservationItems[i];
-                    var date = $filter('date')( reservation.startDate,'EEE MMM dd, yyyy' );
-                    for ( var g = 0;g<item.numberOfGuests;g++ ) {
-                        var parkName = "Sky Zone " + order.parkName;
-                        var startTime = $scope.toTimeString(item.startTime);
-                        var endTime = $scope.toTimeString(item.endTime);
-                        var productName = products[productIds.indexOf(item.resourceSfId)].name;
-                        //var date = $filter('date')( order.startDate,'EEE MMM dd, yyyy');
-                        
-                        BocaService.printTicket(parkName,startTime,endTime,productName,date);
-                    }
-                }
-                def.resolve(order);
-            }
 
             return def.promise;
-            
-        };
+        }
+           
         
         $scope.toTimeString= function(str) {
             var a = str.split(':')
@@ -191,7 +223,6 @@ angular.module('skyZoneApp')
         };
         $scope.managerDiscount = function(){
         	
-        	console.log('hello',$scope.auth)
 
             var disco = {
                 'managerNumber':$scope.auth.managerId,
@@ -205,7 +236,6 @@ angular.module('skyZoneApp')
             $scope.verifyManagerPin().then(function(role){
                 if(role === 'pos_mgr'){
                     OrderService.addManagerDiscount($scope.order.id, OrderService.createManagerDiscount(disco)).then(function(result){
-                        console.log(result)
                         $scope.order = result;
                     }, logErrorStopLoading)
                 }   
@@ -377,17 +407,17 @@ angular.module('skyZoneApp')
           console.log('capturing payment information from verifone');
           $scope.capturingPayment = true;
           $scope.card.amount = $scope.order.totalAmountDue;
-          var amountString = $filter('currency')($scope.card.amount);
+          //var amountString = $filter('currency')($scope.order.totalAmountDue);
           $rootScope.$broadcast('szeShowLoading');
           
-          TriPOSService.swipeCard(amountString).then(function(data) {
+          TriPOSService.swipeCard($scope.card.amount).then(function(data) {
       	    console.log('payment capture compelte: ', data); 
-      	  amountString = amountString.replace('$',''); ///for testing purpose remove it later
-      	  data.approvedAmount =Number.parseFloat(amountString) ; //for testing purpose remove it later
+      	 // data.approvedAmount =$scope.card.amount; //for testing purpose remove it later
               $scope.capturingPayment = false;
               var payload = OrderService.swipeCreditORDebitCardPayment(data)
               OrderService.addCreditCardPayment($scope.order.id,payload)
               	.then(function(order) {
+              	 $rootScope.$broadcast('szeHideLoading');
                   $scope.attemptCompleteOrder();
               },function(err) {
                   logErrorStopLoading(err);
@@ -652,7 +682,10 @@ angular.module('skyZoneApp')
             };
             $scope.goToStartScreen = function(order){
 
+                console.log('order in go to start screen: ', order);
 
+                $rootScope.$broadcast('szeHideLoading')
+                
                 if(order.paymentStatus === 'Fully Paid' || $scope.hasRefund(order)){
 
                     if ($scope.hasRefund(order)) {
