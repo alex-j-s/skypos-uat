@@ -526,13 +526,17 @@ angular.module('skyZoneApp')
                 TriPOSService.refund(payment.amount).then(function(data) {
               	    console.log('payment capture compelte: ', data); 
                 	//  data.approvedAmount =payment.amount; //for testing purpose remove it later
-                        var payload = self.swipeCreditORDebitCardRefund(data);
-                        self.addCreditCardPayment(orderId,payload)
-                        	.then(function(order) {
-                        		 def.resolve(order);
-                        },function(err) {
-                        	 def.reject(err);
-                        });    
+                        if ( data.hasErrors ) {
+                            def.reject(data.errors);
+                        } else {
+                            var payload = self.swipeCreditORDebitCardRefund(data);
+                            self.addCreditCardPayment(orderId,payload)
+                            	.then(function(order) {
+                            		 def.resolve(order);
+                            },function(err) {
+                            	 def.reject(err);
+                            });
+                        }    
                   },function(err) {
                 	  def.reject(err);
                   });  
@@ -742,6 +746,7 @@ angular.module('skyZoneApp')
             }
             
             self.swipeCreditORDebitCardRefund = function(swipeResponse){
+                console.log('refund response: ', swipeResponse);
           	  return {
           		  'transactionId': swipeResponse.transactionId,
                     'amount': swipeResponse.approvedAmount,

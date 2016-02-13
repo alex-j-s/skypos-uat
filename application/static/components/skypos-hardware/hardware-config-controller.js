@@ -9,24 +9,18 @@ angular.module('skyZoneApp')
 					name: 'Verifone MX-925',	
 					status: null,
 					actions: [{
-						title:'Reset & Show Idle',
-						action: function () {
-							console.log('clear screen');
-							VerifoneService.clearAndShowIdle()
-						}
-					},
-                    {
-                        title:'Restart App',
+                        title:'Test Connection',
                         action: function() {
                             console.log('restart app');
-                            VerifoneService.restartApp();
+                            //VerifoneService.restartApp();
+                            TriPOSService.getLaneStatus();
                         }
-                    },
-					{
-						title:'Reboot',
-						action: function() {
-							console.log('reboot');
-                            VerifoneService.rebootTerminal();
+                    },{
+						title:'Show Idle',
+						action: function () {
+							console.log('clear screen');
+							//VerifoneService.clearAndShowIdle()
+							TriPOSService.showIdle();
 						}
 					}]
 				},
@@ -80,7 +74,7 @@ angular.module('skyZoneApp')
 					actions: [{
 						title: 'test connection',
 						action: function() {
-							TriPOSService.swipeCard(15.00).then(function(result) {
+							TriPOSService.getStatus().then(function(result) {
 
 							}, function(err) {
 
