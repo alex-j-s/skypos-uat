@@ -698,12 +698,32 @@ angular.module('skyZoneApp')
 
                     $rootScope.$broadcast('szeConfirm', {
                         title: msg,
-                        message: '',
+                        message: 'Activate Gift Cards?',
                         confirm: {
-                            label: 'Return to Start',
+                            label: 'Next',
                             action: function($clickEvent) {
                                 //go to start
-                                $location.path('/skypos/start/'+Park.parkUrlSegment);
+                                var linkModal = $modal.open({
+                                    animation: true,
+                                    size:'md',
+                                    templateUrl: 'static/components/skypos-payment/skyband-link-modal.html',
+                                    link: function(scope, elem, attr){
+                                        elem.find('#cardNumber').focus();
+                                    },
+                                    resolve:{
+                                        Order: function(){
+                                            return $scope.order;
+                                        }
+                                    },
+                                    controller: 'SPSkyBandLinkCtrl'
+                                })
+
+                                linkModal.result.then(function(result){
+                                    $location.path('/skypos/start/'+Park.parkUrlSegment);
+                                }, function(reason){
+
+                                })
+                                
                             }
                         },
                         cancel: {
