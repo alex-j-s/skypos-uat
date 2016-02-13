@@ -91,6 +91,7 @@ angular.module('skyZoneApp')
                     var out = {};
                     var biggest = null;
                     var foundIt = false;
+                    console.log('$scope.existingPayments: ', $scope.existingPayments);
                     angular.forEach($scope.existingPayments, function(pmt, ind){
                         if(foundIt){
                             return;
@@ -149,6 +150,8 @@ angular.module('skyZoneApp')
                         }
                         
                     }
+
+
                     
                     var payment = $scope.getPaymentForRefund(amt);
                     var paymentType = getPaymentEndpoint(payment.recordType.name);
@@ -217,7 +220,7 @@ angular.module('skyZoneApp')
                             payment.isCancellable = true;
                             auths.push(payment);
                         }
-                        if (payment.transactionType === 'Capture') {
+                        if (payment.transactionType === 'Capture' || payment.transactionType === 'Authorize and Capture') {
                             caps.push(payment);
                         }
                         if (payment.transactionType === 'Void') {
