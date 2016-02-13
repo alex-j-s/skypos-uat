@@ -3,7 +3,8 @@
 angular.module('skyZoneApp')
 	.constant('TRIPOS_ENDPOINTS', {
 		//'dev':'http://localhost:8080'
-		'dev':'http://10.10.21.135:8081'
+		//'dev':'http://10.10.21.135:8081'
+		'dev':'http://192.168.1.37:8080'
 	})
 	.constant('TRIPOS_DEV_TOKENS', {
 		//Blaine's/////////
@@ -13,11 +14,16 @@ angular.module('skyZoneApp')
 		//'DEV-SECRET-2':'ac131ecb-b7d8-4a36-b8be-8614f0bd0d8b',
 		
 		/////VIKASH'S/////////
-		 'DEV-KEY-1':'a700df16-a0f9-4ea4-8422-ac7260ca02c1',
-		 'DEV-KEY-2':'2d877d80-f07d-4618-826a-5e3eb5f2a68b',
-		 'DEV-SECRET-1':'0ac9099e-eebd-4ad4-84db-d06f6326a2ba',
-		 'DEV-SECRET-2':'ac027d6f-2756-4fbd-9b06-76d5992ac27a'
+		//'DEV-KEY-1':'a700df16-a0f9-4ea4-8422-ac7260ca02c1',
+		//'DEV-KEY-2':'2d877d80-f07d-4618-826a-5e3eb5f2a68b',
+		//'DEV-SECRET-1':'0ac9099e-eebd-4ad4-84db-d06f6326a2ba',
+		//'DEV-SECRET-2':'ac027d6f-2756-4fbd-9b06-76d5992ac27a'
+			 
+		/////VIKASH'S HOME/////////
+		 'DEV-KEY-1'	:'078b38a5-9755-4b17-911e-1bd9c87d6378',
+		 'DEV-SECRET-1'	:'162f2b3a-8877-449b-a468-1d2adcb4064f',
 			
+		 
 	})
 	.constant('TRIPOS_HEADERS', {
 		'tp-application-name':'SKYPOS',
@@ -59,6 +65,7 @@ angular.module('skyZoneApp')
 						// 3.) calculate request body hash
 						var requestBodyHash;
 						if ( config.data ) {
+						//	config.data = '{"pinPadIdleMessage": "Hello","testMode": "true","corsAllowedOrigins": "*"}';
 							requestBodyHash = HmacService.getTriPOSHmac(config.data);
 						}
 
@@ -129,7 +136,7 @@ angular.module('skyZoneApp')
 						config.headers['tp-authorization'] = tpAuthHeader;
 						console.log('tp-authorization: ', config.headers['tp-authorization']);
 						//config.headers['tp-authorization'] = 'Version=1.0, Credential=1ea5d25f-e334-44f7-aea3-f4e180a9bff2'; //Blaine's Machine
-						//config.headers['tp-authorization'] = 'Version=1.0, Credential=a700df16-a0f9-4ea4-8422-ac7260ca02c1';  //Vikash's Machine
+						//config.headers['tp-authorization'] = 'Version=1.0, Credential=b70d5976-bbf2-4460-914d-7352dee7bcc3';  //Vikash's Machine
 
 						config.headers['tp-request-id'] = HmacService.generateUUID();
 

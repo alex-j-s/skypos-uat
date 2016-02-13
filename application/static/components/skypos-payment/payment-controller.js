@@ -382,6 +382,8 @@ angular.module('skyZoneApp')
           
           TriPOSService.swipeCard(amountString).then(function(data) {
       	    console.log('payment capture compelte: ', data); 
+      	  amountString = amountString.replace('$',''); ///for testing purpose remove it later
+      	  data.approvedAmount =Number.parseFloat(amountString) ; //for testing purpose remove it later
               $scope.capturingPayment = false;
               var payload = OrderService.swipeCreditORDebitCardPayment(data)
               OrderService.addCreditCardPayment($scope.order.id,payload)
