@@ -418,6 +418,8 @@ angular.module('skyZoneApp')
               OrderService.addCreditCardPayment($scope.order.id,payload)
               	.then(function(order) {
               	 $rootScope.$broadcast('szeHideLoading');
+                 $scope.printReciept(order)
+                 $scope.printTicket(order)
                   $scope.attemptCompleteOrder();
               },function(err) {
                   logErrorStopLoading(err);
@@ -676,6 +678,7 @@ angular.module('skyZoneApp')
                             .then(function() { $rootScope.$broadcast('szeHideLoading'); }, logErrorStopLoading);
                     }
                     else{
+                        console.log('order has probably already been processed (tripos swipe)');
                         $scope.goToStartScreen($scope.order);
                     }
                 }
