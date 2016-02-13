@@ -3,9 +3,9 @@
 angular.module('skyZoneApp')
 	.constant('TRIPOS_ENDPOINTS', {
 		
-		//'dev':'http://localhost:8080'
+		'dev':'http://localhost:8080'
 		//'dev':'http://10.10.21.135:8081'
-		'dev':'http://192.168.1.37:8080'
+		//'dev':'http://192.168.1.37:8080'
 	})
 	.constant('TRIPOS_DEV_TOKENS', {
 		//Blaine's/////////
@@ -21,8 +21,8 @@ angular.module('skyZoneApp')
 		//'DEV-SECRET-2':'ac027d6f-2756-4fbd-9b06-76d5992ac27a'
 			 
 		/////VIKASH'S HOME/////////
-		 'DEV-KEY-1'	:'078b38a5-9755-4b17-911e-1bd9c87d6378',
-		 'DEV-SECRET-1'	:'162f2b3a-8877-449b-a468-1d2adcb4064f',
+		 // 'DEV-KEY-1'	:'078b38a5-9755-4b17-911e-1bd9c87d6378',
+		 // 'DEV-SECRET-1'	:'162f2b3a-8877-449b-a468-1d2adcb4064f',
 			
 		 
 	})
