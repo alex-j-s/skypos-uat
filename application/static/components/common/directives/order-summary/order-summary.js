@@ -5,6 +5,9 @@ angular.module('skyZoneApp')
         return function(inputArray) {
             var out = [];
             angular.forEach(inputArray, function(payment){
+                if(!payment.entryMode){
+                    payment.entryMode = '';
+                }
                 if(payment.entryMode.indexOf('swiped') > -1){
                     out.unshift(payment);
                 }
@@ -98,6 +101,9 @@ angular.module('skyZoneApp')
                     // for (var i in $scope.existingPayments) {
 
                         var payment = paymentsCache.pop();
+                        if (!payment.entryMode){
+                            payment.entryMode = ''
+                        }
 
                         console.log('refunding payment: ', payment);
 
