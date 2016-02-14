@@ -87,7 +87,7 @@ angular.module('skyZoneApp')
 
 
                         OrderService.refundPayment($scope.order.id, payment, paymentType)
-                            .then(OrderService.updateOrderStatus, logErrorStopLoading)
+                            //.then(OrderService.updateOrderStatus, logErrorStopLoading)
                             .then(function(order) {
                                 if (order.paymentStatus != 'Unpaid' && $scope.refundInProgress == undefined) {
                                     console.log('ORDER UNPAID -- REFUNDING');

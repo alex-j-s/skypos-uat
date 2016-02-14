@@ -523,44 +523,44 @@ angular.module('skyZoneApp')
 
             self.refundPayment = function(orderId, payment, paymentType) {
                 var def = $q.defer();
-                TriPOSService.refund(payment.amount).then(function(data) {
-              	    console.log('payment capture compelte: ', data); 
-                	//  data.approvedAmount =payment.amount; //for testing purpose remove it later
-                        if ( data.hasErrors ) {
-                            def.reject(data.errors);
-                        } else {
-                            var payload = self.swipeCreditORDebitCardRefund(data);
-                            self.addCreditCardPayment(orderId,payload)
-                            	.then(function(order) {
-                            		 def.resolve(order);
-                            },function(err) {
-                            	 def.reject(err);
-                            });
-                        }    
-                  },function(err) {
-                	  def.reject(err);
-                  });  
-                
-
-               /* var payload = {
-                    'amount':payment.amount,
-                    'transactionId': payment.transactionId,
-                    'paymentType': 'Refund',
-                    'amountType': 'Standard Deposit',
-                    'orderId': orderId
+                if(payment.entryMode =="swiped" && payment.transactionType!="Refund"){
+                	TriPOSService.refund(payment.amount).then(function(data) {
+                		console.log('payment capture compelte: ', data); 
+                		//  data.approvedAmount =payment.amount; //for testing purpose remove it later
+                		if ( data._hasErrors ) {
+                			def.reject(data.errors);
+                		} else {
+                			var payload = self.swipeCreditORDebitCardRefund(data);
+                			self.addCreditCardPayment(orderId,payload)
+                			.then(function(order) {
+                				def.resolve(order);
+                			},function(err) {
+                				def.reject(err);
+                			});
+                		}    
+                	},function(err) {
+                		def.reject(err);
+                	});  
+                }else{
+                	var payload = {
+                			'amount':payment.amount,
+                			'transactionId': payment.transactionId,
+                			'paymentType': 'Refund',
+                			'amountType': 'Standard Deposit',
+                			'orderId': orderId
+                		}
+                	
+                	if ( paymentType == 'gift-card' ) {
+                		payload.giftCardNumber = payment.giftCardNumber;
+                	}
+                	updateOrderHandler('POST', '/api/orders/' + orderId + '/payments/' + paymentType, payload)
+                	.then(function(order) {
+                		def.resolve(order);
+                	}, function(err) {
+                		def.reject(err);
+                	});
+                	
                 }
-
-                if ( paymentType == 'gift-card' ) {
-                    payload.giftCardNumber = payment.giftCardNumber;
-                }
-
-                updateOrderHandler('POST', '/api/orders/' + orderId + '/payments/' + paymentType, payload)
-                    .then(function(order) {
-                        def.resolve(order);
-                    }, function(err) {
-                        def.reject(err);
-                    });
-*/
                 return def.promise;
             };
 
