@@ -4,6 +4,13 @@ angular.module('skyZoneApp')
     .controller('SPSkyBandLinkCtrl', ['$scope', '$routeParams', '$modalInstance', '$modal', '$rootScope', '$q', '$location', 'Order', 'ProfileService', '$filter',
         function($scope, $routeParams, $modalInstance, $modal, $rootScope, $q, $location, Order, ProfileService, $filter) {
 
+
+            function logErrorStopLoading(err) {
+                $rootScope.$broadcast('szeHideLoading');
+                $rootScope.$broadcast('szeError', 'Failed to process order: '+JSON.stringify(err));
+                $scope.showModal = false;
+            }
+
             $scope.jumpers = Order.participants;
 
             $scope.selectJumper = function(jumper) {
@@ -25,7 +32,7 @@ angular.module('skyZoneApp')
 
                         $rootScope.$broadcast('szeHideLoading');
 
-                    }, logErrorHideLoading)
+                    }, logErrorStopLoading)
                 }, function(reason) {
                     $rootScope.$broadcast('szeHideLoading');
 
