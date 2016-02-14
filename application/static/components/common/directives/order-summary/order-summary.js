@@ -91,7 +91,7 @@ angular.module('skyZoneApp')
                         OrderService.refundPayment($scope.order.id, payment, paymentType)
                             .then(OrderService.updateOrderStatus, logErrorStopLoading)
                             .then(function(order) {
-                                if ($scope.existingPayments.length > 0) {
+                                if (paymentsCache.length > 0) {
                                     console.log('ORDER UNPAID -- REFUNDING');
                                     $scope.refundOrder(order);
                                 } else {
