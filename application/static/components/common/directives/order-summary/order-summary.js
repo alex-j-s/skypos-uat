@@ -48,6 +48,7 @@ angular.module('skyZoneApp')
 
                 $scope.refundInProgress = false;
                 var paymentsCache = [];
+                var doPopDrawer = false;
                 $scope.refundOrder = function(order) {
 
 
@@ -63,6 +64,7 @@ angular.module('skyZoneApp')
 
                     function getPaymentEndpoint(recTypeName) {
                         if (recTypeName === 'Cash') {
+                            doPopDrawer = true;
                             return 'cash'
                         } else if (recTypeName === 'Gift Card') {
                             return 'gift-card'
@@ -101,7 +103,9 @@ angular.module('skyZoneApp')
                                             logSuccessStopLoading('Order successfully refunded. Complete transaction to issue payment.');
                                             $scope.order = order;
                                             var msg = (order.totalAmountDue) ? 'Change Due: ' + $filter('currency')($scope.getOrderCashPaymentTotalForRefund(order)) : 'No Change Due.';
-
+                                            if(doPopDrawer){
+                                                EpsonService.popDrawer();
+                                            }
                                             $rootScope.$broadcast('szeConfirm', {
                                                 title: msg,
                                                 message: '',
@@ -111,43 +115,7 @@ angular.module('skyZoneApp')
                                                         //go to start
                                                         $location.path('/skypos/start/' + $scope.park.parkUrlSegment);
                                                     }
-                                                },
-                                                // cancel: {
-                                                //     label: 'Activate Gift Card',
-                                                //     action: function($clickEvent) {
-                                                //         var gcModal = $modal.open({
-                                                //             animation: true,
-                                                //             size:'md',
-                                                //             templateUrl: 'static/components/skypos-payment/gift-card-issuance.html',
-                                                //             link: function(scope, elem, attr){
-                                                //                 elem.find('#cardNumber').focus();
-                                                //             },
-                                                //             controller: function($scope, $modalInstance){
-                                                //                 $scope.giftCard = {};
-                                                //                 $scope.activateGiftCard = function(gc){
-                                                //                     $rootScope.$broadcast('szeShowLoading');
-                                                //                     GiftCardsService.issueCard(GiftCardsService.createIssueGiftCard(gc.cardNumber, gc.amount, $scope.order.id))
-                                                //                         .success(function(result){
-                                                //                             alert(result.resultText)
-                                                //                             if(!result.isFailure){
-                                                //                                 $modalInstance.close(result);
-                                                //                             }
-                                                //                             console.log('giftcard issued: ',result);
-                                                //                             $rootScope.$broadcast('szeHideLoading');
-                                                //                         })
-                                                //                         .error(logErrorStopLoading)
-                                                //                 };
-                                                //             }
-                                                //         })
-
-                                                //         gcModal.result.then( function (giftCardResult) {
-                                                //             $rootScope.$broadcast('szeShowLoading');
-                                                //             $scope.goToStartScreen(order);
-                                                //         }, function(reason){
-
-                                                //         })
-                                                //     }
-                                                // }
+                                                }
                                             })
                                             console.log($scope.order);
                                         }, logErrorStopLoading)
@@ -239,7 +207,8 @@ angular.module('skyZoneApp')
                     var title = (isRefund)? 'Refund Transaction?':'Cancel Transaction?';
                     var message = (isRefund)? 'Refunding this transaction will release any reservations and navigate back to the Start screen. Continue?'
                         :'Cancelling this transaction will release any pending reservations and navigate back to the Start screen. Continue?';
-                        paymentsCache = angular.copy($scope.existingPayments);
+                    paymentsCache = angular.copy($scope.existingPayments);
+                    doPopDrawer = false;
 
                     $rootScope.$broadcast('szeConfirm', {
                         title: title,
