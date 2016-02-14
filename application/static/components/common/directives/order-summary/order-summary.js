@@ -79,8 +79,9 @@ angular.module('skyZoneApp')
 
                     $rootScope.$broadcast('szeShowLoading');
                     // for (var i in $scope.existingPayments) {
+
                         var payment = $scope.existingPayments.pop();
-                        
+
                         console.log('refunding payment: ', payment);
 
                         var paymentType = getPaymentEndpoint(payment.recordType.name);
@@ -89,7 +90,7 @@ angular.module('skyZoneApp')
                         OrderService.refundPayment($scope.order.id, payment, paymentType)
                             .then(OrderService.updateOrderStatus, logErrorStopLoading)
                             .then(function(order) {
-                                if (order.paymentStatus != 'Unpaid') {
+                                if ($scope.existingPayments.length > 0) {
                                     console.log('ORDER UNPAID -- REFUNDING');
                                     $scope.refundOrder(order);
                                 } else {
@@ -213,8 +214,8 @@ angular.module('skyZoneApp')
 
                             if (data.role === 'pos_mgr') {
                                 //TODO:open the till
-
-                                $scope.refundOrder($scope.order);
+                                $scope.cancelOrder(true);
+                                // $scope.refundOrder($scope.order);
 
 
                             } else {
@@ -232,28 +233,60 @@ angular.module('skyZoneApp')
 
                 ////////////////////////////////////
 
-                $scope.cancelOrder = function() {
+                $scope.cancelOrder = function(isRefund) {
+
+                    var title = (isRefund)? 'Refund Transaction?':'Cancel Transaction?';
+                    var message = (isRefund)? 'Refunding this transaction will release any reservations and navigate back to the Start screen. Continue?'
+                        :'Cancelling this transaction will release any pending reservations and navigate back to the Start screen. Continue?';
+
 
                     $rootScope.$broadcast('szeConfirm', {
-                        title: 'Cancel Transaction?',
-                        message: 'Cancelling this transaction will release any pending reservations and navigate back to the Start screen. Continue?',
+                        title: title,
+                        message: message,
                         confirm: {
                             label: 'Continue',
                             action: function($clickEvent) {
 
                                 $rootScope.$broadcast('szeShowLoading');
-                                if ($scope.order.orderItems && $scope.order.orderItems.length > 0) {
+                                if($scope.existingPayments.length > 0){
+                                    $scope.refundOrder($scope.order)
+                                    .then(function(result) {
+                                            if ($scope.order.orderItems && $scope.order.orderItems.length > 0) {
+                                                var foundRes = false;
+                                                angular.forEach($scope.order.orderItems, function(item) {
+                                                    if (item.reservation) {
+                                                        foundRes = true;
+                                                        OrderService.deleteOrderLineItem($scope.order.id, item.id)
+                                                        .then(function(result){
+                                                            OrderService.deleteLocalOrder();
+                                                            $rootScope.$broadcast('szeHideLoading');
+                                                            $location.path('/skypos/start/' + $routeParams.parkUrlSegment);
+                                                        }, logErrorStopLoading);
+                                                    }
+                                                });
+                                                if (!foundRes) {
+                                                    OrderService.deleteLocalOrder();
+                                                    $rootScope.$broadcast('szeHideLoading');
+                                                    $location.path('/skypos/start/' + $routeParams.parkUrlSegment);
+                                                }
+                                            } else {
+                                                OrderService.deleteLocalOrder();
+                                                $rootScope.$broadcast('szeHideLoading');
+                                                $location.path('/skypos/start/' + $routeParams.parkUrlSegment);
+                                            }
+
+                                    }, logErrorStopLoading);
+                                }
+                                else if ($scope.order.orderItems && $scope.order.orderItems.length > 0) {
                                     var foundRes = false;
                                     angular.forEach($scope.order.orderItems, function(item) {
                                         if (item.reservation) {
                                             foundRes = true;
                                             OrderService.deleteOrderLineItem($scope.order.id, item.id)
-                                            .then($scope.refundOrder, logErrorStopLoading)
-                                            .then(function(result) {
+                                            .then(function(result){
                                                 OrderService.deleteLocalOrder();
                                                 $rootScope.$broadcast('szeHideLoading');
                                                 $location.path('/skypos/start/' + $routeParams.parkUrlSegment);
-                                                return;
                                             }, logErrorStopLoading);
                                         }
                                     });
