@@ -1,6 +1,20 @@
 'use strict';
 
 angular.module('skyZoneApp')
+    .filter('swipedFirst', function(){
+        return function(inputArray) {
+            var out = [];
+            angular.forEach(inputArray, function(payment){
+                if(payment.entryMode.indexOf('swiped') > -1){
+                    out.unshift(payment);
+                }
+                else {
+                    out.push(payment);
+                }
+            })
+            return out;
+        }
+    })
     .directive('skyposOrderSummary', ['$rootScope', '$location', '$routeParams', 'OrderService', 'UserService', '$filter','EpsonService', function($rootScope, $location, $routeParams, OrderService, UserService, $filter,EpsonService) {
         // Runs during compile
         return {
@@ -96,7 +110,7 @@ angular.module('skyZoneApp')
                                 if (paymentsCache.length > 0) {
                                     console.log('ORDER UNPAID -- REFUNDING');
                                     $scope.refundOrder(order);
-                                } else {
+                                } else if(payment.entryMode.indexOf('swiped') === -1){
                                     OrderService.processOrder(order, 'Refunded')
                                         .then(function(order) {
                                             console.log('order updated order refund')
@@ -129,6 +143,25 @@ angular.module('skyZoneApp')
                                             logErrorStopLoading(err);
                                             $scope.refundInProgress = false;
                                         });
+                                } else{
+                                    console.log('order updated order refund')
+                                    logSuccessStopLoading('Order successfully refunded. Complete transaction to issue payment.');
+                                    $scope.order = order;
+                                    var msg = (order.totalAmountDue) ? 'Change Due: ' + $filter('currency')($scope.getOrderCashPaymentTotalForRefund(order)) : 'No Change Due.';
+                                    if(doPopDrawer){
+                                        EpsonService.popDrawer();
+                                    }
+                                    $rootScope.$broadcast('szeConfirm', {
+                                        title: msg,
+                                        message: '',
+                                        confirm: {
+                                            label: 'Return to Start',
+                                            action: function($clickEvent) {
+                                                //go to start
+                                                $location.path('/skypos/start/' + $scope.park.parkUrlSegment);
+                                            }
+                                        }
+                                    })
                                 }
                                 //todo pop drawer, print receipt w refund
                             }, logErrorStopLoading)
@@ -364,6 +397,8 @@ angular.module('skyZoneApp')
                     } else {
                         $scope.existingPayments = auths.concat(sales);
                     }
+
+                    $scope.existingPayments = $filter('swipedFirst')($scope.existingPayments);
                 }
 
                 $scope.populateExistingPayments($scope.order.payments);
