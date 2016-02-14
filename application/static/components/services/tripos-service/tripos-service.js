@@ -53,7 +53,7 @@
 			
 			$http(config)
 				.success(function(result) {
-					if ( result.hasErrors ) {
+					if ( result._hasErrors ) {
 						def.reject(result) 
 					} else {
 						def.resolve(result);
@@ -82,7 +82,7 @@
 
 			$http(config)
 				.success(function(result) {
-					if ( result.hasErrors ) {
+					if ( result._hasErrors ) {
 						def.reject(result) 
 					} else {
 						def.resolve(result);
@@ -111,7 +111,7 @@
 			
 			$http(config)
 			.success(function(result) {
-				if ( result.hasErrors ) {
+				if ( result._hasErrors ) {
 					def.reject(result) 
 				} else {
 					def.resolve(result);
@@ -140,7 +140,7 @@
 
 			$http(config)
 				.success(function(result) {
-					if ( result.hasErrors ) {
+					if ( result._hasErrors ) {
 						def.reject(result) 
 					} else {
 						def.resolve(result);
@@ -198,7 +198,7 @@
 
 			$http(config)
 				.success(function(result) {
-					if ( result.hasError ) {
+					if ( result._hasErrors ) {
 						HardwareService.appendConsoleOutputArray('[TRIPOS] -- ERROR Communicating to Payment Device');
 						def.reject(result);
 					} else {
