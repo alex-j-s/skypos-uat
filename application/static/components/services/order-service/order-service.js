@@ -753,7 +753,7 @@ angular.module('skyZoneApp')
                 console.log('refund response: ', swipeResponse);
           	  return {
           		  'transactionId': swipeResponse.transactionId,
-                    'amount': swipeResponse.approvedAmount,
+                    'amount': swipeResponse.totalAmount,
                     'approvalNumber': swipeResponse.approvalNumber,
                     'binValue': swipeResponse.binValue,
                     'statusCode': swipeResponse.statusCode,

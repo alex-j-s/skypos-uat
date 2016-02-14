@@ -305,6 +305,11 @@ angular.module('skyZoneApp')
 
                 var def = $q.defer();
 
+                if ( quantity === 0 || $scope.order.status !== 'In Progress') {
+                    def.resolve($scope.order);
+                    return def.promise;
+                }
+
                 OrderService.addLineItemToOrder($scope.order.id,
                         OrderService.createAddOnLineItem(productId, quantity))
                     .then(function(order) {

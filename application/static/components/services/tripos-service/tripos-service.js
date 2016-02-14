@@ -13,8 +13,8 @@
  		var self = this;
 
  		self.url = '/tripos/';
- 		//self.laneId = 1;
- 		self.laneId = 9999;
+ 		self.laneId = 1;
+ 		//self.laneId = 9999;
 
  		self.getAPI = function() {
  			var def = PromiseFactory.getInstance();
@@ -97,12 +97,18 @@
 
 		}
 
+		// self.return = function(amount,transactionId,) {
+		// 	var def = PromiseFactory.getInstance();
+		// 	var returnUrl = '/tripos/'
+		// }
+
 		self.refund = function(amount) {
 			var def = PromiseFactory.getInstance();
 			var refundUrl = '/tripos/refund'
 			var request = {};
 			request.laneId = self.laneId;
-			request.amount = amount;
+			request.transactionAmount = amount;
+			request.cardHolderPresentCode = 'Present';
 			var config = {
 				'url': refundUrl,
 				'method': 'POST',
