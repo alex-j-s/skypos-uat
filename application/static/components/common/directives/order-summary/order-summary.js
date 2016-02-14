@@ -46,19 +46,19 @@ angular.module('skyZoneApp')
                     return $scope.order.status == 'Cancelled';
                 }
 
+                $scope.refundInProgress = false;
                 $scope.refundOrder = function(order) {
 
-                    $scope.refundInProgress = undefined;
 
                     console.log('refund order')
                         // return logErrorStopLoading('Coming soon!');
 
-                    if ( $scope.refundInProgress ) { 
+                    if ( !$scope.refundInProgress ) { 
                         console.log('REFUND ALREADY IN PROGRESS');
-                        return; 
+                        $scope.populateExistingPayments(order.payments);
                     }
-                    $scope.refundInProgress = true;
 
+                    $scope.refundInProgress = true;
 
                     function getPaymentEndpoint(recTypeName) {
                         if (recTypeName === 'Cash') {
@@ -78,18 +78,17 @@ angular.module('skyZoneApp')
 
 
                     $rootScope.$broadcast('szeShowLoading');
-                    $scope.populateExistingPayments(order.payments);
-                    for (var i in $scope.existingPayments) {
-                        var payment = $scope.existingPayments[i];
+                    // for (var i in $scope.existingPayments) {
+                        var payment = $scope.existingPayments.pop();
                         console.log('refunding payment: ', payment);
 
                         var paymentType = getPaymentEndpoint(payment.recordType.name);
 
 
                         OrderService.refundPayment($scope.order.id, payment, paymentType)
-                            //.then(OrderService.updateOrderStatus, logErrorStopLoading)
+                            .then(OrderService.updateOrderStatus, logErrorStopLoading)
                             .then(function(order) {
-                                if (order.paymentStatus != 'Unpaid' && $scope.refundInProgress == undefined) {
+                                if (order.paymentStatus != 'Unpaid') {
                                     console.log('ORDER UNPAID -- REFUNDING');
                                     $scope.refundOrder(order);
                                 } else {
@@ -162,7 +161,7 @@ angular.module('skyZoneApp')
                                 }
                                 //todo pop drawer, print receipt w refund
                             }, logErrorStopLoading)
-                    }
+                    // }
 
                 }
 
