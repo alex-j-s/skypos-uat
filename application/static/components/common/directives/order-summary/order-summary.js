@@ -80,6 +80,7 @@ angular.module('skyZoneApp')
                     $rootScope.$broadcast('szeShowLoading');
                     // for (var i in $scope.existingPayments) {
                         var payment = $scope.existingPayments.pop();
+                        
                         console.log('refunding payment: ', payment);
 
                         var paymentType = getPaymentEndpoint(payment.recordType.name);
@@ -246,7 +247,9 @@ angular.module('skyZoneApp')
                                     angular.forEach($scope.order.orderItems, function(item) {
                                         if (item.reservation) {
                                             foundRes = true;
-                                            OrderService.deleteOrderLineItem($scope.order.id, item.id).then(function(result) {
+                                            OrderService.deleteOrderLineItem($scope.order.id, item.id)
+                                            .then($scope.refundOrder, logErrorStopLoading)
+                                            .then(function(result) {
                                                 OrderService.deleteLocalOrder();
                                                 $rootScope.$broadcast('szeHideLoading');
                                                 $location.path('/skypos/start/' + $routeParams.parkUrlSegment);
