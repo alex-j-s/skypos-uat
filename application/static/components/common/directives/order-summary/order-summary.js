@@ -47,16 +47,17 @@ angular.module('skyZoneApp')
                 }
 
                 $scope.refundInProgress = false;
+                var paymentsCache = [];
                 $scope.refundOrder = function(order) {
 
 
                     console.log('refund order')
                         // return logErrorStopLoading('Coming soon!');
 
-                    if ( !$scope.refundInProgress ) { 
-                        console.log('REFUND ALREADY IN PROGRESS');
-                        $scope.populateExistingPayments(order.payments);
-                    }
+                    // if ( !$scope.refundInProgress ) { 
+                    //     console.log('REFUND ALREADY IN PROGRESS');
+                    //     $scope.populateExistingPayments(order.payments);
+                    // }
 
                     $scope.refundInProgress = true;
 
@@ -80,7 +81,7 @@ angular.module('skyZoneApp')
                     $rootScope.$broadcast('szeShowLoading');
                     // for (var i in $scope.existingPayments) {
 
-                        var payment = $scope.existingPayments.pop();
+                        var payment = paymentsCache.pop();
 
                         console.log('refunding payment: ', payment);
 
@@ -238,7 +239,7 @@ angular.module('skyZoneApp')
                     var title = (isRefund)? 'Refund Transaction?':'Cancel Transaction?';
                     var message = (isRefund)? 'Refunding this transaction will release any reservations and navigate back to the Start screen. Continue?'
                         :'Cancelling this transaction will release any pending reservations and navigate back to the Start screen. Continue?';
-
+                        paymentsCache = angular.copy($scope.existingPayments);
 
                     $rootScope.$broadcast('szeConfirm', {
                         title: title,
