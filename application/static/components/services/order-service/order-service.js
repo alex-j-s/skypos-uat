@@ -523,8 +523,9 @@ angular.module('skyZoneApp')
 
             self.refundPayment = function(orderId, payment, paymentType) {
                 var def = $q.defer();
-                if(payment.entryMode =="swiped" && payment.transactionType!="Refund"){
-                	TriPOSService.refund(payment.amount).then(function(data) {
+                if(payment.entryMode.indexOf("swiped") !== -1 && payment.transactionType!="Refund"){
+                    var triposPaymentType = payment.entryMode.split(',')[1];
+                	TriPOSService.return(payment.amount,payment.transactionId,triposPaymentType).then(function(data) {
                 		console.log('payment capture compelte: ', data); 
                 		//  data.approvedAmount =payment.amount; //for testing purpose remove it later
                 		if ( data._hasErrors ) {
@@ -735,7 +736,7 @@ angular.module('skyZoneApp')
                       'isApproved': swipeResponse.isApproved,
                      // 'transactionDateTime': swipeResponse.transactionDateTime!=null?swipeResponse.transactionDateTime.split(".")[0]:"",
                      // 'signature': swipeResponse.signature!=null?swipeResponse.signature.data:"",
-                      'entryMode': 'swiped',
+                      'entryMode': 'swiped,' + swipeResponse.paymentType,
                       'cashBackAmount': swipeResponse.cashbackAmount,
                       'debitSurchargeAmount': swipeResponse.debitSurchargeAmount,
                       'pinVerified': swipeResponse.pinVerified,

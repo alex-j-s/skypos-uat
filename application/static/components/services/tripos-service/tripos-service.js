@@ -97,10 +97,29 @@
 
 		}
 
-		// self.return = function(amount,transactionId,) {
-		// 	var def = PromiseFactory.getInstance();
-		// 	var returnUrl = '/tripos/'
-		// }
+		self.return = function(amount,transactionId,paymentType) {
+			var def = PromiseFactory.getInstance();
+			var returnUrl = '/tripos/return/' + transactionId + '/' + paymentType;
+			var request = {
+				'laneId':self.laneId,
+				'transactionAmount':amount,
+				'cardHolderPresentCode':'Present'
+			};
+			var config = {
+				'url':returnUrl,
+				'method':'POST',
+				'data':request
+			};
+
+			$http(config)
+				.success(function(result) {
+					def.resolve(result);
+				})
+				.error(function(err) {
+					def.reject(err);
+				});
+			return def.promise;
+		}
 
 		self.refund = function(amount) {
 			var def = PromiseFactory.getInstance();
