@@ -741,7 +741,11 @@ angular.module('skyZoneApp')
                       'pinVerified': swipeResponse.pinVerified,
                       'currencyCode': (currentOrder) ? currentOrder.currencyCode : 'USD',
                       'paymentType': 'Deposit',
-                      'amountType': 'Standard Deposit'
+                      'amountType': 'Standard Deposit',
+                      'creditCardNumber':swipeResponse.accountNumber,
+                      'creditCardExpMonth':swipeResponse.expirationMonth,
+                      'creditCardExpYear':swipeResponse.expirationYear,
+                      'creditCardType':swipeResponse.cardLogo
                   };
             }
             
@@ -762,7 +766,11 @@ angular.module('skyZoneApp')
                     'pinVerified': swipeResponse.pinVerified,
                     'currencyCode': (currentOrder) ? currentOrder.currencyCode : 'USD',
                     'paymentType': 'Refund',
-                    'amountType': 'Standard Deposit'
+                    'amountType': 'Standard Deposit',
+	            	'creditCardNumber':swipeResponse.accountNumber,
+	                'creditCardExpMonth':swipeResponse.expirationMonth,
+	                'creditCardExpYear':swipeResponse.expirationYear,
+	                'creditCardType':swipeResponse.cardLogo
                 };
           }
             

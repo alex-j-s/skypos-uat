@@ -53,8 +53,12 @@
 			
 			$http(config)
 				.success(function(result) {
-				console.log('RESULT FROM TRIPOS: '+result);
-					def.resolve(result);
+					if ( result.hasErrors ) {
+						def.reject(result) 
+					} else {
+						def.resolve(result);
+						HardwareService.appendConsoleOutputArray('[TRIPOS] -- swipeCard ' + self.laneId);
+					}
 				})
 				.error(function(err) {
 					console.log('ERROR FROM TRIPOS: '+err);
@@ -78,8 +82,12 @@
 
 			$http(config)
 				.success(function(result) {
-					console.log('Response from TriPOS Void: ', result);
-					def.resolve(result);
+					if ( result.hasErrors ) {
+						def.reject(result) 
+					} else {
+						def.resolve(result);
+						HardwareService.appendConsoleOutputArray('[TRIPOS] -- voidTransaction: ' + self.laneId);
+					}
 				})
 				.error(function(err) {
 					console.log('Error Response from TriPOS Void: ', err);
@@ -103,8 +111,12 @@
 			
 			$http(config)
 			.success(function(result) {
-				console.log('Response from TriPOS refund: ', result);
-				def.resolve(result);
+				if ( result.hasErrors ) {
+					def.reject(result) 
+				} else {
+					def.resolve(result);
+					HardwareService.appendConsoleOutputArray('[TRIPOS] -- Refund processed ');
+				}
 			})
 			.error(function(err) {
 				console.log('Error Response from TriPOS refund: ', err);
