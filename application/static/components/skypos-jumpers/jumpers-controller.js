@@ -109,7 +109,8 @@ angular.module('skyZoneApp')
 
             $scope.newJumper = function(jumper) {
                 console.log('jumper: ', jumper)
-                if ($scope.getAge(jumper.birthday) >= 18) {
+                if ($scope.getAge(jumper.birthday) >= 18 && jumper.phone && jumper.email 
+                    && jumper.phone.length > 0 && jumper.email.length > 0) {
                     UserService.createAccount(jumper).then(function(customer) {
                         $scope.addJumper(customer);
                     }, logErrorStopLoading)
@@ -124,14 +125,27 @@ angular.module('skyZoneApp')
 
 
             $scope.getAge = function(birthday) {
-                var ageDifMs = Date.now() - new Date(birthday).getTime();
-                var ageDate = new Date(ageDifMs); // miliseconds from epoch
-                return Math.abs(ageDate.getUTCFullYear() - 1970);
+                if(birthday && birthday.length > 0){
+                    var ageDifMs = Date.now() - new Date(birthday).getTime();
+                    var ageDate = new Date(ageDifMs); // miliseconds from epoch
+                    return Math.abs(ageDate.getUTCFullYear() - 1970);
+                }
+                else{
+                    return 0;
+                }
             };
 
 
 
-            $scope.doGuestSearch = function(crit) {
+            $scope.doGuestSearch = function(critEmail, critPhone) {
+                var crit = {};
+                if(critEmail){
+                    crit.email = critEmail
+                }
+                if(critPhone){
+                    crit.phone = critPhone
+                }
+
                 $scope.showModal = false;
                 var gsModal = $modal.open({
                     animation: true,
@@ -139,15 +153,13 @@ angular.module('skyZoneApp')
                     size: 'lg',
                     resolve: {
                         'Criteria': function() {
-                            return {
-                                email: crit
-                            };
+                            return crit;
                         }
                     },
                     controller: 'GuestSearchCtrl'
                 });
 
-                gsModal.result.then($scope.addJumper, logErrorStopLoading);
+                gsModal.result.then($scope.findReservationItem, logErrorStopLoading);
             };
 
             function getMinor(guest, minorInfo) {
@@ -160,6 +172,54 @@ angular.module('skyZoneApp')
                     }
                 })
                 return out;
+            }
+
+            $scope.findReservationItem = function(jumper){
+                var riModal = $modal.open({
+                    animation: true,
+                    templateUrl: 'static/components/skypos-jumpers/res-layout.html',
+                    size: 'lg',
+                    resolve: {
+                        'Jumper': function() {
+                            return jumper;
+                        },
+                        'ReservationItems': function(){
+                            return getAvailableReservationItems();
+                        }
+                    },
+                    controller: 'SPResCtrl'
+                });
+
+                riModal.result.then($scope.addJumper, logErrorStopLoading);
+            };
+
+            function getAvailableReservationItems(){
+                var res;
+                var ids = [];
+                var availResItems = [];
+                var availReservations = [];
+                angular.forEach($scope.order.participants, function(jumper){
+                    if(jumper.reservationItemId != null){
+                        ids.push(jumper.reservationItemId);
+                    }
+                });
+                angular.forEach($scope.order.orderItems, function(oi){
+                    if(oi.reservation != null){
+                        res = angular.copy(oi.reservation);
+                        availResItems = [];
+                        angular.forEach(oi.reservation.reservationItems, function(ri){
+                            if(ids.indexOf(ri.id) === -1){
+                                availResItems.push(angular.copy(ri));
+                            }
+                        })
+                        if(availResItems.length > 0){
+                            res.reservationItems = availResItems;
+                            oi.reservation = angular.copy(res);
+                        }
+                        availReservations.push(angular.copy(oi));
+                    }
+                })
+                return availReservations;
             }
 
             $scope.addJumper = function(jumper) {
@@ -177,7 +237,7 @@ angular.module('skyZoneApp')
                     // Order.numberOfGuests = (Order.numberOfGuests)?Order.numberOfGuests+1:Order.numberOfJumpers;
                     
                     angular.forEach(AddOnStatus.getStatus(), function(addon) {
-                        AddOnStatus.setStatus(addon.prod.id, jumper.id, true)
+                        AddOnStatus.setStatus(addon.prod.id, jumper.id, false)
                     })
                     
                     def.resolve(OrderService.addOrderParticipant(Order.id, OrderService.createOrderParticipant(jumper))
@@ -244,6 +304,11 @@ angular.module('skyZoneApp')
             $scope.addLineItem = function(productId, quantity) {
 
                 var def = $q.defer();
+
+                if ( quantity === 0 || $scope.order.status !== 'In Progress') {
+                    def.resolve($scope.order);
+                    return def.promise;
+                }
 
                 OrderService.addLineItemToOrder($scope.order.id,
                         OrderService.createAddOnLineItem(productId, quantity))

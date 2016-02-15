@@ -186,20 +186,26 @@ angular
         $httpProvider.interceptors.push('authInterceptor');
         $httpProvider.interceptors.push('triPOSAuthInterceptor');
     }])
-    .run(['$rootScope', '$timeout', '$location', 'formlyConfig', 'UserService', 'AccessManager', 'USER_ROLES', 'PrintService','VerifoneService','EpsonService','BocaService',  
-        function($rootScope, $timeout, $location, formlyConfig, UserService, AccessManager, USER_ROLES, PrintService, VerifoneService,EpsonService,BocaService) {
+    .run(['$rootScope', '$timeout', '$location', 'formlyConfig', 'UserService', 'AccessManager', 'USER_ROLES', 'PrintService','TriPOSService','EpsonService','BocaService','AveryDennisonService',  
+        function($rootScope, $timeout, $location, formlyConfig, UserService, AccessManager, USER_ROLES, PrintService, TriPOSService,EpsonService,BocaService,AveryDennisonService) {
         AccessManager.reset('pos_sys');
         
         console.log('run')
         
         
-       setTimeout(function () {
-           VerifoneService.connect();
-       }, 3100)
+       // setTimeout(function () {
+       //     VerifoneService.connect();
+       // }, 3100)
+
+
        
-       setTimeout(function () {
-        VerifoneService.clearAndShowIdle();   
-       }, 4000);
+       // setTimeout(function () {
+       //  VerifoneService.clearAndShowIdle();   
+       // }, 4000);
+
+    setTimeout(function() {
+        TriPOSService.showIdle();
+    }, 3100);
     
     setTimeout(function() {
         EpsonService.connect();
@@ -215,6 +221,7 @@ angular
     
     setTimeout(function() {
         BocaService.connect();
+        AveryDennisonService.connect();
     },3000);
     
     // setTimeout(function() {

@@ -10,8 +10,8 @@
 
 
 angular.module('skyZoneApp')
-    .service('OrderService', ['UserService', '$rootScope', '$filter', '$location', '$http', '$q', 'StorageService', 'PromiseFactory', 'ParkService', 'ProductService', 'ProfileService',
-        function(UserService, $rootScope, $filter, $location, $http, $q, StorageService, PromiseFactory, ParkService, ProductService, ProfileService) {
+    .service('OrderService', ['UserService', '$rootScope', '$filter', '$location', '$http', '$q', 'StorageService', 'PromiseFactory', 'ParkService', 'ProductService', 'ProfileService','TriPOSService',
+        function(UserService, $rootScope, $filter, $location, $http, $q, StorageService, PromiseFactory, ParkService, ProductService, ProfileService,TriPOSService) {
             var self = this;
 
             var currentOrder;
@@ -318,6 +318,7 @@ angular.module('skyZoneApp')
                     ProfileService.getProfile(participant.id).then(function(profile) {
                         if (profile.data) profile = profile.data;
                         profile.participantId = participant.participantId;
+                        profile.reservationItemId = participant.reservationItemId;
                         profile.guestOfHonor = participant.guestOfHonor;
                         participantMap['_' + participant.participantId + '_'] = profile;
                         defMap['_' + participant.participantId + '_'].resolve(participantMap['_' + participant.participantId + '_']);
@@ -522,22 +523,45 @@ angular.module('skyZoneApp')
 
             self.refundPayment = function(orderId, payment, paymentType) {
                 var def = $q.defer();
-
-                var payload = {
-                    'amount':payment.amount,
-                    'transactionId': payment.transactionId,
-                    'paymentType': 'Refund',
-                    'amountType': 'Standard Deposit',
-                    'orderId': orderId
+                if( payment.entryMode && payment.entryMode.indexOf("swiped") !== -1 && payment.transactionType!="Refund"){
+                    var triposPaymentType = payment.entryMode.split(',')[1];
+                	TriPOSService.return(payment.amount,payment.transactionId,triposPaymentType).then(function(data) {
+                		console.log('payment capture compelte: ', data); 
+                		//  data.approvedAmount =payment.amount; //for testing purpose remove it later
+                		if ( data._hasErrors ) {
+                			def.reject(data.errors);
+                		} else {
+                			var payload = self.swipeCreditORDebitCardRefund(data);
+                			self.addCreditCardPayment(orderId,payload)
+                			.then(function(order) {
+                				def.resolve(order);
+                			},function(err) {
+                				def.reject(err);
+                			});
+                		}    
+                	},function(err) {
+                		def.reject(err);
+                	});  
+                }else{
+                	var payload = {
+                			'amount':payment.amount,
+                			'transactionId': payment.transactionId,
+                			'paymentType': 'Refund',
+                			'amountType': 'Standard Deposit',
+                			'orderId': orderId
+                		}
+                	
+                	if ( paymentType == 'gift-card' ) {
+                		payload.giftCardNumber = payment.giftCardNumber;
+                	}
+                	updateOrderHandler('POST', '/api/orders/' + orderId + '/payments/' + paymentType, payload)
+                	.then(function(order) {
+                		def.resolve(order);
+                	}, function(err) {
+                		def.reject(err);
+                	});
+                	
                 }
-
-                updateOrderHandler('POST', '/api/orders/' + orderId + '/payments/' + paymentType, payload)
-                    .then(function(order) {
-                        def.resolve(order);
-                    }, function(err) {
-                        def.reject(err);
-                    });
-
                 return def.promise;
             };
 
@@ -702,8 +726,55 @@ angular.module('skyZoneApp')
                 return out;
             };
 
-
-
+            self.swipeCreditORDebitCardPayment = function(swipeResponse){
+            	  return {
+            		  'transactionId': swipeResponse.transactionId,
+                      'amount': swipeResponse.approvedAmount,
+                      'approvalNumber': swipeResponse.approvalNumber,
+                      'binValue': swipeResponse.binValue,
+                      'statusCode': swipeResponse.statusCode,
+                      'isApproved': swipeResponse.isApproved,
+                     // 'transactionDateTime': swipeResponse.transactionDateTime!=null?swipeResponse.transactionDateTime.split(".")[0]:"",
+                     // 'signature': swipeResponse.signature!=null?swipeResponse.signature.data:"",
+                      'entryMode': 'swiped,' + swipeResponse.paymentType,
+                      'cashBackAmount': swipeResponse.cashbackAmount,
+                      'debitSurchargeAmount': swipeResponse.debitSurchargeAmount,
+                      'pinVerified': swipeResponse.pinVerified,
+                      'currencyCode': (currentOrder) ? currentOrder.currencyCode : 'USD',
+                      'paymentType': 'Deposit',
+                      'amountType': 'Standard Deposit',
+                      'creditCardNumber':swipeResponse.accountNumber,
+                      'creditCardExpMonth':swipeResponse.expirationMonth,
+                      'creditCardExpYear':swipeResponse.expirationYear,
+                      'creditCardType':swipeResponse.cardLogo
+                  };
+            }
+            
+            self.swipeCreditORDebitCardRefund = function(swipeResponse){
+                console.log('refund response: ', swipeResponse);
+          	  return {
+          		  'transactionId': swipeResponse.transactionId,
+                    'amount': swipeResponse.totalAmount,
+                    'approvalNumber': swipeResponse.approvalNumber,
+                    'binValue': swipeResponse.binValue,
+                    'statusCode': swipeResponse.statusCode,
+                    'isApproved': swipeResponse.isApproved,
+                   // 'transactionDateTime': swipeResponse.transactionDateTime!=null?swipeResponse.transactionDateTime.split(".")[0]:"",
+                   // 'signature': swipeResponse.signature!=null?swipeResponse.signature.data:"",
+                    'entryMode': 'swiped',
+                    'cashBackAmount': swipeResponse.cashbackAmount,
+                    'debitSurchargeAmount': swipeResponse.debitSurchargeAmount,
+                    'pinVerified': swipeResponse.pinVerified,
+                    'currencyCode': (currentOrder) ? currentOrder.currencyCode : 'USD',
+                    'paymentType': 'Refund',
+                    'amountType': 'Standard Deposit',
+	            	'creditCardNumber':swipeResponse.accountNumber,
+	                'creditCardExpMonth':swipeResponse.expirationMonth,
+	                'creditCardExpYear':swipeResponse.expirationYear,
+	                'creditCardType':swipeResponse.cardLogo
+                };
+          }
+            
             self.createCreditCardPayment = function(paymentInfo, amount) {
                 return {
                     'amount': amount,
@@ -780,6 +851,7 @@ angular.module('skyZoneApp')
 
             self.createOrderParticipant = function(guest) {
                 return {
+                    'reservationItemId':guest.reservationItemId,
                     'customerId': guest.id,
                     'guestOfHonor': angular.isUndefined(guest.guestOfHonor) ? false : guest.guestOfHonor
                 };

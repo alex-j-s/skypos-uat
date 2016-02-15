@@ -75,12 +75,15 @@ angular.module('skyZoneApp')
     	HardwareService.socket.emit('usb-write', { connectionId: self.connectionId, command:command });
     }
 	
-	self.printTicket = function(parkName,startTime,endTime,productName,date) {
-		var command = "<RC30,300><NR><HW2,2><F10>" + parkName;
-		command += "<RC150,400><NR><HW2,2><F12>" + startTime;
-		command += "<RC300,400><NR><HW2,2><F12>" + endTime;
-		command += "<RC500,350><NR><HW2,2><F3>" + productName;
-		command += "<RC700,300><NR><HW2,2><F10>" + date;
+	self.printTicket = function(parkName,startTime,endTime,productName,date,customerFirstInitial,customerLastName,customerAgeGroup,marketingText) {
+		var command = "<RC30,200><NR><HW2,2><F10>" + parkName;
+		command += "<RC125,200><NR><HW2,2><F3>" + customerLastName + ', ' + customerFirstInitial;
+		command += "<RC225,200><NR><HW1,1><F12>" + startTime + ' - ' + endTime;
+		//command += "<RC300,400><NR><HW2,2><F12>" + endTime;
+		command += "<RC325,200><NR><HW2,2><F3>" + productName;
+		command += "<RC400,200><NR><HW2,2><F3>" + customerAgeGroup;
+		command += "<RC475,200><NR><HW2,2><F3>" + date; 	
+		command += "<RC575,200><NR><HW2,2><F3>" + marketingText;
 		command += "<p>"
 		
 		HardwareService.socket.emit('usb-write', { connectionId: self.connectionId, command:command });
