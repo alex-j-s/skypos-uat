@@ -72,7 +72,7 @@
 			var def = PromiseFactory.getInstance();
 			var voidUrl = '/tripos/void/' + transactionId;
 			var request = {};
-			request.laneId = self.laneId;
+			request.laneId = self.laneId;s
 			request = JSON.stringify(request);
 			var config = {
 				'url': voidUrl,
@@ -96,7 +96,7 @@
 			return def.promise;
 
 		}
-
+ 
 		self.return = function(amount,transactionId,paymentType) {
 			var def = PromiseFactory.getInstance();
 			var returnUrl = '/tripos/return/' + transactionId + '/' + paymentType;
