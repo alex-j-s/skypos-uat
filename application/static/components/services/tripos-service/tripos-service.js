@@ -36,6 +36,10 @@
 
  			return def.promise;
  		}
+
+ 		self.reversalFlow = function() {
+ 			
+ 		}
  		
 		self.swipeCard = function(amount){
 			var def = PromiseFactory.getInstance();
