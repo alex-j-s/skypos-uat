@@ -531,7 +531,7 @@ angular.module('skyZoneApp')
                 		if ( data._hasErrors ) {
                 			def.reject(data.errors);
                 		} else {
-                			var payload = self.swipeCreditORDebitCardRefund(data);
+                			var payload = self.swipeCreditORDebitCardRefund(data, 'Reversal'); //still hard coded but fix it
                 			self.addCreditCardPayment(orderId,payload)
                 			.then(function(order) {
                 				def.resolve(order);
