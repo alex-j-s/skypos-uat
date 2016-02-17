@@ -37,9 +37,12 @@
  			return def.promise;
  		}
 
- 		self.reversalFlow = function() {
- 			
- 		}
+ 		
+ 	   function logErrorForPaymentReturn(err) {
+           $rootScope.$broadcast('szeError', 'Payment return issue '+JSON.stringify(err));
+           $scope.showModal = false;
+       }
+
  		
 		self.swipeCard = function(amount){
 			var def = PromiseFactory.getInstance();
@@ -71,6 +74,30 @@
 			return def.promise;
 				
 		}
+		
+		self.reversalFlow = function(amount,transactionId,paymentType){
+			var def = PromiseFactory.getInstance();
+			self.reversal(amount,transactionId,paymentType).success(function(result) {
+				def.resolve(result);
+			})
+			.error(function(err) {
+				logErrorForPaymentReturn(err);
+				self.voidTransaction(amount,transactionId,paymentType).success(function(result) {
+					def.resolve(result);
+				})
+				.error(function(err) {
+					logErrorForPaymentReturn(err);
+					self.return(amount,transactionId,paymentType).success(function(result) {
+						def.resolve(result);
+					})
+					.error(function(err) {
+						logErrorForPaymentReturn(err);
+						def.reject(result) 
+					});
+				});
+			});
+			return def.promise;
+		}
 
 		self.voidTransaction = function(transactionId) {
 			var def = PromiseFactory.getInstance();
@@ -86,7 +113,7 @@
 
 			$http(config)
 				.success(function(result) {
-					if ( result._hasErrors ) {
+					if ( result._hasErrors || !result.isApproved) {
 						def.reject(result) 
 					} else {
 						def.resolve(result);
@@ -99,6 +126,35 @@
 				});
 			return def.promise;
 
+		}
+		
+		self.reversal = function(amount,transactionId,paymentType) {
+			var def = PromiseFactory.getInstance();
+			var returnUrl = '/tripos/return/' + transactionId + '/' + paymentType;
+			var request = {
+				'laneId':self.laneId,
+				'transactionAmount':amount,
+				'cardHolderPresentCode':'Present'
+			};
+			var config = {
+				'url':returnUrl,
+				'method':'POST',
+				'data':request
+			};
+
+			$http(config)
+				.success(function(result) {
+					if ( result._hasErrors || !result.isApproved) {
+						def.reject(result) 
+					} else {
+						def.resolve(result);
+						HardwareService.appendConsoleOutputArray('[TRIPOS] -- voidTransaction: ' + self.laneId);
+					}
+				})
+				.error(function(err) {
+					def.reject(err);
+				});
+			return def.promise;
 		}
  
 		self.return = function(amount,transactionId,paymentType) {
@@ -117,7 +173,12 @@
 
 			$http(config)
 				.success(function(result) {
-					def.resolve(result);
+					if ( result._hasErrors || !result.isApproved) {
+						def.reject(result) 
+					} else {
+						def.resolve(result);
+						HardwareService.appendConsoleOutputArray('[TRIPOS] -- voidTransaction: ' + self.laneId);
+					}
 				})
 				.error(function(err) {
 					def.reject(err);
