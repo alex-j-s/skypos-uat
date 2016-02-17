@@ -78,9 +78,11 @@
 		self.reversalFlow = function(amount,transactionId,paymentType){
 			var def = PromiseFactory.getInstance();
 			self.reversal(amount,transactionId,paymentType).success(function(result) {
+				result.endpoint = 'reversal';
 				def.resolve(result);
 			})
 			.error(function(err) {
+<<<<<<< HEAD
 				//logErrorForPaymentReturn(err);
 				self.voidTransaction(transactionId).success(function(result) {
 					def.resolve(result);
@@ -103,6 +105,23 @@
 							def.reject(result) 
 						});
 					}
+=======
+				logErrorForPaymentReturn(err);
+				self.voidTransaction(amount,transactionId,paymentType).success(function(result) {
+					result.endpoint = 'void';
+					def.resolve(result);
+				})
+				.error(function(err) {
+					logErrorForPaymentReturn(err);
+					self.return(amount,transactionId,paymentType).success(function(result) {
+						result.endpoint = 'return';
+						def.resolve(result);
+					})
+					.error(function(err) {
+						logErrorForPaymentReturn(err);
+						def.reject(result) 
+					});
+>>>>>>> c1561d8e5bce25fe41e64f2313649b6c3b3d5c5a
 				});
 			});
 			return def.promise;
