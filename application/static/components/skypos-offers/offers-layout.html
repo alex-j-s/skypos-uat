@@ -145,8 +145,8 @@
                         <li><i class="fa fa-chevron-right ml20 mr20" style="padding: 13px 0 0;"></i></li>
                         <li>
                             <button class="btn btn-default btn-none">{{ getCategoryName(childCategory) }} <span class="caret"></button>
-                            <ul class="submenu" ng-show="viewCategory && viewCategory.childCategories">
-                                <li ng-repeat="cc in viewCategory.childCategories">
+                            <ul class="submenu" ng-show="parentCategory && parentCategory.childCategories">
+                                <li ng-repeat="cc in parentCategory.childCategories">
                                     <a ng-click="setChildCategory(cc)">{{ cc.name }}</a>
                                 </li>
                             </ul>
@@ -154,12 +154,14 @@
                     </div>
                     <div ng-if="enableChildren(childCategory)">
                         <li><i class="fa fa-chevron-right ml20 mr20" style="padding: 13px 0 0;"></i></li>
-                        <div class="3-category" ng-if="enableChildren(childCategory)">
+                        <li> <!-- class="3-category" ng-if="enableChildren(childCategory)"> -->
                             <button class="btn btn-default btn-none">{{ getCategoryName(grandChildCategory) }}  <span class="caret"></span></button>
-                            <li ng-repeat="cc in viewCategory.grandChildCategories">
+                            <ul class="submenu" ng-show="childCategory && childCategory.childCategories">
+                            <li ng-repeat="cc in childCategory.childCategories">
                                 <a ng-click="setGrandChildCategory(cc)">{{ cc.name }}</a>
                             </li>
-                        </div>
+                            </ul>
+                        </li>
                     </div>
                 </ul>
             </div>
