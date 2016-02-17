@@ -75,6 +75,8 @@ angular.module('skyZoneApp')
        var refundedPayments = [];
        var voidPaymentIds = [];
 
+       var isPINUsed = false;
+
        angular.forEach(order.payments,function(payment) {
         if ( payment.transactionType == 'Void' ) {
           voidPaymentIds.push(payment.transactionId);
@@ -85,31 +87,57 @@ angular.module('skyZoneApp')
             var payment = order.payments[i];
 
             if ( voidPaymentIds.indexOf(payment.transactionId) >= 0 ) { continue; }
+
+            if ( payment.isTriPOSTransaction ) {
+              var keys = ['Merchant Id','Transaction Date','Terminal Id','Account Number','Card Type','Transaction Type','Transaction Id','Entry Mode','Host Response Code','Approval Number'];
+              var values = [
+                payment.triPOSMerchantId,
+                payment.triPOSTransactionDateTime,
+                payment.triPOSTerminalId,
+                payment.creditCardNumber,
+                payment.creditCardType,
+                payment.triPOSTransactionType,
+                payment.transactionId,
+                payment.entryMode,
+                payment.triPOSHostResponseCodeMesg,
+                payment.approvalNumber
+              ]
+
+              if ( payment.triPOSPinUsed ) { isPINUsed = true } 
+
+              if ( payment.transactionType !== 'Reversal' ) {
+                keys.push('Amount');
+                values.push(payment.amount);
+              }
+
+              command += ecf.orderSection(keys,values);
+            } else {
             
-            if (payment.recordType.name == 'Cash' || payment.recordType.name == 'Check') {
-                popDrawer = true;
-            }
-            
-            if ( payment.transactionType != 'Capture' ) {
-            
-                if ( payment.paymentType == 'Refund' ) {
-                    refundedPayments.push(payment);
-                } else {
-            
-                    if ( payment.recordType.name == "Credit Card" ) {
-                        var keys = ['Payment Type','Card Number','Card Type','Amount']
-                        var values = [payment.recordType.name,payment.creditCardNumber,payment.creditCardType,$filter('currency')(payment.amount)];
+              if (payment.recordType.name == 'Cash' || payment.recordType.name == 'Check') {
+                  popDrawer = true;
+              }
+              
+              if ( payment.transactionType != 'Capture' ) {
+              
+                  if ( payment.paymentType == 'Refund' ) {
+                      refundedPayments.push(payment);
+                  } else {
+              
+                      if ( payment.recordType.name == "Credit Card" ) {
+                          var keys = ['Payment Type','Card Number','Card Type','Amount']
+                          var values = [payment.recordType.name,payment.creditCardNumber,payment.creditCardType,$filter('currency')(payment.amount)];
+                          command += ecf.orderSection(keys,values);
+                      } else if ( payment.recordType.name == "Gift Card" ) {
+                        var keys = ['Payment Type','Balance', 'Amount'];
+                        var values = [payment.recordType.name,$filter('currency')(payment.balance),$filter('currency')(payment.amount)]
                         command += ecf.orderSection(keys,values);
-                    } else if ( payment.recordType.name == "Gift Card" ) {
-                      var keys = ['Payment Type','Balance', 'Amount'];
-                      var values = [payment.recordType.name,$filter('currency')(payment.balance),$filter('currency')(payment.amount)]
-                      command += ecf.orderSection(keys,values);
-                    } else  {
-                        var keys = ['Payment Type','Amount']
-                        var values = [payment.recordType.name,$filter('currency')(payment.amount)];
-                        command += ecf.orderSection(keys,values);
-                    }
-                }
+                      } else  {
+                          var keys = ['Payment Type','Amount']
+                          var values = [payment.recordType.name,$filter('currency')(payment.amount)];
+                          command += ecf.orderSection(keys,values);
+                      }
+                  }
+              }
             }
         }
 
