@@ -78,7 +78,8 @@
 		self.reversalFlow = function(amount,transactionId,paymentType){
 			var def = PromiseFactory.getInstance();
 			self.reversal(amount,transactionId,paymentType).success(function(result) {
-				//result.endpoint = 'reversal';
+				result.transactionType = 'Reversal';
+				result.entryMode = 'None';
 				def.resolve(result);
 			})
 			.error(function(err) {

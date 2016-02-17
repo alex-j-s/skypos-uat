@@ -754,7 +754,7 @@ angular.module('skyZoneApp')
                       'triPOSPinUsed' : swipeResponse.paymentType=='Debit'?true:false,
                       'triPOSPaymentType' : swipeResponse.paymentType,
                       'triPOSTerminalId' : swipeResponse.terminalId,
-                      'triPOSTransactionType' : 'Sale',
+                      'triPOSTransactionType' : 'Sale'
                   };
             }
             

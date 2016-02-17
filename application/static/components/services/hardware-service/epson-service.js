@@ -233,6 +233,9 @@ angular.module('skyZoneApp')
           voidPaymentIds.push(payment.transactionId);
         }
        })
+
+       var isPINUsed = false;
+       var popDrawer = false;
                 
         for (var i in order.payments) {
             var payment = order.payments[i];
@@ -240,6 +243,12 @@ angular.module('skyZoneApp')
             if ( voidPaymentIds.indexOf(payment.transactionId) >= 0 ) { continue; }
             
            if ( payment.isTriPOSTransaction ) {
+
+              if ( payment.transactionType === 'Reversal' || payment.transactionType === 'Void' || payment.transactionType === 'Refund' || payment.transactionType === 'Return' ) {
+                refundedPayments.push(payment);
+                continue;
+              }
+
               var keys = ['Merchant Id','Transaction Date','Terminal Id','Account Number','Card Type','Transaction Type','Transaction Id','Entry Mode','Host Response Code','Approval Number'];
               var values = [
                 payment.triPOSMerchantId,
@@ -293,23 +302,49 @@ angular.module('skyZoneApp')
         }
        
        if ( refundedPayments.length  > 0 ) {
-        command += ecf.leftAlignTitleText('Refunded Payments: ');
+        command += ecf.leftAlignTitleText('Reversed Payments: ');
         for ( var i in refundedPayments ) {
             var payment = refundedPayments[i];
-            if ( payment.recordType.name == "Credit Card" ) {
-                        var keys = ['Payment Type','creditCardNumber','Card Type','Amount']
-                        var values = [payment.recordType.name,payment.creditCardNumber,payment.creditCardType,$filter('currency')(payment.amount)];
-                        command += ecf.orderSection(keys,values);
-                    } else  {
-                        var keys = ['Payment Type','Amount']
-                        var values = [payment.recordType.name,$filter('currency')(payment.amount)];
-                        command += ecf.orderSection(keys,values);
-                    }
+            if ( payment.isTriPOSTransaction ) {
+
+              var keys = ['Merchant Id','Transaction Date','Terminal Id','Account Number','Card Type','Transaction Type','Transaction Id','Entry Mode','Host Response Code','Approval Number'];
+              var values = [
+                payment.triPOSMerchantId,
+                payment.triPOSTransactionDateTime,
+                payment.triPOSTerminalId,
+                payment.creditCardNumber,
+                payment.creditCardType,
+                payment.triPOSTransactionType,
+                payment.transactionId,
+                payment.entryMode,
+                payment.triPOSHostResponseCodeMesg,
+                payment.approvalNumber
+              ]
+
+              if ( payment.triPOSPinUsed ) { isPINUsed = true } 
+
+              if ( payment.transactionType !== 'Reversal' ) {
+                keys.push('Amount');
+                values.push(payment.amount);
+              }
+
+              command += ecf.orderSection(keys,values);
+            } else {
+              if ( payment.recordType.name == "Credit Card" ) {
+                          var keys = ['Payment Type','creditCardNumber','Card Type','Amount']
+                          var values = [payment.recordType.name,payment.creditCardNumber,payment.creditCardType,$filter('currency')(payment.amount)];
+                          command += ecf.orderSection(keys,values);
+                      } else  {
+                          var keys = ['Payment Type','Amount']
+                          var values = [payment.recordType.name,$filter('currency')(payment.amount)];
+                          command += ecf.orderSection(keys,values);
+                      }
+            }
+          }
         }
-       }
         
-        if ( sigCopy ) {
-            command += ecf.paymentSection();
+        if ( !sigCopy ) {
+            command += ecf.messageLine('THANK YOU!');
         }
         
         //console.log("order number: ",order.orderNumber, order.orderNumber.replace('SZO-',''));
