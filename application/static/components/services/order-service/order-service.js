@@ -523,8 +523,9 @@ angular.module('skyZoneApp')
 
             self.refundPayment = function(orderId, payment, paymentType) {
                 var def = $q.defer();
-                if( payment.entryMode && payment.entryMode.indexOf("Swiped") !== -1 && payment.transactionType!="Refund"){
-                    var triposPaymentType = payment.entryMode.split(',')[1];
+                if( payment.isTriPOSTransaction && payment.transactionType!="Refund"){
+                    //var triposPaymentType = payment.entryMode.split(',')[1];
+                    var triposPaymentType = payment.triPOSPaymentType;
                 	TriPOSService.reversalFlow(payment.amount,payment.transactionId,payment.triPOSPaymentType).then(function(data) {
                 		console.log('payment capture compelte: ', data); 
                 		//  data.approvedAmount =payment.amount; //for testing purpose remove it later
@@ -753,7 +754,7 @@ angular.module('skyZoneApp')
                       'triPOSPinUsed' : swipeResponse.paymentType=='Debit'?true:false,
                       'triPOSPaymentType' : swipeResponse.paymentType,
                       'triPOSTerminalId' : swipeResponse.terminalId,
-                      'triPOSTransactionType' : 'Sale'
+                      'triPOSTransactionType' : 'Sale',
                   };
             }
             

@@ -9,12 +9,12 @@
  */
 
  angular.module('skyZoneApp')
- 	.service('TriPOSService',['$http', '$q', 'PromiseFactory','HardwareService', function($http, $q, PromiseFactory,HardwareService) {
+ 	.service('TriPOSService',['$rootScope', '$http', '$q', 'PromiseFactory','HardwareService', function($rootScope, $http, $q, PromiseFactory,HardwareService) {
  		var self = this;
 
  		self.url = '/tripos/';
- 		//self.laneId = 1;
- 		self.laneId = 9999;
+ 		self.laneId = 1;
+ 		//self.laneId = 9999;
 
  		self.getAPI = function() {
  			var def = PromiseFactory.getInstance();
@@ -81,19 +81,28 @@
 				def.resolve(result);
 			})
 			.error(function(err) {
-				logErrorForPaymentReturn(err);
-				self.voidTransaction(amount,transactionId,paymentType).success(function(result) {
+				//logErrorForPaymentReturn(err);
+				self.voidTransaction(transactionId).success(function(result) {
 					def.resolve(result);
 				})
 				.error(function(err) {
-					logErrorForPaymentReturn(err);
-					self.return(amount,transactionId,paymentType).success(function(result) {
-						def.resolve(result);
-					})
-					.error(function(err) {
-						logErrorForPaymentReturn(err);
-						def.reject(result) 
-					});
+					//logErrorForPaymentReturn(err);
+					if (paymentType == 'Debit') {
+						self.refund(amount,transactionId,paymentType).success(function(result) {
+							def.resolve(result);
+						})
+						.error(function(err) {
+							def.reject(err);
+						})
+					} else {
+						self.return(amount,transactionId,paymentType).success(function(result) {
+							def.resolve(result);
+						})
+						.error(function(err) {
+							//logErrorForPaymentReturn(err);
+							def.reject(result) 
+						});
+					}
 				});
 			});
 			return def.promise;
@@ -103,7 +112,8 @@
 			var def = PromiseFactory.getInstance();
 			var voidUrl = '/tripos/void/' + transactionId;
 			var request = {};
-			request.laneId = self.laneId;s
+			request.laneId = self.laneId;
+			request.cardHolderPresentCode = 'Present';
 			request = JSON.stringify(request);
 			var config = {
 				'url': voidUrl,
@@ -113,7 +123,7 @@
 
 			$http(config)
 				.success(function(result) {
-					if ( result._hasErrors || !result.isApproved) {
+					if ( result._hasErrors || result.statusCode === 'Failed' || !result.isApproved) {
 						def.reject(result) 
 					} else {
 						def.resolve(result);
@@ -130,7 +140,7 @@
 		
 		self.reversal = function(amount,transactionId,paymentType) {
 			var def = PromiseFactory.getInstance();
-			var returnUrl = '/tripos/return/' + transactionId + '/' + paymentType;
+			var returnUrl = '/tripos/reversal/' + transactionId + '/' + paymentType;
 			var request = {
 				'laneId':self.laneId,
 				'transactionAmount':amount,

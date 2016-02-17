@@ -3,22 +3,22 @@
 angular.module('skyZoneApp')
 	.constant('TRIPOS_ENDPOINTS', {
 		
-		//'dev':'http://localhost:8080'
-		'dev':'http://10.10.21.135:8081'
+		'dev':'http://localhost:8080'
+		//'dev':'http://10.10.21.135:8081'
 		//'dev':'http://192.168.1.38:8080'
 	})
 	.constant('TRIPOS_DEV_TOKENS', {
 		//Blaine's/////////
-		//'DEV-KEY-1':'326074b5-870d-4d20-b367-cdbfc2f34eda',
-		//'DEV-KEY-2':'e70a65ff-64a1-4b61-aff8-efce19c8e5b',
-		// 'DEV-SECRET-1':'31d58d53-9968-4ee9-9ca5-6ce420256129',
-		// 'DEV-SECRET-2':'ac131ecb-b7d8-4a36-b8be-8614f0bd0d8b',
+		'DEV-KEY-1':'326074b5-870d-4d20-b367-cdbfc2f34eda',
+		'DEV-KEY-2':'e70a65ff-64a1-4b61-aff8-efce19c8e5b',
+		'DEV-SECRET-1':'31d58d53-9968-4ee9-9ca5-6ce420256129',
+		'DEV-SECRET-2':'ac131ecb-b7d8-4a36-b8be-8614f0bd0d8b',
 		
 		/////VIKASH'S/////////
-		'DEV-KEY-1':'a700df16-a0f9-4ea4-8422-ac7260ca02c1',
-		'DEV-KEY-2':'2d877d80-f07d-4618-826a-5e3eb5f2a68b',
-		'DEV-SECRET-1':'0ac9099e-eebd-4ad4-84db-d06f6326a2ba',
-		'DEV-SECRET-2':'ac027d6f-2756-4fbd-9b06-76d5992ac27a'
+		// 'DEV-KEY-1':'a700df16-a0f9-4ea4-8422-ac7260ca02c1',
+		// 'DEV-KEY-2':'2d877d80-f07d-4618-826a-5e3eb5f2a68b',
+		// 'DEV-SECRET-1':'0ac9099e-eebd-4ad4-84db-d06f6326a2ba',
+		// 'DEV-SECRET-2':'ac027d6f-2756-4fbd-9b06-76d5992ac27a'
 			 
 		/////VIKASH'S HOME/////////
 		 // 'DEV-KEY-1'	:'078b38a5-9755-4b17-911e-1bd9c87d6378',
