@@ -78,16 +78,19 @@
 		self.reversalFlow = function(amount,transactionId,paymentType){
 			var def = PromiseFactory.getInstance();
 			self.reversal(amount,transactionId,paymentType).success(function(result) {
+				result.endpoint = 'reversal';
 				def.resolve(result);
 			})
 			.error(function(err) {
 				logErrorForPaymentReturn(err);
 				self.voidTransaction(amount,transactionId,paymentType).success(function(result) {
+					result.endpoint = 'void';
 					def.resolve(result);
 				})
 				.error(function(err) {
 					logErrorForPaymentReturn(err);
 					self.return(amount,transactionId,paymentType).success(function(result) {
+						result.endpoint = 'return';
 						def.resolve(result);
 					})
 					.error(function(err) {
@@ -130,7 +133,7 @@
 		
 		self.reversal = function(amount,transactionId,paymentType) {
 			var def = PromiseFactory.getInstance();
-			var returnUrl = '/tripos/return/' + transactionId + '/' + paymentType;
+			var returnUrl = '/tripos/reversal/' + transactionId + '/' + paymentType;
 			var request = {
 				'laneId':self.laneId,
 				'transactionAmount':amount,

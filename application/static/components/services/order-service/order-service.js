@@ -531,7 +531,7 @@ angular.module('skyZoneApp')
                 		if ( data._hasErrors ) {
                 			def.reject(data.errors);
                 		} else {
-                			var payload = self.swipeCreditORDebitCardRefund(data, 'Reversal'); //still hard coded but fix it
+                			var payload = self.swipeCreditORDebitCardRefund(data);
                 			self.addCreditCardPayment(orderId,payload)
                 			.then(function(order) {
                 				def.resolve(order);
@@ -757,7 +757,7 @@ angular.module('skyZoneApp')
                   };
             }
             
-            self.swipeCreditORDebitCardRefund = function(swipeResponse, apiCalled){  //api called is Reversal, void, return
+            self.swipeCreditORDebitCardRefund = function(swipeResponse){ 
                 console.log('refund response: ', swipeResponse);
           	  return {
           		  
@@ -786,7 +786,7 @@ angular.module('skyZoneApp')
                     'triPOSPinUsed' : swipeResponse.paymentType=='Debit'?true:false,
                     'triPOSPaymentType' : swipeResponse.paymentType,
                     'triPOSTerminalId' : swipeResponse.terminalId,
-                    'triPOSTransactionType' : apiCalled
+                    'triPOSTransactionType' : swipeResponse.endpoint
                 };
           }
             
