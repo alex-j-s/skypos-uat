@@ -5,7 +5,10 @@
             <label for="{{'radio-'+index}}" ng-click="handleRowClick($event)">
                 <div class=" row selector-row " style="margin-left: auto; width:100%; float:right; text-indent: 0px; margin: 0px;" >
 
-                    <div class="col-xs-5 minutes"><span ng-bind="duration.jumpDurationMinutes"></span> Min</div>
+                    <div class="col-xs-5 minutes">
+                        <span ng-bind="duration.jumpDurationMinutes"></span> Min
+                        <small style="display: block;color: #fd732b;margin-top: -2.5em;font-size: 0.7em;text-transform:uppercase;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;" ng-bind="duration.name"></small>
+                    </div>
                     <div class="col-xs-5" >
                         <div class="row qty">
 
