@@ -523,9 +523,10 @@ angular.module('skyZoneApp')
 
             self.refundPayment = function(orderId, payment, paymentType) {
                 var def = $q.defer();
-                if( payment.entryMode && payment.entryMode.indexOf("swiped") !== -1 && payment.transactionType!="Refund"){
-                    var triposPaymentType = payment.entryMode.split(',')[1];
-                	TriPOSService.return(payment.amount,payment.transactionId,triposPaymentType).then(function(data) {
+                if( payment.isTriPOSTransaction && payment.transactionType!="Refund"){
+                    //var triposPaymentType = payment.entryMode.split(',')[1];
+                    var triposPaymentType = payment.triPOSPaymentType;
+                	TriPOSService.reversalFlow(payment.amount,payment.transactionId,payment.triPOSPaymentType).then(function(data) {
                 		console.log('payment capture compelte: ', data); 
                 		//  data.approvedAmount =payment.amount; //for testing purpose remove it later
                 		if ( data._hasErrors ) {
@@ -728,15 +729,13 @@ angular.module('skyZoneApp')
 
             self.swipeCreditORDebitCardPayment = function(swipeResponse){
             	  return {
-            		  'transactionId': swipeResponse.transactionId,
                       'amount': swipeResponse.approvedAmount,
                       'approvalNumber': swipeResponse.approvalNumber,
                       'binValue': swipeResponse.binValue,
                       'statusCode': swipeResponse.statusCode,
                       'isApproved': swipeResponse.isApproved,
-                     // 'transactionDateTime': swipeResponse.transactionDateTime!=null?swipeResponse.transactionDateTime.split(".")[0]:"",
-                     // 'signature': swipeResponse.signature!=null?swipeResponse.signature.data:"",
-                      'entryMode': 'swiped,' + swipeResponse.paymentType,
+                      'triPOSTransactionDateTime': swipeResponse.transactionDateTime!=null?swipeResponse.transactionDateTime.split(".")[0]:"",
+                      'entryMode': swipeResponse.entryMode,
                       'cashBackAmount': swipeResponse.cashbackAmount,
                       'debitSurchargeAmount': swipeResponse.debitSurchargeAmount,
                       'pinVerified': swipeResponse.pinVerified,
@@ -746,22 +745,30 @@ angular.module('skyZoneApp')
                       'creditCardNumber':swipeResponse.accountNumber,
                       'creditCardExpMonth':swipeResponse.expirationMonth,
                       'creditCardExpYear':swipeResponse.expirationYear,
-                      'creditCardType':swipeResponse.cardLogo
+                      'creditCardType':swipeResponse.cardLogo,
+                      
+                      'triPOSTransactionId': swipeResponse.transactionId,
+                      'isTriPOSTransaction': true,
+                      'triPOSHostResponseCodeMesg': swipeResponse._processor.hostResponseCode+'/'+swipeResponse._processor.hostResponseMessage,
+                      'triPOSMerchantId' : swipeResponse.merchantId,
+                      'triPOSPinUsed' : swipeResponse.paymentType=='Debit'?true:false,
+                      'triPOSPaymentType' : swipeResponse.paymentType,
+                      'triPOSTerminalId' : swipeResponse.terminalId,
+                      'triPOSTransactionType' : 'Sale'
                   };
             }
             
-            self.swipeCreditORDebitCardRefund = function(swipeResponse){
+            self.swipeCreditORDebitCardRefund = function(swipeResponse){ 
                 console.log('refund response: ', swipeResponse);
           	  return {
-          		  'transactionId': swipeResponse.transactionId,
+          		  
                     'amount': swipeResponse.totalAmount,
                     'approvalNumber': swipeResponse.approvalNumber,
                     'binValue': swipeResponse.binValue,
                     'statusCode': swipeResponse.statusCode,
                     'isApproved': swipeResponse.isApproved,
-                   // 'transactionDateTime': swipeResponse.transactionDateTime!=null?swipeResponse.transactionDateTime.split(".")[0]:"",
-                   // 'signature': swipeResponse.signature!=null?swipeResponse.signature.data:"",
-                    'entryMode': 'swiped',
+                    'triPOSTransactionDateTime': swipeResponse.transactionDateTime!=null?swipeResponse.transactionDateTime.split(".")[0]:"",
+                    'entryMode':  swipeResponse.entryMode,
                     'cashBackAmount': swipeResponse.cashbackAmount,
                     'debitSurchargeAmount': swipeResponse.debitSurchargeAmount,
                     'pinVerified': swipeResponse.pinVerified,
@@ -771,7 +778,16 @@ angular.module('skyZoneApp')
 	            	'creditCardNumber':swipeResponse.accountNumber,
 	                'creditCardExpMonth':swipeResponse.expirationMonth,
 	                'creditCardExpYear':swipeResponse.expirationYear,
-	                'creditCardType':swipeResponse.cardLogo
+	                'creditCardType':swipeResponse.cardLogo,
+	                
+	                'triPOSTransactionId': swipeResponse.transactionId,
+	                'isTriPOSTransaction': true,
+                    'triPOSHostResponseCodeMesg': swipeResponse._processor.hostResponseCode+'/'+swipeResponse._processor.hostResponseMessage,
+                    'triPOSMerchantId' : swipeResponse.merchantId,
+                    'triPOSPinUsed' : swipeResponse.paymentType=='Debit'?true:false,
+                    'triPOSPaymentType' : swipeResponse.paymentType,
+                    'triPOSTerminalId' : swipeResponse.terminalId,
+                    'triPOSTransactionType' : swipeResponse.transactionType
                 };
           }
             

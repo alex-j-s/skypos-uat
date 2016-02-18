@@ -1,0 +1,415 @@
+VeriFone USB Driver 1.0.0.61
+Build 2, Apr 20th 2015
+----------------------------
+
+
+This release supports :
+-----------------------
+
+	Windows platforms :  
+			    Win 8( 32 bit & 64 bit )  Microsoft signed driver   
+			    Win 7( 32 bit & 64 bit )  Microsoft signed driver 
+			    Win XP( 32 bit & 64 bit ) Microsoft signed driver 
+			    Win Server 2003           Microsoft signed driver        
+			    POSReady 2009             Microsoft signed driver       
+			    
+			    Windows Embedded 
+			    POSReady 7(32bit & 64bit) Microsoft signed driver 
+
+
+
+	Terminal Series	: Vx (both predator and eVo ).
+        ----------------------------------------------
+	VX 510 Ethernet Terminal 
+	VX 510 GPRS Terminal 
+	VX 610 Terminal 
+	VX 570 Terminal 
+	VX 670 Terminal 
+	VX 700 Terminal 
+	VX 800 PIN Pad 
+	VX 810 PIN Pad 
+	VX 680 Terminal 
+	VX 520 Terminal 
+	VX 820 PIN pad 
+	VX 805 Terminal 
+	VX 825 Terminal 
+	VX 520 GPRS Terminal 
+	VX 680 CDMA Terminal  
+	FD55 Terminal 
+	VX 680 BlueTooth Terminal 
+	VX 680 WiFi Terminal 
+	VX 520 Sprocket Printer Terminal 
+	VX 675 Terminal 
+	VX 680 3G Terminal 
+	VX GEN3 Terminal 
+	VX 675 3G Terminal 
+	VX 820 DUET base Terminal
+	VX 805 DUET base Terminal
+	VX 690 3G Terminal
+	VX 685 Terminal
+	VSP100 Terminal
+	VX 600 payware mobile reader
+	VX 690 BASE
+	PP1000 Next Gen
+		
+Usage:
+------
+
+A. Un-Installation of any previous drivers.
+-------------------------------------------
+Steps for Un-installation
+
+ Exit all the application that is using COM port, including Spytool, Port monitors.
+ If VeriFone Mx, PP1000 Drivers are present in the PC, it is highly recommended to use Method 1 or Method 2.
+ If only VeriFone Vx driver is present in the PC , use Method 3.
+
+  Method 1:
+
+    a. Select the option sequence as following,
+        i.   In Win XP: Start -> Control Panel -> Add or Remove Programs
+        ii.  In Win 7 : Start -> Control Panel-> Under View by, select 'Large Icons'-> Programs and Features.
+        iii. In Win 8 : Enter control panel in the search box, and then tap or click Control Panel.
+                        Under View by, select Large Icons, and then tap or click Programs and features.
+                        
+    b. Double click on "VeriFone Vx Installer Version X.X.X.X." for Uninstall.
+
+  Method 2:
+  	i. Exit all the application that is using COM port.
+	ii. Open a command prompt.
+	iii. Switch to "C:\Program Files\VERIFONE\USB Driver Vx" directory.
+	iV. Run the following without quotes "C:\Program Files\VERIFONE\USB Driver Vx\unins000.exe /silent".
+
+
+  Method 3:
+
+   Use this method if and only if the following VeriFone Vx driver are present in the PC ,
+     a. Vx_1.0.0.30
+     b. Vx_1.0.0.37 B2
+     c. Vx_1.0.0.43 B2
+     d. Vx_1.0.0.43 B3
+   For any other VeriFone Vx driver is present in the PC , use Method 1 or Method 2.
+
+   Use the utility(Vx_UnInst_1.0.5.zip) which is packaged along with this release, 
+      a. Go to system administrator mode/user with administrator privileges in PC.
+      b. Right click on the Vx_UnInst_1.0.5.bat.
+      c. Click on “Run as Administrator”.
+   
+   For more information on the utility(Vx_UnInst_1.0.5.zip), refer Readme_Vx_UnInst_1.0.5.txt.
+
+Note:
+
+After un-installation, make sure the device is listed under “Other devices” in Device Manager. 
+
+
+
+B. Installation of the driver.
+-------------------------------------------
+
+Installation through silent.bat is highly recommended.
+
+Steps for installation
+
+Method 1:
+
+   1. Download the zip file that is provided with the release. 
+   2. Extract the contents of the zip file to any folder.
+   3. Now extract the contents of the zip file (Vx_1.0.0.61_B2.zip) to any folder.
+   4. Open a command prompt (Recommended with administrator privileges).
+   5. Switch to the folder which specified in step 3.
+   6. Run the batch file silent.bat.   
+   7. The driver will be installed without any UI.   
+   8. Wait for the installation to complete.
+   9. Connect the Vx terminal/Vx PINpad using USB and power up the terminal. 
+
+Method 2: (Only for Systems using RedSys web application(Spain))
+
+   1. Download the zip file that is provided with the release. 
+   2. Extract the contents of the zip file to any folder.
+   3. Now extract the contents of the zip file (Vx_1.0.0.61_B2.zip) to any folder.
+   4. Open a command prompt (Recommended with administrator privileges).
+   5. Switch to the folder which specified in step 3.
+   6. Run the batch file silent_vfiTO.bat.   
+   7. The driver will be installed without any UI.   
+   8. Wait for the installation to complete.
+   9. Connect the Vx terminal/Vx PINpad using USB and power up the terminal. 
+
+  Note: 
+
+   1. Systems using RedSys web application(Spain), a separate installation batch file(silent_vfiTO.bat)
+      have been given to set the variable required to fix communication issue reported.
+   2. Use this batch file silent_vfiTO.bat only in the respective use case.
+   3. Using silent_vfiTO.bat will install to COM2,Please ensure that any physical port(COM2)present 
+      should be disabled prior to installation of driver.
+
+
+Change history for all builds from previous ECO releases:
+
+1.0.0.61:
+---------
+
+1. Fixed a communication issue with echoport application in PosReady 2009 OS.
+
+1.0.0.60:
+---------
+
+1. Fixed an issue that device manager hangs when multiple unplug and replug of the terminal happens.
+
+
+1.0.0.59:
+---------
+
+1. Fix provided for an issue that BSOD happens when Terminal communicates with DockLight application.
+
+2. Corrected the driver version in the sys files.
+
+1.0.0.58:
+---------
+
+1. Fix provided for an issue, where PC runs out of memory after some time of VATS endurance tests.
+
+1.0.0.57:
+---------
+
+1. Added support for PP1000NG device having OS QT10020T or higher.
+
+2. Implemented WPP Software Tracing. Events that pass non critical information will be available from 
+   the Driver WPP logs.
+   Refer the document How_to_get_WPP_trace_logs_Vx_1.0.0.57.docx in the zip file, with this release 
+   for instructions to get WPP trace logs from the driver.
+
+3. WaitCommEvent support in the driver is enhanced to handle port close exceptions, occurring in the 
+   application, when device is plugged out and plugged in from PC.
+
+   Use the parameter '/DTMSET' while driver installation, to enable this feature.
+
+	eg:     i.  In silent.bat file use "setup.exe /silent /nonlegacy /DTMSET /com9"
+
+   	       ii. Pass '/DTMSET' parameter along with setup.exe , eg:  "setup.exe /DTMSET"
+
+
+1.0.0.56:
+---------
+
+1. Fix provided for the issue that communication fails with EFTPOS Application on the restart of the PC 
+   by enabling continuous read.
+
+2. Addressed the issue that communication fails with EFTPOS Application , when any usb devices 
+   plugged out from PC.
+
+
+1.0.0.52:
+---------
+
+1. Fix provided for the issue that BSOD happens When PC going to sleep mode while devices connected 
+   and communicating to PC , when driver installed with multidev option.
+
+2. Fix provided for the issue that incorrect com port number is displayed in the friendly name string 
+   in device manager as compared to in advanced settings, when driver installed with multidev option.
+
+3. Fix provided for the issue that data transfer between PC and Vx devices getting slow, when driver 
+   installed with multidev option.
+
+4. Fix provided for the issue that device is not enumerated correctly in VHQ setup , 
+   as VHQ holding some of the ports , when driver installed with multidev option.
+
+5. Fix is provided for the issue that when driver installed with multidev option , interrupting 
+   the communication of the devices by unplugging and reconnecting to another port prompting PC to restart.
+
+6. Fix provided for the issue that reinstalling the Mx driver causing port instability to Vx driver which
+   installed in multimode.
+
+7. This driver package is debug version(WPP logs enabled) of VeriFoneUSBUARTDriver_Vx_1.0.0.52_B5.
+
+
+1.0.0.51:
+---------
+
+1. Fix provided for multi mode download issue on non standard USB 3.0 xhci hub used in the PC.
+
+2. Installation through silent.bat as well as running setup.exe will take commandline option "/nonlegacy"
+   as default.
+   
+   For Legacy applications (built using VB & mscomm32.ocx) which accesses com port, installation of the 
+   driver should be in legacy mode and use the following for the same.
+   
+   i.  In silent.bat file use "setup.exe /silent /legacy /com9"
+
+   ii. Pass '/legacy' parameter along with setup.exe , eg:  "setup.exe /legacy"
+
+
+1.0.0.50:
+-----------
+
+1. Amdocs case 140609-1662 : Support for WaitCommEvent() Windows API , when the device not present.
+   The issue is , POS application is getting stuck in a loop waiting for the event, while USB cable is unplugged.
+   When the USB cable is unplugged, the  WaitCommEvent() Windows API returns 'OK' , as if there was some pending event,
+   but the event code is empty. The fix for this is provided in the driver , to return KO so that the application stops
+   polling for events, when the device is not present.
+
+2. Amdocs case 140528-10270 :Fix is provided for resuming the communication when PC wakes up from sleep mode.
+
+
+1.0.0.49:
+-----------
+
+1. USB 3.0 Support :
+   Provided the support for the USB3XHCI device controller driver issue , where it  does not give device Instance
+   and Friendly Name in registry . Fix is at the Co-installer level changes to read Device Instance Id and 
+   create Friendly Name registry (using Device instance Id).
+
+2. Provided fix for the issue that PC imaged with Vx driver installed, shows different(incorrect) com port number 
+   in the friendly name string in device manager as compared to in advanced settings. This happens when the USB 
+   Controller driver on the PC  does not create a “SymbolicName” entry when device is plugged in. 
+
+3. Build version of the driver is added in Add/Remove programs.
+
+
+1.0.0.48:
+-----------
+1. Microsoft Certified for
+			    Win 8( 32 bit & 64 bit )  - Microsoft signed driver
+			    Win 7( 32 bit & 64 bit )  - Microsoft signed driver
+			    Win XP( 32 bit & 64 bit ) - Microsoft signed driver
+			    Win Server 2003           - Microsoft signed driver
+			    POSReady 2009             - Microsoft signed driver
+			    
+			    Windows Embedded 
+			    POSReady 7(32bit & 64bit) - Microsoft signed driver		
+	    
+
+2. Driver friendly name issue in .inf file are corrected
+
+3. $CUSTOM IC00884 Fix. Removing DOS message box from PC drive program installation process.
+
+4. DataCash Fixes,Amdocs(130724-9717).
+   When the Vx820 reboots or is unplugged, the COM port that is presents itself as disappears. 
+   Any outstanding IO on this COM port does not return with an error nor can it be cancelled with CancelIO.
+
+
+5. Fixes for .Net support.
+   Junk characters appears when Comport name is read from .net application.
+
+
+6. Fix for USB communication issue with Spain web application.
+   We have introduced a registry mode(VfiTO) to make ReadIntervalTimeout to max value so that 
+   web application is not timed out.
+   Separate installation batch file(silent_vfiTO.bat) given to set the variable required to fix 
+   communication issue with Spain web application.
+
+7. Com port enumeration for COM2 is implemented, assuming there is no physical COM port 2 present 
+   in the PC. If present disable COM2 and proceed with installation on COM2
+
+
+8. During Installation, Windows OS detection logic has been enhanced to accommodate non English Windows OS as well.
+
+
+New terminals supported:
+------------------------
+
+1. Vx690 Terminal
+2. VX690 BASE
+3. PP1000NG Terminal 
+4. Vx685 Terminal 
+
+
+Prerequisite:
+-----------
+1. It is recommended to use the installation and uninstallation with administrative privilege.
+2. Make sure that the driver is not updated online.
+3. Prior to this installer, all the related Vx USB drivers and Vx 690 Base drivers should be 
+   un-installed completely.
+
+
+1.0.0.43:
+-----------
+1. Windows 7 Certified.
+
+2. Enhanced the driver to co-exist with Mx Driver 
+
+3. The following issues are fixed.
+
+   a). When Mx Driver 1.0.0.3 and Vx Driver 1.0.0.42 is installed on same PC,FAT Communication 
+       with Mx driver will fail.
+ 
+   b). FAT communication with the USB VX 1.0.0.42 driver set to COM 6  fails when the MX 1.0.03
+       USB driver is installed.
+
+   c). 1.0.0.43 VX USB driver sets VfiCustomRead to 0 always, legacy mode is not supported.
+ 
+   d). Vx Driver 1.0.0.42 USB driver is not uninstalled completely when uninstalled from 
+       control panel programs/features in WIN 7 64 bit.
+
+   e). Silent.bat install is not silent in WIN 7 64 bit.
+
+4. Changed the driver to work independent of Mx version. 
+
+5. Fixed BSOD issue when the PC was reimaged in windows 7 64 bit systems (Wells Fargo Bank). 
+   This was reported in Mx.  Moved the same to Vx as well.
+
+6. Addressed Amdocs case 130816-17336, BSOD Crash when data packet of large size is sent.
+
+Prerequisite:
+--------------
+
+1. When Mx Version 1.0.0.4 is installed in the PC on com x port, please make sure Mx device is 
+   connected and port is enumerated before installing Vx 1.0.0.43 ,
+
+   Please make sure that Vx is installed in comx+n port.
+
+2.      
+	i).  Running setup.exe- installs with vficustomread = 1
+       ii).  Running a batch file with “nonlegacy” flag installs with vficustomread = 0
+
+
+1.0.0.37:
+-----------
+1. Individual installer batch file for Windows XP(32/64),Windows 7(64/32) ,WEPOS Ready 2009 
+   is provided in this release.
+
+2. Fixed functionality issue of multi-device operations for Microsoft WLK certification.
+
+3. Fixed functionality issue of multi-device operations.
+
+4. Enhanced to support Vx6803G terminal.
+
+5. Provided support for multi-device operations.
+
+   The below are the instructions which needs to be followed to achieve an multi-device operations. 
+
+   a. Multi device support is provided for Vx devices only (no support for Mx, PP devices yet)
+   b. Multi device feature can be enabled during setup using argument /multidev (as provided in the
+       silent_multi.bat file). Please install using  silent_multi.bat file.
+   c. Post installation this feature can be toggled using command line tool multidev.exe (from the 
+      installed "c:\program file\VeriFone\usb driver" directory) 
+   d. If already data-exchange happening on the any of the device (when multi device mode is enabled),
+      other device connection and disconnections should not be performed.
+   e. When Multi-device mode is enabled, data resumption feature will not be supported.
+
+6. Fixes for Application Hangs when device is disconnected and application is still holding the 
+   com port.
+
+7.  Setup Installer changes done.
+
+8.  Changes to support for IRP_MJ_FLUSH (i.e. FileFlushBuffer API).
+
+1.0.0.30:
+---------
+1. Driver handles unexpected reboot cases. Driver shutdown is tracked using registry entry. 
+   If Pc is not shutdown normally, on startup, driver will clean up the previous entries.
+2. Enables application on terminal side to send large data size.
+
+3. Driver uses internal buffer for data read storage. If the buffer read is almost 80% full, 
+   it will not place for further reads to the USB device as buffer is becoming full and wait for
+   application to read the data and empty this buffer.  This functionality is bypassed to
+   over come the "USB device write freezes Vx820 terminal" problem reported.
+
+4.  VfiComTimeout function called during device disconnect scenario which caused bugcheck 0xA.
+
+
+5. Debug lines to fetch the no of bytes read everytime is removed as this is suspected 
+   to cause a bug check.
+
+
+6. Fix for Amdocs case 120209-11473 - Vx810 USB; Win Driver;PC Application hangs when 
+   connected to Vx810 via USB
+
