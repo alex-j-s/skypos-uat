@@ -171,6 +171,13 @@ angular.module('skyZoneApp')
                 command += fac.CTL_LF + fac.CTL_LF;
                 return command;
         };
+
+        fac.messageLine = function(text) {
+            var command = fac.TXT_ALIGN_CT + fac.TXT_NORMAL;
+                command += text;
+                command += fac.CTL_LF + fac.CTL_LF;
+                return command;
+        }
         
         ///
         
