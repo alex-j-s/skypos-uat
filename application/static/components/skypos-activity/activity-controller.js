@@ -110,7 +110,7 @@ angular.module('skyZoneApp')
                 localDuration.isChecked = true;
                 $scope.duration = localDuration;
 
-                if (localDuration.quantity > 0) {
+                if (localDuration.quantity >= 0) {
                     $scope.getTimeSlots(localDuration.id, localDuration.quantity);
                 }
             };
