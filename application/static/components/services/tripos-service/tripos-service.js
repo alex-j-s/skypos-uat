@@ -9,14 +9,14 @@
  */
 
  angular.module('skyZoneApp')
- 	.service('TriPOSService',['$rootScope', '$http', '$q', 'PromiseFactory','HardwareService', function($rootScope, $http, $q, PromiseFactory,HardwareService) {
+ 	.service('TriPOSService',['$rootScope', '$http', '$q', 'PromiseFactory','HardwareService', 'ENV', function($rootScope, $http, $q, PromiseFactory,HardwareService,ENV) {
  		var self = this;
 
  		self.url = '/tripos/';
  		self.laneId = 1;
  		//self.laneId = 9999;
 
-    self.cachedTestMode;
+    self.cachedTestMode = ENV === 'dev' || ENV === 'qa' || ENV === 'uat' ? true : false;
     self.pinPadIdleMessage = 'Welcome to Sky Zone';
     self.corsAllowedOrigins = 'http://localhost:5000';
 
