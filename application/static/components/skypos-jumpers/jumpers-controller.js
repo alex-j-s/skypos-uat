@@ -45,8 +45,8 @@ angular.module('skyZoneApp')
             }
         }
     })
-    .controller('SPJumpersController', ['$scope', '$routeParams', '$modal', '$rootScope', '$q', '$location', 'Park', 'Guest', 'Order', 'Waiver', 'OrderService', 'ProfileService', 'UserService', 'NavService', 'WaiverService', 'AddOnStatus',
-        function($scope, $routeParams, $modal, $rootScope, $q, $location, Park, Guest, Order, Waiver, OrderService, ProfileService, UserService, NavService, WaiverService, AddOnStatus) {
+    .controller('SPJumpersController', ['$scope', '$routeParams', '$modal', '$rootScope', '$q', '$location', 'Park', 'Guest', 'Order', 'Waiver', 'OrderService', 'ProfileService', 'UserService', 'NavService', 'WaiverService', 'AddOnStatus','WaiverStatus',
+        function($scope, $routeParams, $modal, $rootScope, $q, $location, Park, Guest, Order, Waiver, OrderService, ProfileService, UserService, NavService, WaiverService, AddOnStatus, WaiverStatus) {
 
             function logErrorStopLoading(err) {
                 $rootScope.$broadcast('szeHideLoading');
@@ -466,32 +466,59 @@ angular.module('skyZoneApp')
 
 
             $scope.goToOffersScreen = function() {
-                $rootScope.$broadcast('szeShowLoading')
-                if($scope.order.status === 'In Progress' || $scope.order.status === 'Reserved'){
-                    $scope.aggregateAndAddLineItems().then(function(success) {
 
-                        AddOnStatus.purchasedAll();
-                        NavService.goToRoute('offers', {
-                            'parkUrlSegment': Park.parkUrlSegment,
-                            'orderId': $scope.order.id,
-                            'guestId': $scope.guest.id
-                        });
-                    }, function(success) {
-                        AddOnStatus.purchasedAll();
-                        NavService.goToRoute('offers', {
-                            'parkUrlSegment': Park.parkUrlSegment,
-                            'orderId': $scope.order.id,
-                            'guestId': $scope.guest.id
-                        });
+                if(!WaiverStatus.allSigned()){
+                    $rootScope.$broadcast('szeHideLoading');
+                    $rootScope.$broadcast('szeConfirm', {
+                        title: 'Waivers Not Complete',
+                        message: 'All waivers must be signed and approved before compeleting the order. Go to Jumpers screen now?',
+                        confirm: {
+                            label: 'Go to Jumpers',
+                            action: function($clickEvent) {
+                                NavService.goToRoute('jumpers', {
+                                    'parkUrlSegment':Park.parkUrlSegment,
+                                    'orderId':$scope.order.id,
+                                    'guestId':$scope.guest.id
+                                });
+                            }
+                        },
+                        cancel: {
+                            label: 'Stay Here',
+                            action: function($clickEvent) {
+                                return;
+
+                            }
+                        }
                     })
-                }
-                else{
-                        AddOnStatus.purchasedAll();
-                        NavService.goToRoute('offers', {
-                            'parkUrlSegment': Park.parkUrlSegment,
-                            'orderId': $scope.order.id,
-                            'guestId': $scope.guest.id
-                        });
+                } else {
+
+                    $rootScope.$broadcast('szeShowLoading')
+                    if($scope.order.status === 'In Progress' || $scope.order.status === 'Reserved'){
+                        $scope.aggregateAndAddLineItems().then(function(success) {
+
+                            AddOnStatus.purchasedAll();
+                            NavService.goToRoute('offers', {
+                                'parkUrlSegment': Park.parkUrlSegment,
+                                'orderId': $scope.order.id,
+                                'guestId': $scope.guest.id
+                            });
+                        }, function(success) {
+                            AddOnStatus.purchasedAll();
+                            NavService.goToRoute('offers', {
+                                'parkUrlSegment': Park.parkUrlSegment,
+                                'orderId': $scope.order.id,
+                                'guestId': $scope.guest.id
+                            });
+                        })
+                    }
+                    else{
+                            AddOnStatus.purchasedAll();
+                            NavService.goToRoute('offers', {
+                                'parkUrlSegment': Park.parkUrlSegment,
+                                'orderId': $scope.order.id,
+                                'guestId': $scope.guest.id
+                            });
+                    }
                 }
             };
             $scope.goToGuestScreen = function() {
