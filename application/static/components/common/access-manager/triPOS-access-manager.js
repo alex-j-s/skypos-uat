@@ -3,7 +3,9 @@
 angular.module('skyZoneApp')
 	.constant('TRIPOS_ENDPOINTS', {
 		
-		'dev':'http://localhost:8080'
+		'dev':'http://localhost:8080',
+		'qa':'http://localhost:8080',
+		'uat':'http://localhost:8080'
 		//'dev':'http://10.10.21.135:8081'
 		//'dev':'http://192.168.1.38:8080'
 	})
