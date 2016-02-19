@@ -16,6 +16,10 @@
  		self.laneId = 1;
  		//self.laneId = 9999;
 
+    self.cachedTestMode;
+    self.pinPadIdleMessage = 'Welcome to Sky Zone';
+    self.corsAllowedOrigins = 'http://localhost:5000';
+
  		self.getAPI = function() {
  			var def = PromiseFactory.getInstance();
 
@@ -37,13 +41,13 @@
  			return def.promise;
  		}
 
- 		
+
  	   function logErrorForPaymentReturn(err) {
            $rootScope.$broadcast('szeError', 'Payment return issue '+JSON.stringify(err));
            $scope.showModal = false;
        }
 
- 		
+
 		self.swipeCard = function(amount){
 			var def = PromiseFactory.getInstance();
 			self.swipeUrl = '/tripos/sale';
@@ -57,11 +61,11 @@
 					'method': 'POST',
 					data    : request
 			}
-			
+
 			$http(config)
 				.success(function(result) {
 					if ( result._hasErrors ) {
-						def.reject(result) 
+						def.reject(result)
 					} else {
 						def.resolve(result);
 						HardwareService.appendConsoleOutputArray('[TRIPOS] -- swipeCard ' + self.laneId);
@@ -72,9 +76,9 @@
 					def.reject(err);
 				});
 			return def.promise;
-				
+
 		}
-		
+
 		self.reversalFlow = function(amount,transactionId,paymentType){
 			var def = PromiseFactory.getInstance();
 			self.reversal(amount,transactionId,paymentType).success(function(result) {
@@ -102,7 +106,7 @@
 						})
 						.error(function(err) {
 							//logErrorForPaymentReturn(err);
-							def.reject(result) 
+							def.reject(result)
 						});
 					}
 				});
@@ -126,7 +130,7 @@
 			$http(config)
 				.success(function(result) {
 					if ( result._hasErrors || result.statusCode === 'Failed' || !result.isApproved) {
-						def.reject(result) 
+						def.reject(result)
 					} else {
 						def.resolve(result);
 						HardwareService.appendConsoleOutputArray('[TRIPOS] -- voidTransaction: ' + self.laneId);
@@ -139,7 +143,7 @@
 			return def.promise;
 
 		}
-		
+
 		self.reversal = function(amount,transactionId,paymentType) {
 			var def = PromiseFactory.getInstance();
 			var returnUrl = '/tripos/reversal/' + transactionId + '/' + paymentType;
@@ -157,7 +161,7 @@
 			$http(config)
 				.success(function(result) {
 					if ( result._hasErrors || !result.isApproved) {
-						def.reject(result) 
+						def.reject(result)
 					} else {
 						def.resolve(result);
 						HardwareService.appendConsoleOutputArray('[TRIPOS] -- voidTransaction: ' + self.laneId);
@@ -168,7 +172,7 @@
 				});
 			return def.promise;
 		}
- 
+
 		self.return = function(amount,transactionId,paymentType) {
 			var def = PromiseFactory.getInstance();
 			var returnUrl = '/tripos/return/' + transactionId + '/' + paymentType;
@@ -186,7 +190,7 @@
 			$http(config)
 				.success(function(result) {
 					if ( result._hasErrors || !result.isApproved) {
-						def.reject(result) 
+						def.reject(result)
 					} else {
 						def.resolve(result);
 						HardwareService.appendConsoleOutputArray('[TRIPOS] -- voidTransaction: ' + self.laneId);
@@ -210,11 +214,11 @@
 				'method': 'POST',
 				'data': request
 			};
-			
+
 			$http(config)
 			.success(function(result) {
 				if ( result._hasErrors ) {
-					def.reject(result) 
+					def.reject(result)
 				} else {
 					def.resolve(result);
 					HardwareService.appendConsoleOutputArray('[TRIPOS] -- Refund processed ');
@@ -243,7 +247,7 @@
 			$http(config)
 				.success(function(result) {
 					if ( result._hasErrors ) {
-						def.reject(result) 
+						def.reject(result)
 					} else {
 						def.resolve(result);
 						HardwareService.appendConsoleOutputArray('[TRIPOS] -- Idle screen shown on lane: ' + self.laneId);
@@ -314,4 +318,77 @@
 				});
 			return def.promise;
 		}
+
+    self.toggleTestMode = function() {
+      var def = PromiseFactory.getInstance();
+
+      self.getTestMode()
+        .then(function(testMode) {
+
+          var configUrl = '/tripos/configuration/application';
+          var request = {
+            'pinPadIdleMessage': self.pinPadIdleMessage,
+            'corsAllowedOrigins':self.corsAllowedOrigins,
+            'testMode':!testMode
+          }
+
+          var config = {
+            'url':configUrl,
+            'method':'POST',
+            'data':request
+          }
+
+          $http(config)
+            .success(function(result) {
+              if ( result.didUpdate && result.testMode !== undefined ) {
+                HardwareService.appendConsoleOutputArray('[TRIPOS] -- Test Mode Updated: ' + result.testMode);
+                self.cachedTestMode = result.testMode;
+                def.resolve(result);
+              } else {
+                HardwareService.appendConsoleOutputArray('[TRIPOS] -- ERROR Updating Test Mode: Failure');
+                def.reject(result);
+              }
+            })
+            .error(function(err) {
+              HardwareService.appendConsoleOutputArray('[TRIPOS] -- ERROR Updating Test Mode: Error');
+            })
+
+        }, function(err) {
+          HardwareService.appendConsoleOutputArray('[TRIPOS] -- ERROR Updating Test Mode: No cached test mode');
+        })
+    }
+
+    self.getTestMode = function() {
+      var def = PromiseFactory.getInstance();
+
+      if ( self.cachedTestMode !== undefined ) {
+        def.resolve(self.cachedTestMode);
+      } else {
+
+        var configUrl = '/tripos/configuration/application';
+        var config = {
+          'url':configUrl,
+          'method':'GET'
+        }
+
+        $http(config)
+          .success(function(result) {
+            if ( result.testMode != undefined ) {
+              HardwareService.appendConsoleOutputArray('[TRIPOS] -- Test Mode: ' + result.testMode);
+              def.resolve(result.testMode);
+            } else {
+              HardwareService.appendConsoleOutputArray('[TRIPOS] -- ERROR Retriving Test Mode Status');
+              def.reject(result);
+            }
+          })
+          .error(function(err) {
+            HardwareService.appendConsoleOutputArray('[TRIPOS] -- ERROR Retriving Test Mode Status');
+            def.reject(err);
+          });
+        }
+
+        return def.promise;
+    }
+
+
  	}]);
