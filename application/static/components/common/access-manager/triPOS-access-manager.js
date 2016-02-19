@@ -35,8 +35,8 @@ angular.module('skyZoneApp')
 		'tp-return-logs':true,
 		'Accept':'application/json'
 	})
-	.factory('triPOSAuthInterceptor', ['$q', 'HmacService', 'ENV', 'TRIPOS_HEADERS', 'TRIPOS_DEV_TOKENS', 'TRIPOS_ENDPOINTS', 'TriPOSService',
-		function($q, HmacService, ENV, TRIPOS_HEADERS, TRIPOS_DEV_TOKENS, TRIPOS_ENDPOINTS, TRIPOSService) {
+	.factory('triPOSAuthInterceptor', ['$q', 'HmacService', 'ENV', 'TRIPOS_HEADERS', 'TRIPOS_DEV_TOKENS', 'TRIPOS_ENDPOINTS',
+		function($q, HmacService, ENV, TRIPOS_HEADERS, TRIPOS_DEV_TOKENS, TRIPOS_ENDPOINTS) {
 
 			return {
 				request: function(config) {
@@ -137,20 +137,20 @@ angular.module('skyZoneApp')
 						tpAuthHeader += 'RequestDate=' + timestamp + ', ';
 						tpAuthHeader += 'Signature=' + signature;
 
-						TriPOSService.getTestMode()
-							.then(function(testMode) {
-								if ( !testMode ) {
-									config.headers['tp-authorization'] = tpAuthHeader;
-								} else {
-									config.headers['tp-authorization'] = 'Version=1.0, Credential=' + TRIPOS_DEV_TOKENS['DEV-KEY-1'];
-								}
-							}, function(err) {
-								config.headers['tp-authorization'] = 'Version=1.0, Credential=' + TRIPOS_DEV_TOKENS['DEV-KEY-1'];
-							})
+						// TriPOSService.getTestMode()
+						// 	.then(function(testMode) {
+							// 	if ( !testMode ) {
+							// 		config.headers['tp-authorization'] = tpAuthHeader;
+							// 	} else {
+							// 		config.headers['tp-authorization'] = 'Version=1.0, Credential=' + TRIPOS_DEV_TOKENS['DEV-KEY-1'];
+							// 	}
+							// }, function(err) {
+							// 	config.headers['tp-authorization'] = 'Version=1.0, Credential=' + TRIPOS_DEV_TOKENS['DEV-KEY-1'];
+							// })
 
 						//config.headers['tp-authorization'] = tpAuthHeader;
 						console.log('tp-authorization: ', config.headers['tp-authorization']);
-						//config.headers['tp-authorization'] = 'Version=1.0, Credential=' + TRIPOS_DEV_TOKENS['DEV-KEY-1'];
+						config.headers['tp-authorization'] = 'Version=1.0, Credential=' + TRIPOS_DEV_TOKENS['DEV-KEY-1'];
 
 						config.headers['tp-request-id'] = HmacService.generateUUID();
 
