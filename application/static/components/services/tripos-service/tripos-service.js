@@ -16,7 +16,7 @@
  		self.laneId = 1;
  		//self.laneId = 9999;
 
-    self.cachedTestMode = ENV === 'dev' || ENV === 'qa' || ENV === 'uat' ? true : false;
+    self.cachedTestMode;
     self.pinPadIdleMessage = 'Welcome to Sky Zone';
     self.corsAllowedOrigins = 'http://localhost:5000';
 
@@ -292,14 +292,13 @@
 
 			var statusUrl = '/tripos/status/lane/' + self.laneId;
 
-			var request = {
-				'laneId':self.laneId
-			}
+			// var request = {
+			// 	'laneId':self.laneId
+			// }
 
 			var config = {
 				'url':statusUrl,
-				'method':'GET',
-				'data':request
+				'method':'GET'
 			}
 
 			$http(config)
@@ -334,13 +333,13 @@
 
           var config = {
             'url':configUrl,
-            'method':'POST',
+            'method':'PUT',
             'data':request
           }
 
           $http(config)
             .success(function(result) {
-              if ( result.didUpdate && result.testMode !== undefined ) {
+              if ( result.applicationUpdated && result.testMode !== undefined ) {
                 HardwareService.appendConsoleOutputArray('[TRIPOS] -- Test Mode Updated: ' + result.testMode);
                 self.cachedTestMode = result.testMode;
                 def.resolve(result);
@@ -362,6 +361,7 @@
       var def = PromiseFactory.getInstance();
 
       if ( self.cachedTestMode !== undefined ) {
+      	HardwareService.appendConsoleOutputArray('[TRIPOS] -- Test Mode: ' + result.testMode);
         def.resolve(self.cachedTestMode);
       } else {
 
