@@ -92,15 +92,18 @@ angular.module('skyZoneApp')
     };
 
     self.getTriPOSHmac = function(str,key) {
-      var utf8encodedStr = unescape(encodeURIComponent(str));
+      console.log('str: ', str);
+      var utf8encodedStr = unescape(str);
+      console.log('utf8encodedStr: ', utf8encodedStr);
       var hmac;
       if ( key ) {
-        var utf8encodedKey = unescape(encodeURIComponent(key));
+        var utf8encodedKey = unescape(key);
         hmac = CryptoJS.HmacSHA256(utf8encodedStr,utf8encodedKey);
       } else {
     	  hmac = CryptoJS.SHA256(utf8encodedStr); // no key
       }
       var hmacHEX = CryptoJS.enc.Hex.stringify(hmac);
+      console.log('hmac: ', hmac, hmacHEX);
       return hmacHEX;
     }
 

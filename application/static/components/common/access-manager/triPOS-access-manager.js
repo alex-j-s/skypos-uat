@@ -2,7 +2,7 @@
 
 angular.module('skyZoneApp')
 	.constant('TRIPOS_ENDPOINTS', {
-		
+
 		'dev':'http://localhost:8080',
 		'qa':'http://localhost:8080',
 		'uat':'http://localhost:8080'
@@ -15,18 +15,18 @@ angular.module('skyZoneApp')
 		'DEV-KEY-2':'e70a65ff-64a1-4b61-aff8-efce19c8e5b',
 		'DEV-SECRET-1':'31d58d53-9968-4ee9-9ca5-6ce420256129',
 		'DEV-SECRET-2':'ac131ecb-b7d8-4a36-b8be-8614f0bd0d8b',
-		
+
 		/////VIKASH'S/////////
 		// 'DEV-KEY-1':'a700df16-a0f9-4ea4-8422-ac7260ca02c1',
 		// 'DEV-KEY-2':'2d877d80-f07d-4618-826a-5e3eb5f2a68b',
 		// 'DEV-SECRET-1':'0ac9099e-eebd-4ad4-84db-d06f6326a2ba',
 		// 'DEV-SECRET-2':'ac027d6f-2756-4fbd-9b06-76d5992ac27a'
-			 
+
 		/////VIKASH'S HOME/////////
 		 // 'DEV-KEY-1'	:'078b38a5-9755-4b17-911e-1bd9c87d6378',
 		 // 'DEV-SECRET-1'	:'162f2b3a-8877-449b-a468-1d2adcb4064f',
-			
-		 
+
+
 	})
 	.constant('TRIPOS_HEADERS', {
 		'tp-application-name':'SKYPOS',
@@ -35,9 +35,9 @@ angular.module('skyZoneApp')
 		'tp-return-logs':true,
 		'Accept':'application/json'
 	})
-	.factory('triPOSAuthInterceptor', ['$q', 'HmacService', 'ENV', 'TRIPOS_HEADERS', 'TRIPOS_DEV_TOKENS', 'TRIPOS_ENDPOINTS', 
+	.factory('triPOSAuthInterceptor', ['$q', 'HmacService', 'ENV', 'TRIPOS_HEADERS', 'TRIPOS_DEV_TOKENS', 'TRIPOS_ENDPOINTS',
 		function($q, HmacService, ENV, TRIPOS_HEADERS, TRIPOS_DEV_TOKENS, TRIPOS_ENDPOINTS) {
-			
+
 			return {
 				request: function(config) {
 					if ( config.url.indexOf('/tripos/') !== -1 ) {
@@ -55,21 +55,27 @@ angular.module('skyZoneApp')
 						config.headers['Accept']                 = 'application/json';
 
 						var nonce = HmacService.generateUUID();
-						
+
 						// tp-authorization ( following triPOS documentation steps )
-						
+
 						// 1.) select a HMAC algorithim
-						var hmacAlgorithm = 'tp-hmac-sha256'; // sha256
+						var hmacAlgorithm = 'TP-HMAC-SHA256'; // sha256
 
 						// 2.) Collect the request method & url
 						var method = config.method;
 						var url = config.url.replace(TRIPOS_ENDPOINTS[ENV], '');
 
 						// 3.) calculate request body hash
-						var requestBodyHash;
+						var requestBodyHash = '';
 						if ( config.data ) {
-						//	config.data = '{"pinPadIdleMessage": "Hello","testMode": "true","corsAllowedOrigins": "*"}';
-							requestBodyHash = HmacService.getTriPOSHmac(config.data);
+							console.log('THERE IS DATA: ', config);
+							if ( typeof config.data === "string" ) {
+								console.log('is string');
+								requestBodyHash = HmacService.getTriPOSHmac(config.data);
+							} else {
+								//	config.data = '{"pinPadIdleMessage": "Hello","testMode": "true","corsAllowedOrigins": "*"}
+								requestBodyHash = HmacService.getTriPOSHmac(JSON.stringify(config.data));
+							}
 						}
 
 						// 4.) generate the canonical signed headers
@@ -83,13 +89,14 @@ angular.module('skyZoneApp')
 						var signedHeaders = '';
 						canonicalHeadersArray = canonicalHeadersArray.sort();
 						angular.forEach(canonicalHeadersArray, function(header) {
-							signedHeaders = signedHeaders + ';' + header; 
+							signedHeaders = signedHeaders + ';' + header;
 						});
 						signedHeaders = signedHeaders.slice(1); // remove preceeding semi-colon
 
 						// 5.) generate the caonical headers
 						var canonicalHeadersStr = '';
-						angular.forEach(canonicalHeadersArray, function(header) {
+						angular.forEach(canonicalHeadersArray, function(header) { 
+							if ( !config.data && header === 'Content-Type' ) { return; }
 							canonicalHeadersStr = canonicalHeadersStr + header + ':' + config.headers[header] + '\n'
 						});
 
@@ -107,10 +114,11 @@ angular.module('skyZoneApp')
 						}else{
 							canonicalRequest +="\n";
 						}
-						canonicalRequest += canonicalHeadersStr ; // new line all ready we have while calculating canonicalHeadersStr
+						canonicalRequest += canonicalHeadersStr ; // new line already we have while calculating canonicalHeadersStr
 						canonicalRequest += signedHeaders + '\n';
-						if ( requestBodyHash ) { canonicalRequest += requestBodyHash; }
-						
+						canonicalRequest += requestBodyHash;
+						console.log('canonicalRequest: [Length: '+canonicalRequest.length+']', canonicalRequest);
+
 
 						// 9.) Generate the canonical request hash
 						var requestHash = HmacService.getTriPOSHmac(canonicalRequest);
@@ -136,13 +144,27 @@ angular.module('skyZoneApp')
 						tpAuthHeader += 'Nonce=' + nonce + ', ';
 						tpAuthHeader += 'RequestDate=' + timestamp + ', ';
 						tpAuthHeader += 'Signature=' + signature;
-						//config.headers['tp-authorization'] = tpAuthHeader;
+
+						// TriPOSService.getTestMode()
+						// 	.then(function(testMode) {
+							// 	if ( !testMode ) {
+							// 		config.headers['tp-authorization'] = tpAuthHeader;
+							// 	} else {
+							// 		config.headers['tp-authorization'] = 'Version=1.0, Credential=' + TRIPOS_DEV_TOKENS['DEV-KEY-1'];
+							// 	}
+							// }, function(err) {
+							// 	config.headers['tp-authorization'] = 'Version=1.0, Credential=' + TRIPOS_DEV_TOKENS['DEV-KEY-1'];
+							// })
+
+						config.headers['tp-authorization'] = tpAuthHeader;
 						console.log('tp-authorization: ', config.headers['tp-authorization']);
-						config.headers['tp-authorization'] = 'Version=1.0, Credential=' + TRIPOS_DEV_TOKENS['DEV-KEY-1'];
+						//config.headers['tp-authorization'] = 'Version=1.0, Credential=' + TRIPOS_DEV_TOKENS['DEV-KEY-1'];
 
 						config.headers['tp-request-id'] = HmacService.generateUUID();
 
 						console.log('CONFIG FROM TRIPOS: ', config);
+
+						console.log('requestHash', requestHash)
 					}
 					return config;
 				}

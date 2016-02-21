@@ -1,7 +1,7 @@
-/* 
+/*
 --------------------------------------------------
 --------------------------------------------------
-            Navigation 
+            Navigation
 --------------------------------------------------
 -------------------------------------------------- */
 
@@ -95,10 +95,10 @@ img.nav-icons {
 
 
 
-/* 
+/*
 --------------------------------------------------
 --------------------------------------------------
-            Footer 
+            Footer
 --------------------------------------------------
 -------------------------------------------------- */
 
@@ -192,7 +192,7 @@ footer {
     height: 4rem;
 }
 .p-container .progress {
-    
+
 }
 /* Previous & Next Navigation
 -------------------------------------------------- */
@@ -313,7 +313,7 @@ footer {
 }
 
 
-/* Tables 
+/* Tables
 -------------------------------------------------- */
 .section-rows label {
     width: 100%;
@@ -331,10 +331,10 @@ div.single-panel table .section-rows td {
 }
 
 
-/* 
+/*
 --------------------------------------------------
 --------------------------------------------------
-            Start 
+            Start
 --------------------------------------------------
 -------------------------------------------------- */
 #start .config {
@@ -398,10 +398,10 @@ div.single-panel table .section-rows td {
     width: 100%;
     padding: 0 25px;
 }
-/* 
+/*
 --------------------------------------------------
 --------------------------------------------------
-            Activity 
+            Activity
 --------------------------------------------------
 -------------------------------------------------- */
 
@@ -473,14 +473,14 @@ div.single-panel table .section-rows td {
 }
 #activity .single-panel.last {
     margin-right: 0px;
-} 
+}
 #activity span.ticket {
     float: right;
-    margin-right: 20px; 
+    margin-right: 20px;
     font-weight: 400;
     font-size: .85em;
     text-transform: uppercase;
-}  
+}
 
 /* Use .inactive to toggle the  1,2,3 panels on time/activity page  */
 #activity .single-panel.inactive {
@@ -608,10 +608,10 @@ div.single-panel table .section-rows td {
     display: block;
 }
 
-/* 
+/*
 --------------------------------------------------
 --------------------------------------------------
-            Guest 
+            Guest
 --------------------------------------------------
 -------------------------------------------------- */
 
@@ -650,10 +650,10 @@ div.single-panel table .section-rows td {
 }
 
 
-/* 
+/*
 --------------------------------------------------
 --------------------------------------------------
-            Jumpers 
+            Jumpers
 --------------------------------------------------
 -------------------------------------------------- */
 #jumper *:focus {
@@ -727,7 +727,7 @@ div.single-panel table .section-rows td {
     font-size: 1.6em;
     color: #656565;
 }
-/* Jumper modal 
+/* Jumper modal
 --------------------------------------------------*/
 #jumper .hd-new {
     color: #FB7337;
@@ -789,12 +789,12 @@ div.single-panel table .section-rows td {
     #jumper .switch-sz.switch-light input:checked ~ span span:last-of-type {
       opacity: 1; }
     #jumper .switch-sz.switch-toggle, #jumper .switch-sz > span span {
-      text-transform: uppercase; }    
+      text-transform: uppercase; }
 
-/* 
+/*
 --------------------------------------------------
 --------------------------------------------------
-            Waiver 
+            Waiver
 --------------------------------------------------
 -------------------------------------------------- */
 .waiver-header {
@@ -821,10 +821,10 @@ div.single-panel table .section-rows td {
     border-top: 1px solid #ddd;
 }
 
-/* 
+/*
 --------------------------------------------------
 --------------------------------------------------
-            Offers 
+            Offers
 --------------------------------------------------
 -------------------------------------------------- */
 
@@ -1020,14 +1020,14 @@ div.single-panel table .section-rows td {
         padding: 10px 5px;
     }
 
-         
+
 }
 
 
-/* 
+/*
 --------------------------------------------------
 --------------------------------------------------
-            Payment 
+            Payment
 --------------------------------------------------
 -------------------------------------------------- */
 #payment {
@@ -1069,9 +1069,9 @@ background-color: #D7D7D7;
     margin-bottom: 5px;
     padding: 0px;
 }
-/* 
+/*
 --------------------------------------------------
-            Offers & Payment SIDEBAR 
+            Offers & Payment SIDEBAR
 -------------------------------------------------- */
 
 #sidebar.sidebar {
@@ -1115,12 +1115,14 @@ background-color: #D7D7D7;
     font-size: .95rem;
 }
 #sidebar .dl-horizontal dt {
-    width: 120px;
+    /*width: 120px;*/
     margin-left: 30px;
     text-align: left;
+    white-space: nowrap;
 }
 #sidebar .dl-horizontal dd {
     margin-left: 150px;
+    /*text-align: right;*/
 }
 #sidebar .total dl.dl-horizontal dd {
     color: #eb5202;
@@ -1130,10 +1132,10 @@ background-color: #D7D7D7;
 }
 
 
-/* 
+/*
 --------------------------------------------------
 --------------------------------------------------
-            Bootstrap overrides 
+            Bootstrap overrides
 --------------------------------------------------
 -------------------------------------------------- */
 
@@ -1151,10 +1153,10 @@ button:hover, button:focus, .button:hover, .button:focus {
     background-color: #0055b7;
 }
 
-/* 
+/*
 --------------------------------------------------
 --------------------------------------------------
-            Modal overrides 
+            Modal overrides
 --------------------------------------------------
 -------------------------------------------------- */
 .modal  .modal-backdrop {

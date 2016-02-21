@@ -86,7 +86,7 @@
                         <div class="col-md-2">
                             <button class="sk-btn btn-orange footer-button btn-responsive" ng-disabled="!orderPurchased()"  ng-click="printTicket(order)" ><i class="fa fa-ticket"></i> TICKETS</button>
                             </div>
-                        <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive" ng-click="toggleModal('band')" ><i class="fa fa-circle-o-notch"></i> BAND</button></div>
+                        <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive" ng-click="toggleModal('band')" ng-disabled="true" ><i class="fa fa-circle-o-notch"></i> BAND</button></div>
                         <div class="col-md-2">
                             <button class="sk-btn btn-orange footer-button btn-responsive"  ng-click="toggleModal('discount')" ng-disabled="!orderInProgress()"><i class="fa fa-angle-double-down"></i> DISCOUNT</button>
                             </div>
@@ -110,7 +110,7 @@
 
 <modal title="{{modelTitle}}" visible="showModal" id="paymentModal">
     <div ng-switch on="modelType">
-        
+
         <div ng-switch-when="cash">
             <div class="row">
                 <h3 class="text-center mb20">Cash Payment</h3>
@@ -143,7 +143,7 @@
                 <div class="col-sm-5 mb20">
                     <numkeypad ng-model="cashInput"> </numkeypad>
                 </div>
-                
+
             </div>
             <div class="modal-footer">
                 <center>
@@ -355,7 +355,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div ng-switch-when="band">
             <div class="row">
                 <h3 class="text-center mb20">_LINK BAND</h3>
@@ -365,7 +365,7 @@
                 </div>
             </div>
         </div>
-        
+
 
 
         <div ng-switch-default>
@@ -413,7 +413,7 @@
                                 <li><a href="#">Type 3</a></li>
                             </ul>
                         </div>
-                    </div> 
+                    </div>
                     <div class="form-group">
                         <label class="side-text control-label col-sm-6" for="expires" style="padding-right: 0px">Expires</label>
                         <div class="col-sm-3">
@@ -479,7 +479,7 @@
             </center>
         </div>
     </div>
-    
+
      <div ng-switch-when="manager-auth-discount" >
         <div class="row">
             <h3 class="text-center mb20">Manager Approval</h3>
