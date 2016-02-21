@@ -3,10 +3,33 @@
 angular.module('skyZoneApp')
     .controller('SPHardwareConfigController',['$scope','HardwareService','VerifoneService','EpsonService','BocaService','AveryDennisonService','RFIDReaderService', 'TriPOSService', '$modalInstance',
     	function($scope,HardwareService,VerifoneService,EpsonService,BocaService,AveryDennisonService,RFIDReaderService,TriPOSService,$modalInstance){
-			
+
 			$scope.devices = [
-				{
-					name: 'Verifone MX-925',	
+        {
+					name: 'TRIPOS',
+					status: null,
+					actions: [{
+						title: 'test connection',
+						action: function() {
+							TriPOSService.getStatus().then(function(result) {
+
+							}, function(err) {
+
+							});
+						}
+					},{
+            title: 'Get Test Mode Status',
+            action: function() {
+              TriPOSService.getTestMode();
+            }
+          },{
+            title: 'Toggle Test Mode',
+            action: function() {
+              TriPOSService.toggleTestMode();
+            }
+          }]
+				},{
+					name: 'Verifone MX-925',
 					status: null,
 					actions: [{
                         title:'Test Connection',
@@ -43,7 +66,7 @@ angular.module('skyZoneApp')
 						action: function() {
 							console.log('Boca Test Print');
 							BocaService.testPrint();
-						}  
+						}
 					}]
 				},
 				{
@@ -67,20 +90,6 @@ angular.module('skyZoneApp')
 							RFIDReaderService.readTag();
 						}
 					}]
-				},
-				{
-					name: 'TRIPOS',
-					status: null,
-					actions: [{
-						title: 'test connection',
-						action: function() {
-							TriPOSService.getStatus().then(function(result) {
-
-							}, function(err) {
-
-							});
-						}
-					}]
 				}
 			];
 
@@ -92,7 +101,7 @@ angular.module('skyZoneApp')
 					$scope.console += msg + '\n---------------\n';
 				});
 				if (!$scope.$$phase) { $scope.$apply(); }
-				
+
 				//$('#console').scrollTop = $('#console').scrollHeight;
 			}
 
@@ -102,13 +111,13 @@ angular.module('skyZoneApp')
 			$scope.saveConsole = function() {
 				// $scope.toJSON = '';
 				// $scope.toJSON = angular.toJson($scope.console);
-				var blob = new Blob([$scope.console], { type:"application/text;charset=utf-8;" });			
+				var blob = new Blob([$scope.console], { type:"application/text;charset=utf-8;" });
 				var downloadLink = angular.element('<a></a>');
                 downloadLink.attr('href',window.URL.createObjectURL(blob));
                 downloadLink.attr('download', 'console-output-' + new Date().getTime() + '.txt');
 				downloadLink[0].click();
 			};
-			
+
 			// $modalInstance.close(result);
 			// $modalInstance.dismiss('reason');
 
@@ -128,10 +137,10 @@ angular.module('skyZoneApp')
 			// 	//$scope.devices = data;
 			// 	$scope.$apply();
 			// });
-			
+
 			// HardwareService.socket.emit('status');
-			
-			
+
+
 		}])
 
 

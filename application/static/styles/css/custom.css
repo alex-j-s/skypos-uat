@@ -1118,9 +1118,11 @@ background-color: #D7D7D7;
     /*width: 120px;*/
     margin-left: 30px;
     text-align: left;
+    white-space: nowrap;
 }
 #sidebar .dl-horizontal dd {
     margin-left: 150px;
+    /*text-align: right;*/
 }
 #sidebar .total dl.dl-horizontal dd {
     color: #eb5202;
