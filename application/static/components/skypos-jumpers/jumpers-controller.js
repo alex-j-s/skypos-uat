@@ -22,7 +22,7 @@ angular.module('skyZoneApp')
                             addon.jumpers[key] = false;
                         }
                     })
-                })  
+                })
             },
             setStatus: function(productId, jumperId, status) {
                 addOnStatus['_' + productId + '_'].jumpers['_' + jumperId + '_'] = status;
@@ -73,8 +73,8 @@ angular.module('skyZoneApp')
                     })
                 });
             }
-            
-            
+
+
 
             $scope.getAddOns = function() {
                 return AddOnStatus.getStatus();
@@ -109,7 +109,7 @@ angular.module('skyZoneApp')
 
             $scope.newJumper = function(jumper) {
                 console.log('jumper: ', jumper)
-                if ($scope.getAge(jumper.birthday) >= 18 && jumper.phone && jumper.email 
+                if ($scope.getAge(jumper.birthday) >= 18 && jumper.phone && jumper.email
                     && jumper.phone.length > 0 && jumper.email.length > 0) {
                     UserService.createAccount(jumper).then(function(customer) {
                         $scope.addJumper(customer);
@@ -235,11 +235,11 @@ angular.module('skyZoneApp')
 
                     // Order.numberOfJumpers = Order.participants.length+1;
                     // Order.numberOfGuests = (Order.numberOfGuests)?Order.numberOfGuests+1:Order.numberOfJumpers;
-                    
+
                     angular.forEach(AddOnStatus.getStatus(), function(addon) {
                         AddOnStatus.setStatus(addon.prod.id, jumper.id, false)
                     })
-                    
+
                     def.resolve(OrderService.addOrderParticipant(Order.id, OrderService.createOrderParticipant(jumper))
                             .then(function(order) {
                                 $scope.refreshJumpers(order);
@@ -573,7 +573,8 @@ angular.module('skyZoneApp')
                     if ( result.data.length === 1 ) {
                         $scope.addJumper(result.data[0]);
                     } else {
-                        $rootScope.broadcast('szeError','Could not find guest');
+                        $rootScope.$broadcast('szeHideLoading');
+                        $rootScope.$broadcast('szeError','Could not find guest');
                     }
                   }, function(err) {
                     console.log(err);
