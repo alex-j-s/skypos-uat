@@ -17,17 +17,19 @@ angular.module('skyZoneApp')
 
 							});
 						}
-					},{
-            title: 'Get Test Mode Status',
-            action: function() {
-              TriPOSService.getTestMode();
-            }
-          },{
-            title: 'Toggle Test Mode',
-            action: function() {
-              TriPOSService.toggleTestMode();
-            }
-          }]
+					}
+          // {
+          //   title: 'Get Test Mode Status',
+          //   action: function() {
+          //     TriPOSService.getTestMode();
+          //   }
+          // },{
+          //   title: 'Toggle Test Mode',
+          //   action: function() {
+          //     TriPOSService.toggleTestMode();
+          //   }
+          // }
+        ]
 				},{
 					name: 'Verifone MX-925',
 					status: null,

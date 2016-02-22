@@ -205,7 +205,8 @@ angular.module('skyZoneApp')
                     if ( result.data.length === 1 ) {
                         $scope.handleGuestSearchResult(result.data[0]);
                     } else {
-                        $rootScope.broadcast('szeError','Could not find guest');
+                        $rootScope.$broadcast('szeHideLoading');
+                        $rootScope.$broadcast('szeError','Could not find guest');
                     }
                   }, function(err) {
                     console.log(err);
