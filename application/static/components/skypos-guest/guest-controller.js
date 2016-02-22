@@ -199,11 +199,17 @@ angular.module('skyZoneApp')
 
             skybandModal.result.then( function (skybandId) {
                 $rootScope.$broadcast('szeShowLoading');
-                ProfileService.customerSearch({'skybandId':id})
+                ProfileService.customerSearch({'skybandId':skybandId})
                   .then(function(result) {
                     console.log(result);
+                    if ( result.data.length === 1 ) {
+                        $scope.handleGuestSearchResult(result.data[0]);
+                    } else {
+                        $rootScope.broadcast('szeError','Could not find guest');
+                    }
                   }, function(err) {
                     console.log(err);
+                    $rootScope.broadcast('szeError','error searching guest: ', err.msg);
                   });
             }, function(reason){
 
