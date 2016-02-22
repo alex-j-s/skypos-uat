@@ -416,16 +416,22 @@ angular.module('skyZoneApp')
       	    console.log('payment capture compelte: ', data);
       	 // data.approvedAmount =$scope.card.amount; //for testing purpose remove it later
               $scope.capturingPayment = false;
-              var payload = OrderService.swipeCreditORDebitCardPayment(data)
-              OrderService.addCreditCardPayment($scope.order.id,payload)
-              	.then(function(order) {
-              	 $rootScope.$broadcast('szeHideLoading');
-                 $scope.printReciept(order)
-                 $scope.printTicket(order)
-                  $scope.attemptCompleteOrder();
-              },function(err) {
-                  logErrorStopLoading(err);
-              });
+              if ( data.statusCode == 'Failed' ) { //declined payment
+                logErrorStopLoading('Swipe Capture Failed');
+              } else if ( data.statusCode == 'Approved' ) {
+                var payload = OrderService.swipeCreditORDebitCardPayment(data)
+                OrderService.addCreditCardPayment($scope.order.id,payload)
+                	.then(function(order) {
+                	 $rootScope.$broadcast('szeHideLoading');
+                   $scope.printReciept(order)
+                   $scope.printTicket(order)
+                    $scope.attemptCompleteOrder();
+                },function(err) {
+                    logErrorStopLoading(err);
+                });
+              } else {
+                logErrorStopLoading('Swipe Capture Failed');
+              }
         },function(err) {
             logErrorStopLoading(err);
         });
