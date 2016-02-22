@@ -553,6 +553,37 @@ angular.module('skyZoneApp')
 
             };
 
+        $scope.openSkybandModal = function(){
+            $scope.showModal = false;
+            var skybandModal = $modal.open({
+                animation: true,
+                size:'md',
+                templateUrl: 'static/components/skypos-start/skyband-scan-modal.html',
+                link: function(scope, elem, attr){
+                    elem.find('.scanner-field').focus();
+                },
+                controller: 'SPSkybandModal'
+            })
+
+            skybandModal.result.then( function (skybandId) {
+                $rootScope.$broadcast('szeShowLoading');
+                ProfileService.customerSearch({'skybandId':skybandId})
+                  .then(function(result) {
+                    console.log(result);
+                    if ( result.data.length === 1 ) {
+                        $scope.addJumper(result.data[0]);
+                    } else {
+                        $rootScope.broadcast('szeError','Could not find guest');
+                    }
+                  }, function(err) {
+                    console.log(err);
+                    $rootScope.broadcast('szeError','error searching guest: ', err.msg);
+                  });
+            }, function(reason){
+
+            })
+        };
+
             $rootScope.$on('szeOrderUpdated', function(evt, order) {
                     $scope.refreshJumpers(order)
             });
