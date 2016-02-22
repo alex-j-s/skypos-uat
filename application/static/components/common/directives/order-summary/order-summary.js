@@ -243,7 +243,14 @@ angular.module('skyZoneApp')
 
                 $scope.cancelOrder = function(isRefund) {
 
-                    if ( $scope.existingPayments.length > 0 ) {
+                    var triPOSTransaction = false;
+                    var nonTriPOSTransaction = false;
+                    angular.forEach($scope.existingPayments, function(payment) {
+                      if ( payment.isTriPOSTransaction ) { triPOSTransaction = true; }
+                      else { nonTriPOSTransaction = true; }
+                    })
+
+                    if ( nonTriPOSTransaction && !isRefund ) {
                       $rootScope.$broadcast('szeConfirm', {
                         title: 'Remove Payments',
                         message: 'Please remove all payments from the order before cancelling.',

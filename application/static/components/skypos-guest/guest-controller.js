@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('skyZoneApp')
-    .controller('SPGuestController',['$scope', '$modal', '$routeParams', '$q', '$rootScope', '$location', 'Park', 'ProfileService', 'OrderService', 'NavService', 'Order', 'UserService', 'RFIDReaderService'
+    .controller('SPGuestController',['$scope', '$modal', '$routeParams', '$q', '$rootScope', '$location', 'Park', 'ProfileService', 'OrderService', 'NavService', 'Order', 'UserService', 'RFIDReaderService',
     	function($scope, $modal, $routeParams, $q, $rootScope ,$location, Park, ProfileService, OrderService, NavService, Order, UserService, RFIDReaderService){
 
     	console.log(Park);
