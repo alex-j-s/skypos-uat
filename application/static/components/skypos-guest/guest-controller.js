@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('skyZoneApp')
-    .controller('SPGuestController',['$scope', '$modal', '$routeParams', '$q', '$rootScope', '$location', 'Park', 'ProfileService', 'OrderService', 'NavService', 'Order', 'UserService',
-    	function($scope, $modal, $routeParams, $q, $rootScope ,$location, Park, ProfileService, OrderService, NavService, Order, UserService){
-    	
+    .controller('SPGuestController',['$scope', '$modal', '$routeParams', '$q', '$rootScope', '$location', 'Park', 'ProfileService', 'OrderService', 'NavService', 'Order', 'UserService', 'RFIDReaderService',
+    	function($scope, $modal, $routeParams, $q, $rootScope ,$location, Park, ProfileService, OrderService, NavService, Order, UserService, RFIDReaderService){
+
     	console.log(Park);
 
                     $scope.isSearching = false;
@@ -40,7 +40,7 @@ angular.module('skyZoneApp')
             searchCriteria.postalCode.length > 0 ||
             searchCriteria.orderNumber.length > 0 ||
             isPhone(searchCriteria.numOrEmail) ||
-            isEmail(searchCriteria.numOrEmail)); 
+            isEmail(searchCriteria.numOrEmail));
         };
 
     	$scope.handleGuestSearchResult = function(guest){
@@ -50,10 +50,10 @@ angular.module('skyZoneApp')
     	};
 
         $scope.canAddGuest = function(guest){
-            return(guest.firstName && guest.firstName.length > 0 
-                && guest.lastName && guest.lastName.length > 0 
-                && guest.email && guest.email.length > 0 
-                && guest.phone && guest.phone.length > 0 
+            return(guest.firstName && guest.firstName.length > 0
+                && guest.lastName && guest.lastName.length > 0
+                && guest.email && guest.email.length > 0
+                && guest.phone && guest.phone.length > 0
                 && guest.birthday && guest.birthday.length > 0
                 && guest.gender && guest.gender.length > 0)
         };
@@ -99,7 +99,7 @@ angular.module('skyZoneApp')
     		};
 
     		var def = $q.defer();
-    		
+
     		$rootScope.$broadcast('szeShowLoading');
             $scope.isSearching = true;
     		OrderService.createOrder(orderRequest)
@@ -147,7 +147,7 @@ angular.module('skyZoneApp')
                 controller: 'GuestSearchCtrl'
             });
 
-            gsModal.result.then($scope.handleGuestSearchResult, $scope.handleGuestSearchCancel); 
+            gsModal.result.then($scope.handleGuestSearchResult, $scope.handleGuestSearchCancel);
     	};
 
     	$scope.goToJumpersScreen = function(){
@@ -186,4 +186,34 @@ angular.module('skyZoneApp')
                 })
         };
 
+        $scope.openSkybandModal = function(){
+            var skybandModal = $modal.open({
+                animation: true,
+                size:'md',
+                templateUrl: 'static/components/skypos-start/skyband-scan-modal.html',
+                link: function(scope, elem, attr){
+                    elem.find('.scanner-field').focus();
+                },
+                controller: 'SPSkybandModal'
+            })
+
+            skybandModal.result.then( function (skybandId) {
+                $rootScope.$broadcast('szeShowLoading');
+                ProfileService.customerSearch({'skybandId':skybandId})
+                  .then(function(result) {
+                    console.log(result);
+                    if ( result.data.length === 1 ) {
+                        $scope.handleGuestSearchResult(result.data[0]);
+                    } else {
+                        $rootScope.$broadcast('szeHideLoading');
+                        $rootScope.$broadcast('szeError','Could not find guest');
+                    }
+                  }, function(err) {
+                    console.log(err);
+                    $rootScope.broadcast('szeError','error searching guest: ', err.msg);
+                  });
+            }, function(reason){
+
+            })
+        };
     }]);

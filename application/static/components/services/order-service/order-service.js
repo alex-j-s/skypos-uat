@@ -527,7 +527,7 @@ angular.module('skyZoneApp')
                     //var triposPaymentType = payment.entryMode.split(',')[1];
                     var triposPaymentType = payment.triPOSPaymentType;
                 	TriPOSService.reversalFlow(payment.amount,payment.transactionId,payment.triPOSPaymentType).then(function(data) {
-                		console.log('payment capture compelte: ', data); 
+                		console.log('payment capture compelte: ', data);
                 		//  data.approvedAmount =payment.amount; //for testing purpose remove it later
                 		if ( data._hasErrors ) {
                 			def.reject(data.errors);
@@ -539,10 +539,10 @@ angular.module('skyZoneApp')
                 			},function(err) {
                 				def.reject(err);
                 			});
-                		}    
+                		}
                 	},function(err) {
                 		def.reject(err);
-                	});  
+                	});
                 }else{
                 	var payload = {
                 			'amount':payment.amount,
@@ -551,7 +551,7 @@ angular.module('skyZoneApp')
                 			'amountType': 'Standard Deposit',
                 			'orderId': orderId
                 		}
-                	
+
                 	if ( paymentType == 'gift-card' ) {
                 		payload.giftCardNumber = payment.giftCardNumber;
                 	}
@@ -561,7 +561,7 @@ angular.module('skyZoneApp')
                 	}, function(err) {
                 		def.reject(err);
                 	});
-                	
+
                 }
                 return def.promise;
             };
@@ -632,7 +632,7 @@ angular.module('skyZoneApp')
             //     };
 
             //     if ( order.totalOrderAmount == order.TotalAmountDue ) {
-            //         orderStatus.status = "Unpaid"; 
+            //         orderStatus.status = "Unpaid";
             //     }
 
             //     var def = $q.defer();
@@ -645,10 +645,10 @@ angular.module('skyZoneApp')
 
             //     return def.promise;
             // };
-            
+
             self.updateReturnOrderStatus = function(retOrder){
                 $rootScope.isReturn = true;
-                return self.processOrder(retOrder, 'Refunded')  
+                return self.processOrder(retOrder, 'Refunded')
             };
 
             self.updateOrderStatus = function(order) {
@@ -746,7 +746,7 @@ angular.module('skyZoneApp')
                       'creditCardExpMonth':swipeResponse.expirationMonth,
                       'creditCardExpYear':swipeResponse.expirationYear,
                       'creditCardType':swipeResponse.cardLogo,
-                      
+
                       'triPOSTransactionId': swipeResponse.transactionId,
                       'isTriPOSTransaction': true,
                       'triPOSHostResponseCodeMesg': swipeResponse._processor.hostResponseCode+'/'+swipeResponse._processor.hostResponseMessage,
@@ -757,11 +757,11 @@ angular.module('skyZoneApp')
                       'triPOSTransactionType' : 'Sale'
                   };
             }
-            
-            self.swipeCreditORDebitCardRefund = function(swipeResponse){ 
+
+            self.swipeCreditORDebitCardRefund = function(swipeResponse){
                 console.log('refund response: ', swipeResponse);
           	  return {
-          		  
+
                     'amount': swipeResponse.totalAmount,
                     'approvalNumber': swipeResponse.approvalNumber,
                     'binValue': swipeResponse.binValue,
@@ -779,7 +779,7 @@ angular.module('skyZoneApp')
 	                'creditCardExpMonth':swipeResponse.expirationMonth,
 	                'creditCardExpYear':swipeResponse.expirationYear,
 	                'creditCardType':swipeResponse.cardLogo,
-	                
+
 	                'triPOSTransactionId': swipeResponse.transactionId,
 	                'isTriPOSTransaction': true,
                     'triPOSHostResponseCodeMesg': swipeResponse._processor.hostResponseCode+'/'+swipeResponse._processor.hostResponseMessage,
@@ -790,7 +790,7 @@ angular.module('skyZoneApp')
                     'triPOSTransactionType' : swipeResponse.transactionType
                 };
           }
-            
+
             self.createCreditCardPayment = function(paymentInfo, amount) {
                 return {
                     'amount': amount,
@@ -935,7 +935,7 @@ angular.module('skyZoneApp')
                 return def.promise;
             };
 
-            
+
 
             self.productExistsOnOrder = function(order, product){
                 var out = false;
