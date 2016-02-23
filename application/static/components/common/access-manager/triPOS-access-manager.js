@@ -5,7 +5,8 @@ angular.module('skyZoneApp')
 
 		'dev':'http://localhost:8080',
 		'qa':'http://localhost:8080',
-		'uat':'http://localhost:8080'
+		'uat':'http://localhost:8080',
+		'prod':'http://localhost:8080'
 		//'dev':'http://10.10.21.135:8081'
 		//'dev':'http://192.168.1.38:8080'
 	})
@@ -95,7 +96,7 @@ angular.module('skyZoneApp')
 
 						// 5.) generate the caonical headers
 						var canonicalHeadersStr = '';
-						angular.forEach(canonicalHeadersArray, function(header) { 
+						angular.forEach(canonicalHeadersArray, function(header) {
 							if ( !config.data && header === 'Content-Type' ) { return; }
 							canonicalHeadersStr = canonicalHeadersStr + header + ':' + config.headers[header] + '\n'
 						});

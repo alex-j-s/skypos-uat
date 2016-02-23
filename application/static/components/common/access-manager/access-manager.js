@@ -75,7 +75,7 @@ angular.module('skyZoneApp')
                         }
                         // else if (authToken !== publicAuthToken){
                         //   channel = 'pos_user';
-                        // } 
+                        // }
                         config.headers.Authorization = role + ':' + hmac64;
 
                         console.log('reg access-manager: ', config);
@@ -104,7 +104,7 @@ angular.module('skyZoneApp')
             this.role = 'pos_sys';
         };
     })
-    .service('AccessManager', 
+    .service('AccessManager',
     	['$http', '$location', '$rootScope', 'ProfileService', 'PromiseFactory', 'StorageService', 'Session', 'USER_ROLES', 'PUBLIC_TOKENS',
             function($http, $location, $rootScope, ProfileService, PromiseFactory, StorageService, Session, USER_ROLES, PUBLIC_TOKENS) {
                 return {
