@@ -8,7 +8,7 @@ angular.module('skyZoneApp')
         'dev': 'https://skyzone-epic-dev.herokuapp.com',
         'qa': 'https://skyzone-epic-qa.herokuapp.com',
         'uat': 'https://skyzone-epic-uat.herokuapp.com',
-        'prod': 'https://skyzone-epic.herokuapp.com'
+        'prod': 'https://skyzone-epic-prod.herokuapp.com'
     })
     .constant('PUBLIC_TOKENS', {
         'user': '2dc55cdd-6f10-4303-bf9f-17c1565698c2',
