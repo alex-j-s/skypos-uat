@@ -73,11 +73,11 @@
                         <div class="col-md-2">
                             <button class="sk-btn btn-orange footer-button btn-responsive" ng-disabled="!orderPurchased()" ng-click="printReciept(order)" ><i class="fa fa-print"></i>{{ orderPurchased() ? 'RE-PRINT' : 'Print'  }}</button>
                         </div>
-                        <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive" ng-click="toggleModal('coupon')" ng-disabled="!orderInProgress()"><i class="fa fa-ticket"></i> COUPON</button></div>
-                        <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive"   ng-click="toggleModal('gift-card')" ng-disabled="!orderInProgress()"><i class="fa fa-gift"></i> GIFT CARD</button></div>
-                        <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive" ng-disabled="!orderInProgress()"   ng-click="toggleModal('cash')"><i class="fa fa-money"></i> CASH</button></div>
+                        <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive" ng-click="toggleModal('coupon')" ng-disabled="!orderInProgress() && !canAddPayment()"><i class="fa fa-ticket"></i> COUPON</button></div>
+                        <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive"   ng-click="toggleModal('gift-card')" ng-disabled="!orderInProgress() && !canAddPayment()"><i class="fa fa-gift"></i> GIFT CARD</button></div>
+                        <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive" ng-disabled="!orderInProgress() && !canAddPayment()"   ng-click="toggleModal('cash')"><i class="fa fa-money"></i> CASH</button></div>
                         <div class="col-md-2">
-                            <button class="sk-btn btn-orange footer-button btn-responsive" ng-disabled="orderPurchased()" ng-click="kickOffPaymentProcess()" ><i class="fa fa-credit-card"></i>Swipe</button>
+                            <button class="sk-btn btn-orange footer-button btn-responsive" ng-disabled="orderPurchased() && !canAddPayment()" ng-click="kickOffPaymentProcess()" ><i class="fa fa-credit-card"></i>Swipe</button>
                         </div>
                     </div>
                     <div class="row ">
@@ -88,9 +88,9 @@
                             </div>
                         <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive" ng-click="toggleModal('band')" ng-disabled="true" ><i class="fa fa-circle-o-notch"></i> BAND</button></div>
                         <div class="col-md-2">
-                            <button class="sk-btn btn-orange footer-button btn-responsive"  ng-click="toggleModal('discount')" ng-disabled="!orderInProgress()"><i class="fa fa-angle-double-down"></i> DISCOUNT</button>
+                            <button class="sk-btn btn-orange footer-button btn-responsive"  ng-click="toggleModal('discount')" ng-disabled="!orderInProgress() && !canAddPayment()"><i class="fa fa-angle-double-down"></i> DISCOUNT</button>
                             </div>
-                        <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive"   ng-click="toggleModal('check')" ng-disabled="!orderInProgress()"><i class="fa fa-th"></i> CHECK</button></div>
+                        <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive"   ng-click="toggleModal('check')" ng-disabled="!orderInProgress() && !canAddPayment()"><i class="fa fa-th"></i> CHECK</button></div>
                        <!--  <div class="col-md-2"><button class="sk-btn btn-orange footer-button btn-responsive"   ng-click="toggleModal('credit')" ng-disabled="!orderInProgress()"><i class="fa fa-credit-card"></i> CREDIT</button></div> -->
                     </div>
                 </div>

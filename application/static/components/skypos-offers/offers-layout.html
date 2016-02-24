@@ -264,7 +264,7 @@
                                 </div>
                             </div> -->
                             <div class="col-sm-5">
-                                <div class="" ng-show="order.status=='In Progress'">
+                                <div class="" ng-show="order.status!='Finalized'">
                                     <div class="price text-center offer-label">Quantity</div>
                                     <div class="flex-align mt10">
                                         <button type="button" class="sk-btn btn-blue minus" ng-click="decrementViewQuantity(product)"><i class="fa fa-minus"></i></button>
@@ -301,7 +301,7 @@
                             <div class="col-sm-2 pull-right">
                                 <div class="action">
                                     <button type="button" class="sk-btn mt10" ng-click="addproductToOrder(product)" ng-disabled="!productFullySelected(product)"
-                                    ng-hide="order.status!='In Progress'">Add To Order</button>
+                                    ng-hide="order.status==='Finalized'">Add To Order</button>
                                 </div>
                             </div>
                         </div>
