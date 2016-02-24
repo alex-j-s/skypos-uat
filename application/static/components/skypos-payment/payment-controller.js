@@ -45,6 +45,10 @@ angular.module('skyZoneApp')
 			$scope.showModal = !$scope.showModal;
 		};
 
+        $scope.canAddPayment = function(){
+            return $scope.order.totalAmountDue > 0;
+        };
+
         ////////// ORDER STATUS //////////
         $scope.orderInProgress = function(e) {
             return $scope.order.status == 'In Progress' || $scope.order.status == 'Reserved';
