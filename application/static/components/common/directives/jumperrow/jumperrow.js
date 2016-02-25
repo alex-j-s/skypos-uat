@@ -12,7 +12,7 @@
  */
 
 angular.module('skyZoneApp')
-    .directive('jumperrow', ['$rootScope', 'VerifoneService', 'OrderService', 'WaiverService', 'UserService', 'WaiverStatus', 'AddOnStatus','ProfileService', 
+    .directive('jumperrow', ['$rootScope', 'VerifoneService', 'OrderService', 'WaiverService', 'UserService', 'WaiverStatus', 'AddOnStatus','ProfileService',
         function($rootScope, VerifoneService, OrderService, WaiverService, UserService, WaiverStatus, AddOnStatus, ProfileService) {
 
         return {
@@ -229,7 +229,7 @@ angular.module('skyZoneApp')
                                         // WaiverStatus.setStatus($scope.jumper.id, $scope.getWaiverStatus())
                                         }
                                     })
-                                    
+
                                     ProfileService.getCustomerInformation($scope.$parent.$parent.guest.id).then(function(result) {
                                         console.log('get profile after waiver result: ', result);
                                         $scope.$parent.$parent.guest = result.data;
@@ -240,7 +240,7 @@ angular.module('skyZoneApp')
                                         $scope.getWaiverStatus();
                                         if(!$scope.$$phase) {
                                             $scope.$apply();
-                                        } 
+                                        }
                                     }, waiverError);
                                 }, waiverError);
                             }, waiverError)
@@ -272,17 +272,18 @@ angular.module('skyZoneApp')
                         }
                         console.log('waiverIds: ', waiverids);
                         UserService.getCurrentUser().then(function(result) {
-                            console.log("profile: ", result);
                             WaiverService.approveWaivers(result.id, waiverids).then(function(result) {
-                                console.log('approval response: ', result);
                                 //$scope.jumper = result.data;
                                 WaiverStatus.setStatus($scope.jumper.id, 'Approved')
                                 OrderService.getOrderParticipantsProfiles($rootScope.order).then(function(participants) {
-                                    console.log('participants', participants);
-                                    angular.forEach(participants.data, function(participant, index){
+                                    angular.forEach(participants, function(participant, index){
+                                      angular.forEach(participant.waivers,function(waiver) {
+                                        if ( waiver.parkId == $scope.park.id ) {
+                                          WaiverStatus.setStatusFromWaiver(participant.id,waiver);
+                                        }
+                                      });
                                         if(participant.id === $scope.jumper.id){
                                             $scope.jumper = participant;
-                                            // WaiverStatus.setStatus($scope.jumper.id, $scope.getWaiverStatus())
                                         }
                                     });
 
