@@ -11,7 +11,7 @@
 
 angular.module('skyZoneApp')
 .service('WaiverStatus', function(){
-  
+
   var waiverStatus = {};
   var num = {
     unsigned:0,
@@ -75,6 +75,9 @@ angular.module('skyZoneApp')
       }else{
         return waiverStatus;
       }
+    },
+    updateStatusCount: function() {
+        calcStatusCounts();
     },
     numUnsigned: function(){
       return num.unsigned;
@@ -140,7 +143,7 @@ angular.module('skyZoneApp')
     self.createWaiver = function(legalDocumentId, parkId, adults, minors, agreement) {
 
       console.log(agreement);
-      
+
       var waiverObj = {
         'legalDocumentId': legalDocumentId,
         'parkId': parkId,
@@ -161,13 +164,13 @@ angular.module('skyZoneApp')
 
       return $http.post('/api/waivers', waiverObj);
     };
-    
+
     self.approveWaivers = function(userId,waiverIds) {
       var obj = {
         'userId':(userId)?userId:50,
         'ids':waiverIds
       }
-      
+
       return $http.post('/api/waivers/approvals',obj);
     }
 
