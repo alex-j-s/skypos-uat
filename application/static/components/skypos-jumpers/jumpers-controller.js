@@ -466,6 +466,7 @@ angular.module('skyZoneApp')
 
 
             $scope.goToOffersScreen = function() {
+              WaiverStatus.updateStatusCount();
 
                 if(!WaiverStatus.allSigned()){
                     $rootScope.$broadcast('szeHideLoading');
