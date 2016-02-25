@@ -113,8 +113,19 @@ angular.module('skyZoneApp')
             isEmail(searchCriteria.numOrEmail));
         };
 
-        if ( $scope.criteria.phone || $scope.criteria.email ) {
-          $scope.guestSearch($scope.criteria);
-        }
+        // $scope.hasCriteria = function(searchCriteria) {
+        //   return (searchCriteria.firstName ||
+        //     searchCriteria.lastName ||
+        //     searchCriteria.email ||
+        //     searchCriteria.phone ||
+        //     searchCriteria.postalCode ||
+        //     searchCriteria.orderNumber ||
+        //     searchCriteria.numOrEmail)
+        // }
+        //
+        // if ( $scope.criteria && $scope.hasCriteria($scope.criteria) ) {
+        //   $scope.guestSearch($scope.criteria);
+        // }
+        $scope.guestSearch($scope.criteria);
     }
     ]);
