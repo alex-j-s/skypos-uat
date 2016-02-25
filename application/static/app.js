@@ -55,7 +55,7 @@ angular
                     authorizedRoles: [USER_ROLES.all]
                 },
                 templateUrl:'static/components/employee-login/login.html',
-                controller:'SPLoginController' 
+                controller:'SPLoginController'
             })
             .when('/skypos/start/:parkUrlSegment', {
                 resolve: {
@@ -65,7 +65,7 @@ angular
                     authorizedRoles: [USER_ROLES.all]
                 },
                 templateUrl:'static/components/skypos-start/start-layout.html',
-                controller:'SPStartController' 
+                controller:'SPStartController'
             })
             .when('/skypos/clockin/:parkUrlSegment', {
                 resolve: {
@@ -186,53 +186,53 @@ angular
         $httpProvider.interceptors.push('authInterceptor');
         $httpProvider.interceptors.push('triPOSAuthInterceptor');
     }])
-    .run(['$rootScope', '$timeout', '$location', 'formlyConfig', 'UserService', 'AccessManager', 'USER_ROLES', 'PrintService','TriPOSService','EpsonService','BocaService','AveryDennisonService',  
+    .run(['$rootScope', '$timeout', '$location', 'formlyConfig', 'UserService', 'AccessManager', 'USER_ROLES', 'PrintService','TriPOSService','EpsonService','BocaService','AveryDennisonService',
         function($rootScope, $timeout, $location, formlyConfig, UserService, AccessManager, USER_ROLES, PrintService, TriPOSService,EpsonService,BocaService,AveryDennisonService) {
         AccessManager.reset('pos_sys');
-        
+
         console.log('run')
-        
-        
+
+
        // setTimeout(function () {
        //     VerifoneService.connect();
        // }, 3100)
 
 
-       
+
        // setTimeout(function () {
-       //  VerifoneService.clearAndShowIdle();   
+       //  VerifoneService.clearAndShowIdle();
        // }, 4000);
 
     setTimeout(function() {
         TriPOSService.showIdle();
     }, 3100);
-    
+
     setTimeout(function() {
         EpsonService.connect();
     },3000);
-    
+
     // setTimeout(function() {
     //     EpsonService.printReciept(null);
     // },5000);
-    
+
     // setTimeout(function() {
     //     EpsonService.disconnect();
     // },6000);
-    
+
     setTimeout(function() {
         BocaService.connect();
         AveryDennisonService.connect();
     },3000);
-    
+
     // setTimeout(function() {
     //     BocaService.printTicket();
     // },5000);
-    
+
     // setTimeout(function() {
     //     BocaService.disconnect();
     // },6000);
-        
-        
+
+
         $rootScope.$on('$routeChangeStart', function(e, next, previous) {
             console.log(next)
             if(next.data){
@@ -243,7 +243,7 @@ angular
                     //else raise unauthenticated event
                     alert('Unauthorized!')
                 }
-                
+
             }
         });
 
@@ -277,17 +277,5 @@ angular
         }
 
         return hrs+min;
-    }   
+    }
 });
-
-
-
-
-
-
-
-
-
-
-
-
