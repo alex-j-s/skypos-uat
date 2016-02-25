@@ -9,9 +9,9 @@
  */
 
 angular.module('skyZoneApp')
-    .controller('GuestSearchCtrl', ['$scope', '$modalInstance', '$modal', '$rootScope', 'ProfileService', 'Criteria', 
+    .controller('GuestSearchCtrl', ['$scope', '$modalInstance', '$modal', '$rootScope', 'ProfileService', 'Criteria',
         function($scope, $modalInstance, $modal, $rootScope, ProfileService, Criteria) {
-      
+
         $scope.isSearching = true;
         $scope.showProfile = false;
       $scope.criteria = Criteria;
@@ -110,9 +110,25 @@ angular.module('skyZoneApp')
             searchCriteria.postalCode.length > 0 ||
             searchCriteria.orderNumber.length > 0 ||
             isPhone(searchCriteria.numOrEmail) ||
-            isEmail(searchCriteria.numOrEmail)); 
+            isEmail(searchCriteria.numOrEmail));
         };
 
-        $scope.guestSearch($scope.criteria);
+        $scope.hasCriteria = function(searchCriteria) {
+          return (searchCriteria.firstName ||
+            searchCriteria.lastName ||
+            searchCriteria.email ||
+            searchCriteria.phone ||
+            searchCriteria.postalCode ||
+            searchCriteria.orderNumber ||
+            searchCriteria.numOrEmail)
+        }
+
+        if ( $scope.criteria && $scope.hasCriteria($scope.criteria) ) {
+          $scope.guestSearch($scope.criteria);
+        } else {
+          $scope.isSearching = false;
+          $scope.isLoading = false;
+        }
+        //$scope.guestSearch($scope.criteria);
     }
     ]);
