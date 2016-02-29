@@ -466,6 +466,7 @@ angular.module('skyZoneApp')
 
 
             $scope.goToOffersScreen = function() {
+              WaiverStatus.updateStatusCount();
 
                 if(!WaiverStatus.allSigned()){
                     $rootScope.$broadcast('szeHideLoading');
@@ -493,7 +494,7 @@ angular.module('skyZoneApp')
                 } else {
 
                     $rootScope.$broadcast('szeShowLoading')
-                    if($scope.order.status === 'In Progress' || $scope.order.status === 'Reserved'){
+                    if($scope.order.status !== 'Finalized'){
                         $scope.aggregateAndAddLineItems().then(function(success) {
 
                             AddOnStatus.purchasedAll();
